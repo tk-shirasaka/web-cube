@@ -1,0 +1,7 @@
+{
+    "sys"   : ["admin", "user"],
+    "page"  : ["top", "header", "footer", "side_bar", "block", "form", "button", "image", "width", "column", "row"],
+    "addr"  : ["zip_code", "tel", "city", "address", "stats"],
+    "time"  : ["datetime", "date", "year", "month", "day", "time", "hour", "minute", "second", "format"],
+    "com"   : ["next", "prev"]
+}

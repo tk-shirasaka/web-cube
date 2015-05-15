@@ -1,0 +1,86 @@
+{
+    "Uses" : {
+        "Column" : {
+            "Normal"    : "%s",
+            "Type"      : "%s",
+            "Length"    : "(%s)",
+            "Null"      : "NOT NULL",
+            "Default"   : "DEFAULT %s",
+            "Constraint": "CONSTRAINT %s",
+            "Attr"      : "%s"
+        },
+        "Constraint" : {
+            "Primary"   : "PRIMARY KEY(%s)",
+            "Foreign"   : "FOREIGN KEY(%s) REFERENCE(%s)",
+            "Unique"    : "UNIQUE (%s)",
+            "Check"     : "CHECK(%s)"
+        },
+        "Query" : {
+            "Where"     : "WHERE %s",
+            "Sort"      : "ORDER BY %s",
+            "Group"     : "GROUP BY %s",
+            "Limit"     : "LIMIT %s"
+        }
+    },
+    "Show" : {
+        "SQL" : {
+            "Normal"    : "SHOW",
+            "Database"  : "DATABASES %s",
+            "Table"     : "TABLES %s",
+            "Column"    : "COLUMNS FROM %s"
+        }
+    },
+    "Create" : {
+        "SQL" : {
+            "Nomal"     : "CREATE TABLE %s (%s)"
+        },
+        "Uses" : ["Column", "Constraint"]
+    },
+    "Drop" : {
+        "SQL" : {
+            "Normal"    : "DROP TABLE %s"
+        }
+    },
+    "Alter" : {
+        "SQL" : {
+            "Normal"    : "ALTER TABLE %s",
+            "Add"       : "ADD(%s)",
+            "DropCol"   : "DROP(%s)",
+            "DropAttr"  : "DROP %s",
+            "Modify"    : "MODIFY(%s)",
+            "Unuse"     : "SET UNUSED(%s)",
+            "Enable"    : "ENABLE %s",
+            "Disable"   : "DISABLE"
+        },
+        "Uses" : ["Column", "Constraint"]
+    },
+    "Constraint" : {
+        "SQL" : {
+            "Normal"    : "CONSTRAINT %s{%s}"
+        },
+        "Uses" : ["Constraint"]
+    },
+    "Insert" : {
+        "SQL" : {
+            "Normal"    : "INSERT INTO %s (%s) VALUES(%s)"
+        }
+    },
+    "Update" : {
+        "SQL" : {
+            "Normal"    : "UPDATE %s SET %s"
+        },
+        "Uses" : ["Query"]
+    },
+    "Delete" : {
+        "SQL" : {
+            "Normal"    : "DELETE FROM %s"
+        },
+        "Uses" : ["Query"]
+    },
+    "Select" : {
+        "SQL" : {
+            "Normal"    : "SELECT %s FROM %s"
+        },
+        "Uses" : ["Query"]
+    }
+}

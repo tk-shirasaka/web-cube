@@ -1,0 +1,30 @@
+{
+    "Configure" : {
+        "MultiUser" : false,
+        "Locale"    : "ja",
+        "Debug"     : 4
+    },
+    "Data"  : {
+        "Master"    : {
+            "Source"    : "MySQL",
+            "Path"      : "localhost",
+            "Database"  : "Master",
+            "Port"      : "",
+            "User"      : "web-cube",
+            "Password"  : "Password#01",
+            "Encode"    : "UTF-8"
+        },
+        "Test"   : {
+            "Source"    : "Json",
+            "Path"      : "test/data",
+            "Database"  : "",
+            "Port"      : "",
+            "User"      : "",
+            "Password"  : "",
+            "Encode"    : ""
+        }
+    },
+    "Routing"   : {
+        "Default"   : "Top"
+    }
+}

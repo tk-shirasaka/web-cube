@@ -1,0 +1,6 @@
+{
+    "level" : {
+        "1" : "Fatal", "2" : "Warning", "3" : "Notice", "4" : "Info"
+    },
+    "format" : "%s : [%s] %s:%s %s -- %s"
+}

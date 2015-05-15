@@ -1,0 +1,8 @@
+# Gtags
+GPATH
+GRTAGS
+GTAGS
+
+# tmp files
+*.swp
+*.swo
