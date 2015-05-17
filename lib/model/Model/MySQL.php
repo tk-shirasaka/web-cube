@@ -8,16 +8,27 @@ class MySQL extends Database {
     public  $error          = ["connect" => "connect_error", "execute" => "error"];
 
     public function connect() {
-        $path       = $this->_config["path"];
-        $user       = $this->_config["User"];
-        $password   = $this->_config["Password"];
-        $database   = $this->_config["Database"];
-        $port       = $this->_config["Port"];
+        $path       = $this->config["Path"];
+        $user       = $this->config["User"];
+        $password   = $this->config["Password"];
+        $database   = $this->config["Database"];
+        $port       = $this->config["Port"];
 
         if ($port) {
-            $this->connect = new mysqli($server, $user, $password, $database, $port);
+            $this->connect = new mysqli($path, $user, $password, $database, $port);
         } else {
-            $this->connect = new mysqli($server, $user, $password, $database);
+            $this->connect = new mysqli($path, $user, $password, $database);
         }
+    }
+
+    public function _execute($query) {
+        $ret    = [];
+        $result = $this->connect->query($query);
+        if ($result) {
+            while ($ret[] = $result->fetch_assoc()) {}
+            array_pop($ret);
+            $result->free();
+        }
+        return $ret;
     }
 }

@@ -1,0 +1,23 @@
+{
+    "Table" : "information_schema.key_column_usage",
+    "Field" : [
+        "TABLE_NAME",
+        "COLUMN_NAME",
+        "REFERENCED_TABLE_NAME",
+        "REFERENCED_COLUMN_NAME"
+    ],
+    "Where" : {
+        "REFERENCED_TABLE_NAME" : {
+            "Relation"  : "is not",
+            "Value"     : "null"
+        }
+    },
+    "Src" : {
+        "Table"     : "TABLE_NAME",
+        "Column"    : "COLUMN_NAME"
+    },
+    "Dst" : {
+        "Table"     : "REFERENCED_TABLE_NAME",
+        "Column"    : "REFERENCED_COLUMN_NAME"
+    }
+}

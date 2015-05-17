@@ -1,126 +1,109 @@
 {
-    "User"  : {
-        "name"          : {
+    "User"  : [
+        {
             "Description"   : "User accout name (id)",
+            "Field"         : "name",
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "password"      : {
+        {
             "Description"   : "User accout password",
+            "Field"         : "password",
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "language"      : {
+        {
             "Description"   : "User uses language",
+            "Field"         : "language",
             "Type"          : "varchar",
             "Length"        : 10,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "last_login"    : {
+        {
             "Description"   : "Last login date time",
+            "Field"         : "last_login",
             "Type"          : "datetime",
             "Length"        : "",
             "Null"          : true,
             "Default"       : null,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "login_status"  : {
+        {
             "Description"   : "When logining registered user ip, else blank",
+            "Field"         : "login_status",
             "Type"          : "var",
             "Length"        : 15,
             "Null"          : true,
             "Default"       : null,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "open_date"   : {
+        {
             "Description"   : "Set user web page is opened date",
+            "Field"         : "open_date",
             "Type"          : "date",
             "Length"        : "",
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "close_date"    : {
+        {
             "Description"   : "Set user web page is closed date",
+            "Field"         : "close_date",
             "Type"          : "date",
             "Length"        : "",
             "Null"          : true,
             "Default"       : null,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         }
-    },
-    "Page"  : {
-        "id"            : {
+    ],
+    "Page"  : [
+        {
             "Description"   : "Page id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "name"          : {
+        {
             "Description"   : "Page name (use page title)",
+            "Field"         : "name",
             "Type"          : "varchar",
             "Length"        : 10,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "user"          : {
+        {
             "Description"   : "Page owner user account name",
+            "Field"         : "user",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -132,196 +115,169 @@
                 "Field" : "name"
             }
         },
-        "path"          : {
+        {
             "Description"   : "Page id",
+            "Field"         : "path",
             "Type"          : "varchar",
             "Length"        : 80,
             "Null"          : true,
             "Default"       : null,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         }
-    },
-    "Image"     : {
-        "id"            : {
+    ],
+    "Image"     : [
+        {
             "Description"   : "Image id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "name"          : {
+        {
             "Description"   : "Image name",
+            "Field"         : "name",
             "Type"          : "varchar",
             "Length"        : 20,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "path"      : {
+        {
             "Description"   : "Image path",
+            "Field"         : "path",
             "Type"          : "varchar",
             "Length"        : 200,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "width"      : {
+        {
             "Description"   : "Image width",
+            "Field"         : "width",
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : true,
             "Default"       : null,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "height"      : {
+        {
             "Description"   : "Image height",
+            "Field"         : "height",
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : true,
             "Default"       : null,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         }
-    },
-    "PartsType" : {
-        "id"            : {
+    ],
+    "PartsType" : [
+        {
             "Description"   : "Parts type id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "name"          : {
+        {
             "Description"   : "Parts type name (e.g. link, button)",
+            "Field"         : "name",
             "Type"          : "varchar",
             "Length"        : 20,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         }
-    },
-    "Parts" : {
-        "id"            : {
+    ],
+    "Parts" : [
+        {
             "Description"   : "Parts id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "name"          : {
+        {
             "Description"   : "Parts name (used html name attr)",
+            "Field"         : "name",
             "Type"          : "varchar",
             "Length"        : 20,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "class"          : {
+        {
             "Description"   : "Parts class",
+            "Field"         : "class",
             "Type"          : "varchar",
             "Length"        : 20,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "rows"          : {
+        {
             "Description"   : "Use row nums (1 bit = 1 flore : 8 x 8 = 64 flore)",
+            "Field"         : "rows",
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "cols"          : {
+        {
             "Description"   : "Use col nums (Bootstrap cols [1-12])",
+            "Field"         : "cols",
             "Type"          : "tiny int",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "title"         : {
+        {
             "Description"   : "Parts title (used parts title e.g. h3 tag)",
+            "Field"         : "title",
             "Type"          : "varchar",
             "Length"        : 20,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "page"       : {
+        {
             "Description"   : "Page id",
+            "Field"         : "page",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -333,8 +289,9 @@
                 "Field" : "id"
             }
         },
-        "type"          : {
+        {
             "Description"   : "Type id",
+            "Field"         : "type",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -346,8 +303,9 @@
                 "Field" : "id"
             }
         },
-        "parent"          : {
+        {
             "Description"   : "Parent parts id",
+            "Field"         : "parent",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : true,
@@ -359,10 +317,11 @@
                 "Field" : "id"
             }
         }
-    },
-    "InputParts"    : {
-        "id"            : {
+    ],
+    "InputParts"    : [
+        {
             "Description"   : "Parts id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -374,23 +333,22 @@
                 "Field" : "id"
             }
         },
-        "multiple"      : {
+        {
             "Description"   : "Use multi line flg",
+            "Field"         : "multiple",
             "Type"          : "tiny int",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         }
-    },
-    "ChoiceParts"   : {
-        "id"            : {
+    ],
+    "ChoiceParts"   : [
+        {
             "Description"   : "Parts id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -402,36 +360,33 @@
                 "Field" : "id"
             }
         },
-        "options"      : {
+        {
             "Description"   : "Choices (use json data structure [{key : val},...]), when raddio button, null isn't allow",
+            "Field"         : "options",
             "Type"          : "varchar",
             "Length"        : 200,
             "Null"          : true,
             "Default"       : null,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "choice_kbn"  : {
+        {
             "Description"   : "CheckBox/RaddioButton switch [check : 0, raddio : 1]",
+            "Field"         : "choice_kbn",
             "Type"          : "tiny int",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         }
-    },
-    "LinkParts"     : {
-        "id"            : {
+    ],
+    "LinkParts"     : [
+        {
             "Description"   : "Parts id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -443,34 +398,31 @@
                 "Field" : "id"
             }
         },
-        "path"      : {
+        {
             "Description"   : "Link path",
+            "Field"         : "path",
             "Type"          : "varchar",
             "Length"        : 200,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "link_kbn"      : {
+        {
             "Description"   : "Inner/Outer link switch [inner : 0, outer : 1]",
+            "Field"         : "link_kbn",
             "Type"          : "tiny int",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "image"         : {
+        {
             "Description"   : "Image id",
+            "Field"         : "image",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : true,
@@ -482,10 +434,11 @@
                 "Field" : "id"
             }
         }
-    },
-    "ButtonParts"   : {
-        "id"            : {
+    ],
+    "ButtonParts"   : [
+        {
             "Description"   : "Parts id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -497,21 +450,20 @@
                 "Field" : "id"
             }
         },
-        "action"  : {
+        {
             "Description"   : "Action Type [MoveUp/Down : 0, Show/Hide : 1, Fade : 2]",
+            "Field"         : "action",
             "Type"          : "tiny int",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "target"  : {
+        {
             "Description"   : "Target BlockParts id",
+            "Field"         : "target",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -523,10 +475,11 @@
                 "Field" : "id"
             }
         }
-    },
-    "FormParts"   : {
-        "id"            : {
+    ],
+    "FormParts"   : [
+        {
             "Description"   : "Parts id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -538,36 +491,33 @@
                 "Field" : "id"
             }
         },
-        "method"      : {
+        {
             "Description"   : "Method type [GET : 0, POST : 1]",
+            "Field"         : "method",
             "Type"          : "tiny int",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         },
-        "action"  : {
+        {
             "Description"   : "Action URI",
+            "Field"         : "action",
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "",
-                "Field" : ""
-            }
+            "Foreign"       : false
         }
-    },
-    "BlockParts"   : {
-        "id"            : {
+    ],
+    "BlockParts"   : [
+        {
             "Description"   : "Parts id",
+            "Field"         : "id",
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : false,
@@ -579,5 +529,5 @@
                 "Field" : "id"
             }
         }
-    }
+    ]
 }

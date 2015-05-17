@@ -14,7 +14,7 @@ class Model extends Common {
             $this->{$source}->setConfig($this->config[$this->uses]);
         }
 
-        if ($this->{$source}->source_type === "Database" and !$this->{$this->uses}) $this->{$source}->putSchema($this->{$source}->getSchema());
+        if ($this->{$source}->source_type === "Database" and !$this->{$this->uses}) file_put_contents($this->_sub_dir. DS. $this->uses. ".json", json_encode($this->{$source}->getSchema()));;
     }
 
     public function init() {
