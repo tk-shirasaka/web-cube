@@ -17,7 +17,7 @@ class ErrorHandler extends Common {
     }
 
     private function _putMessage($message) {
-        echo $message. "</br>";
+        echo "{$message}</br>";
     }
     public function init() {
         if (!$this->_debug_level) $this->_init();

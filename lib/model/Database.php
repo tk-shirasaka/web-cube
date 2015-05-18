@@ -3,25 +3,29 @@
 class Database extends Common {
     public  $allow_instance = true;
     public  $source_type    = "Database";
-    public  $config        = null;
+    public  $config         = null;
     public  $eoq            = "";
     public  $isUpdate       = false;
-    private $_init          = false;
+    private $_debug_level   = null;
 
     private final function _init() {
-        $this->_init    = true;
         $this->Format;
         $this->Referer;
-        $this->Format   = (is_array($this->Format)) ? array_merge($this->{"Model.Database"}->Format, $this->Format) : $this->{"Model.Database"}->Format;
-        $this->Referer  = (is_array($this->Referer)) ? array_merge($this->{"Model.Database"}->Referer, $this->Referer) : $this->{"Model.Database"}->Referer;
+        $this->Format       = (is_array($this->Format)) ? array_merge($this->{"Model.Database"}->Format, $this->Format) : $this->{"Model.Database"}->Format;
+        $this->Referer      = (is_array($this->Referer)) ? array_merge($this->{"Model.Database"}->Referer, $this->Referer) : $this->{"Model.Database"}->Referer;
+        $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
     }
 
     public function init() {
-        if (__CLASS__ !== $this->_name and !$this->_init) $this->_init();
+        if (__CLASS__ !== $this->_name and !$this->_debug_level) $this->_init();
     }
 
     public function setConfig($config) {
         $this->config  = $config;
+    }
+
+    public function dumpQuery($query, $time) {
+        if ($this->_debug_level) echo "{$query} : {$time}</br>";
     }
 
     public function getQuery($type, $uses = [], $options = []) {
@@ -74,11 +78,17 @@ class Database extends Common {
     }
 
     public function execute($query) {
+        $start  = microtime(true);
+
         $this->connect();
         $ret    = $this->_execute($query);
 
         if ($this->isUpdate) $this->_commit();
         $this->close();
+
+        $end    = microtime(true);
+        $time   = $end - $start;
+        $this->dumpQuery($query, $time);
 
         return $ret;
     }

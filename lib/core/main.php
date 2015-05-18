@@ -71,7 +71,7 @@ final class Core {
 
         foreach ($this->_pathes[$root] as $path) {
             $dir_name  = $path. DS. $class;
-            $file_name = $path. DS. $class. ".". $ext;
+            $file_name = $path. DS. "{$class}.{$ext}";
             if (file_exists($dir_name) and is_dir($dir_name) and empty($this->_classes[$root][$class]["sub_modules"])) {
                 foreach (glob($dir_name. DS. "*") as $sub_file_name) {
                     $sub_file           = pathinfo($sub_file_name);
