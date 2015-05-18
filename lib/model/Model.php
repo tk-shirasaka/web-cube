@@ -7,14 +7,21 @@ class Model extends Common {
 
     private final function _init() {
         $this->config   = Core::Get()->getConfig("Data");
-        $source         = $this->config[$this->uses]["Source"];
+        $uses           = $this->uses;
+        $source         = $this->config[$uses]["Source"];
 
-
-        if (isset($this->config[$this->uses])) {
-            $this->{$source}->setConfig($this->config[$this->uses]);
+        if (__CLASS__ === $this->_name) {
+            $this->{$uses}  = $this->{$source};
+        } else {
+            App::Uses("Model", "Model");
+            $this->{$uses}  = clone $this->{"Model.Model"}->{$source};
         }
 
-        if ($this->{$source}->source_type === "Database" and !$this->{$this->uses}) file_put_contents($this->_sub_dir. DS. $this->uses. ".json", json_encode($this->{$source}->getSchema()));;
+        if (isset($this->config[$uses])) {
+            $this->{$uses}->setConfig($this->config[$uses]);
+        }
+
+        if ($this->{$source}->source_type === "Database" and !$this->{"Schema.{$uses}"}) file_put_contents($this->_sub_dir. DS. "Schema.{$uses}.json", json_encode($this->{$source}->getSchema()));;
     }
 
     public function init() {
