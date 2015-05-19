@@ -61,26 +61,23 @@ class Database extends Common {
         return $format. $this->eoq;
     }
 
-    public function getJoin($table, &$ret = []) {
+    public function getJoin($table) {
+        $comp = [];
 
         if (is_array($table)) {
-            $base_table = array_shift($table);
-            foreach ($table as $ref_table) {
-                $foreigns = array_search_key(["Foreign", "Field"], $this->schema[$ref_table]);
-                for ($i = 0; $i < count($foreigns["Foreign"]); $i++) {
-                    if (!$foreigns["Foreign"][$i]) continue;
-                    $base_field = $foreigns["Foreign"][$i]["Field"];
-                    $ref_field  = $foreigns["Field"][$i];
-                    if ($foreigns["Foreign"][$i]["Table"] === $base_table) {
-                        $ret[] = "{$base_table}.{$base_field} = {$ref_table}.{$ref_field}";
-                    } else {
-                        $this->getJoin([$foreigns["Foreign"][$i]["Table"], $ref_table], $ret);
-                        if ($ret) {
-                            $ref_table  = $foreigns["Foreign"][$i]["Table"];
-                            $ret[]      = "{$base_table}.{$base_field} = {$ref_table}.{$ref_field}";
-                        }
+            foreach ($table as $base_table) {
+                if (array_search($base_table, $comp) !== false) continue;
+                $foreigns   = array_search_key(["Foreign", "Field"], $this->schema[$base_table]);
+                foreach ($foreigns["Foreign"] as $key => $val) {
+                    if (!$val) continue;
+                    $ref_table  = $val["Table"];
+                    $ref_field  = $val["Field"];
+                    $base_field = $foreigns["Field"][$key];
+
+                    if (array_search($ref_table, $table) !== false) {
+                        $ret[]  = "{$base_table}.{$base_field} = {$ref_table}.{$ref_field}";
+                        $comp[] = $ref_table;
                     }
-                    if ($ret) break;
                 }
             }
         }

@@ -23,14 +23,14 @@ class Model extends Common {
             $this->{$source}->setConfig($this);
         }
 
-        if (__CLASS__ === $this->_name) $this->page = $this->getParts();
+        if (__CLASS__ === $this->_name) $this->page = $this->getPage();
     }
 
     public function init() {
         if (!$this->config) $this->_init();
     }
 
-    public function getParts($conditions = []) {
+    public function getPage($conditions = []) {
         if ($conditions) {
             $table  = isset($conditions["Table"]) ? $conditions["Table"] : [];
             $where  = isset($conditions["Where"]) ? $conditions["Where"] : [];
@@ -42,7 +42,7 @@ class Model extends Common {
                 "user" => $this->_params["User"],
             ];
         }
-        if (empty($table)) $table = ["Page", "Parts"];
+        if (empty($table)) $table = ["Page", "Parts", "PartsType"];
 
         return $this->{MST_DB}->find($table, ["Where" => $where]);
     }
