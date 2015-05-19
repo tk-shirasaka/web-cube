@@ -19,3 +19,8 @@ define("WWW_ROOT",  APP. DS. "webroot");
  * System default user
  */
 define("SYS_USER",  "sysadmin");
+
+/**
+ * DB common definition
+ */
+define("MST_DB",  "Master");

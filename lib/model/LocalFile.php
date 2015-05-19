@@ -40,7 +40,7 @@ class LocalFile extends Common {
         return $this->_put($path, $data);
     }
 
-    public function setConfig($config) {
-        $this->_config  = $config;
+    public function setConfig($object) {
+        $this->_config  = $object->config[$object->uses];
     }
 }

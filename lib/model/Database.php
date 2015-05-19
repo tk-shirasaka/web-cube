@@ -4,6 +4,7 @@ class Database extends Common {
     public  $allow_instance = true;
     public  $source_type    = "Database";
     public  $config         = null;
+    public  $schema         = [];
     public  $eoq            = "";
     public  $isUpdate       = false;
     private $_debug_level   = null;
@@ -20,8 +21,16 @@ class Database extends Common {
         if (__CLASS__ !== $this->_name and !$this->_debug_level) $this->_init();
     }
 
-    public function setConfig($config) {
-        $this->config  = $config;
+    public function setConfig(&$object) {
+        $uses           = $object->uses;
+        $this->config   = $object->config[$uses];
+        if (!$object->{"Schema\\{$uses}"}) {
+            $file_path  = $object->_sub_dir. DS. "Schema\\{$uses}.json";
+            $schema     = $this->getSchema();
+            file_put_contents($file_path, json_encode($schema));
+            $object->{"Schema\\{$uses}"} = $schema;
+        }
+        $this->schema   = $object->{"Schema\\{$uses}"};
     }
 
     public function dumpQuery($query, $time) {
@@ -52,6 +61,33 @@ class Database extends Common {
         return $format. $this->eoq;
     }
 
+    public function getJoin($table, &$ret = []) {
+
+        if (is_array($table)) {
+            $base_table = array_shift($table);
+            foreach ($table as $ref_table) {
+                $foreigns = array_search_key(["Foreign", "Field"], $this->schema[$ref_table]);
+                for ($i = 0; $i < count($foreigns["Foreign"]); $i++) {
+                    if (!$foreigns["Foreign"][$i]) continue;
+                    $base_field = $foreigns["Foreign"][$i]["Field"];
+                    $ref_field  = $foreigns["Field"][$i];
+                    if ($foreigns["Foreign"][$i]["Table"] === $base_table) {
+                        $ret[] = "{$base_table}.{$base_field} = {$ref_table}.{$ref_field}";
+                    } else {
+                        $this->getJoin([$foreigns["Foreign"][$i]["Table"], $ref_table], $ret);
+                        if ($ret) {
+                            $ref_table  = $foreigns["Foreign"][$i]["Table"];
+                            $ret[]      = "{$base_table}.{$base_field} = {$ref_table}.{$ref_field}";
+                        }
+                    }
+                    if ($ret) break;
+                }
+            }
+        }
+
+        return implode(" AND ", $ret);
+    }
+
     public function getWhere($where, $join = "AND") {
         $where  = (is_array($where)) ? $where : [$where];
         $ret    = [];
@@ -66,7 +102,8 @@ class Database extends Common {
             } else if (is_array($val)) {
                 $ret[]      = $this->getWhere($val);
             } else {
-                $ret[]      = "{$key} {$relation} {$val}"; 
+                if (is_string($val)) $val = "'$val'";
+                $ret[]      = "{$key} = {$val}"; 
             }
         }
         return implode(" {$join} ", $ret);
@@ -102,11 +139,16 @@ class Database extends Common {
         $uses       = [];
         $options    = [];
         $options[]  = (empty($conditions["Field"])) ? "*" : implode(" ,", $conditions["Field"]);
-        $options[]  = $table;
+        $options[]  = is_array($table) ? implode(", ", $table) : $table;
 
         foreach (array_keys($this->Format["Uses"]["Query"]) as $key) {
             if (isset($conditions[$key])) {
-                $options[]  = ($key === "Where") ? $this->getWhere($conditions[$key]) : $conditions[$key];
+                if ($key === "Where") {
+                    $join       = $this->getJoin($table);
+                    $options[]  = ($join) ? $join. " AND ". $this->getWhere($conditions[$key]) : $this->getWhere($conditions[$key]);
+                } else {
+                    $options[]  = $conditions[$key];
+                }
                 $uses[]     = $key;
             }
         }
