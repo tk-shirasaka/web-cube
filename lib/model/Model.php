@@ -23,16 +23,18 @@ class Model extends Common {
             $this->{$source}->setConfig($this);
         }
 
-        if (__CLASS__ === $this->_name) $this->getParts();
+        if (__CLASS__ === $this->_name) $this->page = $this->getParts();
     }
 
     public function init() {
         if (!$this->config) $this->_init();
     }
 
-    public function getParts() {
-
-        if ($this->_params["Method"] === "POST" and isset($this->_params["Data"]["PageId"])) {
+    public function getParts($conditions = []) {
+        if ($conditions) {
+            $table  = isset($conditions["Table"]) ? $conditions["Table"] : [];
+            $where  = isset($conditions["Where"]) ? $conditions["Where"] : [];
+        } else if ($this->_params["Method"] === "POST" and isset($this->_params["Data"]["PageId"])) {
             $where  = ["id" => $this->_params["Data"]["PageId"]];
         } else {
             $where  = [
@@ -40,6 +42,8 @@ class Model extends Common {
                 "user" => $this->_params["User"],
             ];
         }
-        $this->page = $this->{MST_DB}->find(["Page", "Parts"], ["Where" => $where]);
+        if (empty($table)) $table = ["Page", "Parts"];
+
+        return $this->{MST_DB}->find($table, ["Where" => $where]);
     }
 }

@@ -145,7 +145,8 @@ class Database extends Common {
             if (isset($conditions[$key])) {
                 if ($key === "Where") {
                     $join       = $this->getJoin($table);
-                    $options[]  = ($join) ? $join. " AND ". $this->getWhere($conditions[$key]) : $this->getWhere($conditions[$key]);
+                    $where      = $this->getWhere($conditions[$key]);
+                    $options[]  = ($join and $where) ? "{$join} AND {$where}" : "{$join}{$where}";
                 } else {
                     $options[]  = $conditions[$key];
                 }
