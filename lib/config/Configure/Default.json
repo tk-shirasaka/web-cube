@@ -10,7 +10,7 @@
             "Path"      : "localhost",
             "Database"  : "Master",
             "Port"      : "",
-            "User"      : "web-cube",
+            "User"      : "sysadmin",
             "Password"  : "Password#01",
             "Encode"    : "UTF-8"
         },
