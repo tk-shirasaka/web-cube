@@ -39,7 +39,7 @@
             "Type"          : "datetime",
             "Length"        : "",
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -47,10 +47,10 @@
         {
             "Description"   : "When logining registered user ip, else blank",
             "Field"         : "login_status",
-            "Type"          : "var",
+            "Type"          : "varchar",
             "Length"        : 15,
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -72,7 +72,7 @@
             "Type"          : "date",
             "Length"        : "",
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -121,7 +121,7 @@
             "Type"          : "varchar",
             "Length"        : 80,
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -167,7 +167,7 @@
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -178,7 +178,7 @@
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -309,7 +309,7 @@
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -366,7 +366,7 @@
             "Type"          : "varchar",
             "Length"        : 200,
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -426,7 +426,7 @@
             "Type"          : "int",
             "Length"        : 10,
             "Null"          : true,
-            "Default"       : null,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {

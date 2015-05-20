@@ -9,9 +9,9 @@
             "Constraint": "CONSTRAINT %s",
             "Attr"      : "%s"
         },
-        "Constraint" : {
+        "Constraints" : {
             "Primary"   : "PRIMARY KEY(%s)",
-            "Foreign"   : "FOREIGN KEY(%s) REFERENCE(%s)",
+            "Foreign"   : "FOREIGN KEY(%s) REFERENCE %s (%s)",
             "Unique"    : "UNIQUE (%s)",
             "Check"     : "CHECK(%s)"
         },
@@ -32,9 +32,9 @@
     },
     "Create" : {
         "SQL" : {
-            "Nomal"     : "CREATE TABLE %s (%s)"
+            "Normal"     : "CREATE TABLE %s (%s)"
         },
-        "Uses" : ["Column", "Constraint"]
+        "Uses" : ["Column", "Constraints"]
     },
     "Drop" : {
         "SQL" : {
@@ -52,13 +52,13 @@
             "Enable"    : "ENABLE %s",
             "Disable"   : "DISABLE"
         },
-        "Uses" : ["Column", "Constraint"]
+        "Uses" : ["Column", "Constraints"]
     },
     "Constraint" : {
         "SQL" : {
             "Normal"    : "CONSTRAINT %s{%s}"
         },
-        "Uses" : ["Constraint"]
+        "Uses" : ["Constraints"]
     },
     "Insert" : {
         "SQL" : {

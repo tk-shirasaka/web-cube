@@ -44,7 +44,8 @@ class Database extends Common {
     }
 
     public function getFormat($type, $uses = []) {
-        $formats    = $this->Format[$type]["SQL"];
+        $is_sql     = (isset($this->Format[$type]["SQL"]));
+        $formats    = ($is_sql) ? $this->Format[$type]["SQL"] : $this->Format["Uses"][$type];
         $uses       = (is_array($uses)) ? $uses : [$uses];
         $format     = (isset($formats["Normal"])) ? $formats["Normal"] : "";
 
@@ -58,7 +59,7 @@ class Database extends Common {
             $format .= (isset($formats[$use])) ? $formats[$use] : "";
         }
 
-        return $format. $this->eoq;
+        return ($is_sql) ? "{$format}{$this->eoq}" : $format;
     }
 
     public function getJoin($table) {
@@ -125,6 +126,53 @@ class Database extends Common {
         $this->dumpQuery($query, $time);
 
         return $ret;
+    }
+
+    public function create($table) {
+        $query  = [];
+        $keys   = ["Primary" => [], "Foreign" => [], "Unique" => []];
+        foreach ($this->schema[$table] as $field) {
+            $type       = ["Type"];
+            $options    = [$field["Field"], $field["Type"]];
+            if ($field["Length"]) {
+                $type[]     = "Length";
+                $options[]  = $field["Length"];
+            }
+            if (!$field["Null"]) {
+                $type[]     = "Null";
+            }
+            if ($field["Primary"])  $keys["Primary"][]  = $field["Field"];
+            if ($field["Unique"])   $keys["Unique"][]   = $field["Field"];
+            if ($field["Foreign"])  $keys["Foreign"][]  = ["Field" => $field["Field"], "Referer" => $field["Foreign"]];
+
+            $type[]     = "Default";
+            if ($field["Default"] === "") {
+                array_pop($type);
+            } else if (is_string($field["Default"]) and $field["Default"] !== "NULL") {
+                $options[] = "'". $field["Default"]. "'";
+            } else if ($field["Default"] !== ""){
+                $options[] = $field["Default"];
+            }
+            $query[]    = $this->getQuery("Column", $type, $options);
+        }
+        if ($keys["Primary"])   $query[] = $this->getQuery("Constraints", "Primary", implode(", ", $keys["Primary"]));
+        if ($keys["Unique"])    $query[] = $this->getQuery("Constraints", "Unique", implode(", ", $keys["Unique"]));
+        foreach ($keys["Foreign"] as $val) {
+            $query[]    = $this->getQuery("Constraints", "Foreign", [$val["Field"], $val["Referer"]["Table"], $val["Referer"]["Field"]]);
+        }
+
+        return $this->execute($this->getQuery("Create", "", [$table, implode(", ", $query)]));
+    }
+
+    public function drop($table) {
+        $flg = false;
+        foreach ($this->show("Table") as $saved_table) {
+            $saved_table    = array_values($saved_table)[0];
+            if ($table !== $saved_table) continue;
+            $flg    = true;
+            break;
+        }
+        return ($flg) ? $this->execute($this->getQuery("Drop", "", $table)) : $flg;
     }
 
     public function show($type, $options = []) {
