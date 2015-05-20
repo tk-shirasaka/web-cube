@@ -1,7 +1,18 @@
 {
     "User"  : [
         {
-            "Description"   : "User accout name (id)",
+            "Description"   : "User id",
+            "Field"         : "id",
+            "Type"          : "int",
+            "Length"        : 10,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : true,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Accout name",
             "Field"         : "name",
             "Type"          : "varchar",
             "Length"        : 40,
@@ -112,7 +123,7 @@
             "Unique"        : false,
             "Foreign"       : {
                 "Table" : "User",
-                "Field" : "name"
+                "Field" : "id"
             }
         },
         {
@@ -256,7 +267,7 @@
         {
             "Description"   : "Use col nums (Bootstrap cols [1-12])",
             "Field"         : "cols",
-            "Type"          : "tiny int",
+            "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : "",
@@ -336,7 +347,7 @@
         {
             "Description"   : "Use multi line flg",
             "Field"         : "multiple",
-            "Type"          : "tiny int",
+            "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,
@@ -374,7 +385,7 @@
         {
             "Description"   : "CheckBox/RaddioButton switch [check : 0, raddio : 1]",
             "Field"         : "choice_kbn",
-            "Type"          : "tiny int",
+            "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,
@@ -412,7 +423,7 @@
         {
             "Description"   : "Inner/Outer link switch [inner : 0, outer : 1]",
             "Field"         : "link_kbn",
-            "Type"          : "tiny int",
+            "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,
@@ -453,7 +464,7 @@
         {
             "Description"   : "Action Type [MoveUp/Down : 0, Show/Hide : 1, Fade : 2]",
             "Field"         : "action",
-            "Type"          : "tiny int",
+            "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : "",
@@ -494,7 +505,7 @@
         {
             "Description"   : "Method type [GET : 0, POST : 1]",
             "Field"         : "method",
-            "Type"          : "tiny int",
+            "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
             "Default"       : 0,

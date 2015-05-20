@@ -11,7 +11,7 @@
         },
         "Constraints" : {
             "Primary"   : "PRIMARY KEY(%s)",
-            "Foreign"   : "FOREIGN KEY(%s) REFERENCE %s (%s)",
+            "Foreign"   : "FOREIGN KEY(%s) REFERENCES %s (%s)",
             "Unique"    : "UNIQUE (%s)",
             "Check"     : "CHECK(%s)"
         },
