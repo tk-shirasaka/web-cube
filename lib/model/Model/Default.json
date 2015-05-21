@@ -1,0 +1,210 @@
+{
+    "User"  : [
+        {
+            "id"            : "System",
+            "name"          : "{%s}",
+            "password"      : "{%s}",
+            "language"      : "{%s}",
+            "last_login"    : "{%s}",
+            "login_status"  : "localhost",
+            "open_date"     : "{%s}",
+            "close_date"    : "NULL"
+        }
+    ],
+    "Page"  : [
+        {
+            "id"            : "Default",
+            "name"          : "Default Page",
+            "Field"         : "System",
+            "path"          : "Default"
+        },
+        {
+            "id"            : "Error",
+            "name"          : "Error Page",
+            "Field"         : "System",
+            "path"          : "Error"
+        }
+    ],
+    "PartsType" : [
+        {
+            "id"            : "Block",
+            "name"          : "Block Parts"
+        },
+        {
+            "id"            : "Form",
+            "name"          : "Form Parts"
+        },
+        {
+            "id"            : "Header",
+            "name"          : "Header Parts"
+        },
+        {
+            "id"            : "Input",
+            "name"          : "Input Parts"
+        },
+        {
+            "id"            : "Link",
+            "name"          : "Link Parts"
+        }
+    ],
+    "Parts" : [
+        {
+            "id"            : "Header",
+            "name"          : "Header Parts",
+            "class"         : "NULL",
+            "rows"          : "0x000000000000000F",
+            "cols"          : 12,
+            "title"         : "",
+            "page"          : "Default",
+            "type"          : "Block",
+            "parent"        : "NULL"
+        },
+        {
+            "id"            : "LeftSide",
+            "name"          : "Left Sidebar Parts",
+            "class"         : "NULL",
+            "rows"          : "0x0FFFFFFFFFFFFFF0",
+            "cols"          : 2,
+            "title"         : "",
+            "page"          : "Default",
+            "type"          : "Block",
+            "parent"        : "NULL"
+        },
+        {
+            "id"            : "Main",
+            "name"          : "Main Contents",
+            "class"         : "NULL",
+            "rows"          : "0x0FFFFFFFFFFFFFF0",
+            "cols"          : 8,
+            "title"         : "",
+            "page"          : "Default",
+            "type"          : "Block",
+            "parent"        : "NULL"
+        },
+        {
+            "id"            : "RightSide",
+            "name"          : "Right Sidebar Parts",
+            "class"         : "NULL",
+            "rows"          : "0x0FFFFFFFFFFFFFF0",
+            "cols"          : 2,
+            "title"         : "",
+            "page"          : "Default",
+            "type"          : "Block",
+            "parent"        : "NULL"
+        },
+        {
+            "id"            : "Footer",
+            "name"          : "Footer Parts",
+            "class"         : "NULL",
+            "rows"          : "0xF000000000000000",
+            "cols"          : 12,
+            "title"         : "",
+            "page"          : "Default",
+            "type"          : "Block",
+            "parent"        : "NULL"
+        },
+        {
+            "id"            : "Headline",
+            "name"          : "Headline Parts",
+            "class"         : "NULL",
+            "rows"          : "0x0000000000000001",
+            "cols"          : 12,
+            "title"         : "WebCube",
+            "page"          : "Default",
+            "type"          : "Block",
+            "parent"        : "Header"
+        },
+        {
+            "id"            : "PageTitle",
+            "name"          : "Page Title Parts",
+            "class"         : "NULL",
+            "rows"          : "0x0000000000000002",
+            "cols"          : 12,
+            "title"         : "",
+            "page"          : "Default",
+            "type"          : "Header",
+            "parent"        : "Header"
+        },
+        {
+            "id"            : "LoginForm",
+            "name"          : "Login Form Parts",
+            "class"         : "NULL",
+            "rows"          : "0x0000000000000003",
+            "cols"          : 10,
+            "title"         : "Login",
+            "page"          : "Default",
+            "type"          : "Form",
+            "parent"        : "Main"
+        },
+        {
+            "id"            : "LoginUser",
+            "name"          : "Login User Input Form",
+            "class"         : "NULL",
+            "rows"          : "0x0000000000000001",
+            "cols"          : 8,
+	    "title"         : "{I18n::FORM_USER}",
+            "page"          : "Default",
+            "type"          : "Input",
+            "parent"        : "LoginForm"
+        },
+        {
+            "id"            : "LoginPassword",
+            "name"          : "Login Password Input Form",
+            "class"         : "NULL",
+            "rows"          : "0x0000000000000003",
+            "cols"          : 8,
+            "title"         : "{I18n::FORM_PASSWORD}",
+            "page"          : "Default",
+            "type"          : "Input",
+            "parent"        : "LoginForm"
+        }
+    ],
+    "BlockParts"   : [
+        {
+            "id"            : "Header"
+        },
+        {
+            "id"            : "LeftSide"
+        },
+        {
+            "id"            : "Main"
+        },
+        {
+            "id"            : "RightSide"
+        },
+        {
+            "id"            : "Footer"
+        },
+        {
+            "id"            : "Headline"
+        }
+    ],
+    "HeaderParts"   : [
+        {
+            "id"            : "Header",
+            "contents"      : "Web Cube",
+            "type"          : 1
+        }
+    ],
+    "FormParts"   : [
+        {
+            "id"            : "LoginForm",
+            "method"        : 1,
+            "action"        : "/login",
+            "submit"        : "{I18n::FORM_SUBMIT}",
+            "cancel"        : "NULL"
+        }
+    ],
+    "InputParts"    : [
+        {
+            "id"            : "LoginUser",
+            "multiple"      : false,
+            "password"      : false
+        },
+        {
+            "id"            : "LoginPassword",
+            "multiple"      : false,
+            "password"      : true
+        }
+    ]
+}

@@ -247,8 +247,8 @@
             "Field"         : "class",
             "Type"          : "varchar",
             "Length"        : 20,
-            "Null"          : false,
-            "Default"       : "",
+            "Null"          : true,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -347,6 +347,17 @@
         {
             "Description"   : "Use multi line flg",
             "Field"         : "multiple",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : false,
+            "Default"       : 0,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Use password flg",
+            "Field"         : "password",
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
@@ -523,6 +534,28 @@
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
+        },
+        {
+            "Description"   : "Submit Text",
+            "Field"         : "submit",
+            "Type"          : "varchar",
+            "Length"        : 40,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Cancel Text (If NULL, then not use cancel)",
+            "Field"         : "cancel",
+            "Type"          : "varchar",
+            "Length"        : 40,
+            "Null"          : true,
+            "Default"       : "NULL",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
         }
     ],
     "BlockParts"   : [
@@ -539,6 +572,82 @@
                 "Table" : "Parts",
                 "Field" : "id"
             }
+        }
+    ],
+    "TextParts"   : [
+        {
+            "Description"   : "Parts id",
+            "Field"         : "id",
+            "Type"          : "int",
+            "Length"        : 10,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : true,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "Parts",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Text contents",
+            "Field"         : "contents",
+            "Type"          : "varchar",
+            "Length"        : 2000,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Use multi line flg",
+            "Field"         : "multiple",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : false,
+            "Default"       : 0,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        }
+    ],
+    "HeaderParts"   : [
+        {
+            "Description"   : "Parts id",
+            "Field"         : "id",
+            "Type"          : "int",
+            "Length"        : 10,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : true,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "Parts",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Header Text",
+            "Field"         : "contents",
+            "Type"          : "varchar",
+            "Length"        : 100,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Header tag type [ H1 - H6 ]",
+            "Field"         : "type",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : false,
+            "Default"       : 0,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
         }
     ]
 }
