@@ -5,16 +5,21 @@ final class App extends Common {
 
     public static function Build($alias, $path, $option = []) {
         if (!self::$_core) self::$_core = Core::Get();
-        $core   = self::$_core;
-        $core->setPath($alias, $path, $option);
+        self::$_core->setPath($alias, $path, $option);
     }
 
     public static function Uses($root, $class, $ext = "php") {
         if (!self::$_core) self::$_core = Core::Get();
-        $core   = self::$_core;
         $src    = debug_backtrace(false, 1)[0]["file"];
         $ext    = strtolower($ext);
 
-        $core->setClass($root, $class, $src, $ext);
+        self::$_core->setClass($root, $class, $src, $ext);
+    }
+
+    public static function GetUses($src = null, $target = false) {
+        if (!self::$_core)  self::$_core    = Core::Get();
+        if (!$src)          $src            = debug_backtrace(false, 1)[0]["file"];
+
+        return self::$_core->getUses($src, $target);
     }
 }

@@ -26,13 +26,13 @@ final class Core {
         App::Uses("Utility",    "Parameter");
         App::Uses("Utility",    "I18n");
         App::Uses("Config",     "ErrorHandler");
-        App::Uses("Model",      "Model");
+        App::Uses("Model",      "ModelMaster");
 
         $this->getClass("Config.Configure",     __FILE__);
         $this->getClass("Utility.Parameter",    __FILE__);
         $this->getClass("Utility.I18n",         __FILE__);
         $this->getClass("Config.ErrorHandler",  __FILE__);
-        $this->getClass("Model.Model",          __FILE__);
+        $this->getClass("Model.ModelMaster",    __FILE__);
     }
 
     public function setPropaty($propaty) {
@@ -152,6 +152,24 @@ final class Core {
             $ret = $class["instance"];
         }
         return $ret;
+    }
+
+    public function getUses($src, $target = false) {
+        $ret = [];
+
+        foreach ($this->_classes as $key => $val) {
+            if ($target and $target !== $key) continue;
+            $srch       = array_fill_keys(array_keys($val), ["allow_list", "file"]);
+            $allow      = array_search_key($srch, $this->_classes);
+            $ret[$key]  = [];
+
+            foreach ($allow["allow_list"] as $allow_key => $allow_file) {
+                $allow_file = $allow_file[0];
+                if ($src === $allow_file) $ret[$key][] = implode(".", $this->srchClass($allow["file"][$allow_key]));
+            }
+        }
+        return $ret;
+
     }
 
     public function getParams() {

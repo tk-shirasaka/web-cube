@@ -10,27 +10,26 @@ class Database extends Common {
     private $_debug_level   = null;
 
     private final function _init() {
-        $this->Format;
-        $this->Referer;
-        $this->Format       = (is_array($this->Format)) ? array_merge($this->{"Model.Database"}->Format, $this->Format) : $this->{"Model.Database"}->Format;
-        $this->Referer      = (is_array($this->Referer)) ? array_merge($this->{"Model.Database"}->Referer, $this->Referer) : $this->{"Model.Database"}->Referer;
-        $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
+        if (__CLASS__ !== $this->_name and !$this->_debug_level) {
+            $this->Format       = (is_array($this->Format))     ? array_merge($this->{"Model.Database"}->Format, $this->Format)     : $this->{"Model.Database"}->Format;
+            $this->Referer      = (is_array($this->Referer))    ? array_merge($this->{"Model.Database"}->Referer, $this->Referer)   : $this->{"Model.Database"}->Referer;
+            $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
+        }
     }
 
     public function init() {
-        if (__CLASS__ !== $this->_name and !$this->_debug_level) $this->_init();
+        $this->_init();
     }
 
     public function setConfig(&$object) {
-        $uses           = $object->uses;
-        $this->config   = $object->config[$uses];
-        if (!$object->{"Schema\\{$uses}"}) {
-            $file_path  = $object->_sub_dir. DS. "Schema\\{$uses}.json";
+        $this->config   = $object->config;
+        if (!$object->Schema) {
+            $file_path  = $object->_sub_dir. DS. "Schema.json";
             $schema     = $this->getSchema();
             file_put_contents($file_path, json_encode($schema));
-            $object->{"Schema\\{$uses}"} = $schema;
+            $object->Schema = $schema;
         }
-        $this->schema   = $object->{"Schema\\{$uses}"};
+        $this->schema   = $object->Schema;
     }
 
     public function dumpQuery($query, $time) {

@@ -29,22 +29,24 @@ class Configure extends Common {
     }
 
     private function _init() {
-        $this->_init = true;
-        $Configure  = $this->Default["Configure"];
-        $Data       = $this->Default["Data"];
-        $Routing    = $this->Default["Routing"];
-        if (isset($this->{"Config.Config"}->config))    $Configure  = array_merge($Configure,   $this->{"Config.Config"}->config);
-        if (isset($this->{"Config.Data"}->config))      $Data       = array_merge($Data,        $this->{"Config.Data"}->config);
-        if (isset($this->{"Config.Router"}->config))    $Routing    = array_merge($Routing,     $this->{"Config.Router"}->config);
-
-        if ($this->_chkConfig(compact("Configure", "Data", "Routing"))) {
-            Core::Get()->setPropaty(compact("Configure"));
-            Core::Get()->setPropaty(compact("Data"));
-            Core::Get()->setPropaty(compact("Routing"));
+        if (!$this->_init) {
+            $this->_init = true;
+            $Configure  = $this->Default["Configure"];
+            $Data       = $this->Default["Data"];
+            $Routing    = $this->Default["Routing"];
+            if (isset($this->{"Config.Config"}->config))    $Configure  = array_merge($Configure,   $this->{"Config.Config"}->config);
+            if (isset($this->{"Config.Data"}->config))      $Data       = array_merge($Data,        $this->{"Config.Data"}->config);
+            if (isset($this->{"Config.Router"}->config))    $Routing    = array_merge($Routing,     $this->{"Config.Router"}->config);
+ 
+            if ($this->_chkConfig(compact("Configure", "Data", "Routing"))) {
+                Core::Get()->setPropaty(compact("Configure"));
+                Core::Get()->setPropaty(compact("Data"));
+                Core::Get()->setPropaty(compact("Routing"));
+            }
         }
     }
 
     public function init() {
-        if (!$this->_init) $this->_init();
+        $this->_init();
     }
 }

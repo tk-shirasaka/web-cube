@@ -5,8 +5,10 @@ class ErrorHandler extends Common {
     private $_debug_level   = null;
 
     private function _init() {
-        $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
-        set_error_handler([$this, "Error"]);
+        if (!$this->_debug_level) {
+            $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
+            set_error_handler([$this, "Error"]);
+        }
     }
 
     private function _getMessage($debug, $message, $src, $line, $context) {
@@ -20,7 +22,7 @@ class ErrorHandler extends Common {
         echo "{$message}</br>";
     }
     public function init() {
-        if (!$this->_debug_level) $this->_init();
+        $this->_init();
     }
 
     public function Error($e_no, $e_str, $e_file, $e_line, $e_context) {
