@@ -1,5 +1,6 @@
 <?php
-App::Uses("Model", "Model");
+App::Uses("Model",      "Model");
+App::Uses("Utility",    "I18n");
 
 class ModelMaster extends Model {
     public  $uses           = MST_DB;
@@ -7,20 +8,32 @@ class ModelMaster extends Model {
     public function init() {
         parent::init();
 
-        $tables     = $this->Source->show("Table");
-        $table_key  = (empty($tables)) ? "" : array_keys($tables[0])[0];
-        $tables     = array_search_key($table_key, $tables);
-
-        foreach ($this->Schema as $table => $val) {
-            if (empty($tables) or array_search($table, $tables) === false) {
-                $this->putDefaultData($table);
-            }
-        }
+        if (empty($this->Source->show("Table"))) $this->_putDefault();
         $this->page = $this->getPage();
     }
 
-    public function putDefaultData($table) {
-        $this->Source->create($table);
+    private function _putDefault($table) {
+        foreach ($this->Schema as $table => $val) {
+            $this->Source->create($table);
+            if (empty($this->Default[$table])) continue;
+
+            foreach ($this->Default[$table] as $record) {
+                foreach ($record as $field => $val) {
+                    $val = trim($val);
+                    if ($val === "NULL") {
+                    } else if (substr($val, 0,1) === "{" and substr($val, -1,1) === "}") {
+                        $separator  = "::";
+                        $val        = preg_replace("/\{(.*)\}/", "$1", $val);
+                        $val        = explode($separator, $val);
+                        if (count($val) === 1) {
+                            $val    = constant($val[0]);
+                        } else if (count($val) === 2) {
+                            $val    = $val[0]::${$val[1]};
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function getPage($conditions = []) {

@@ -18,7 +18,10 @@ define("WWW_ROOT",  APP. DS. "webroot");
 /**
  * System default user
  */
-define("SYS_USER",  "sysadmin");
+define("SYS_USER",      "sysadmin");
+define("SYS_PASSWORD",  "password");
+define("SYS_LANGUAGE",  "ja");
+define("ACCESS_TIME",   date("Y-m-d"));
 
 /**
  * DB common definition

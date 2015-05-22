@@ -2,12 +2,12 @@
     "User"  : [
         {
             "id"            : "System",
-            "name"          : "{%s}",
-            "password"      : "{%s}",
-            "language"      : "{%s}",
-            "last_login"    : "{%s}",
+            "name"          : "{SYS_USER}",
+            "password"      : "{SYS_PASSWORD}",
+            "language"      : "{SYS_LANGUAGE}",
+            "last_login"    : "{ACCESS_TIME}",
             "login_status"  : "localhost",
-            "open_date"     : "{%s}",
+            "open_date"     : "{ACCESS_TIME}",
             "close_date"    : "NULL"
         }
     ],
