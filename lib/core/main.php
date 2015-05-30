@@ -99,7 +99,9 @@ final class Core {
         foreach ($this->_classes as $root => $classes) {
             if (!empty($ret)) break;
             foreach ($classes as $class => $val) {
-                if ($val["file"] === $src) {
+                $srch       = array_fill_keys(array_keys($val["sub_modules"]), "file");
+                $sub_files  = array_search_key($srch, $val["sub_modules"]);
+                if ($val["file"] === $src or array_search($src, $sub_files) !== false) {
                     $ret = [
                         "root"  => $root,
                         "class" => $class,
@@ -128,6 +130,16 @@ final class Core {
         $flg    = isset($sub) ?
                   (isset($this->_classes[$root]) and isset($this->_classes[$root][$class]) and isset($this->_classes[$root][$class]["sub_modules"][$sub])) :
                   (isset($this->_classes[$root]) and isset($this->_classes[$root][$class]));
+
+        if (!$flg and isset($sub)) {
+            $uses   = $this->getUses($src, $root);
+            foreach ($uses[$root] as $class => $attr) {
+                if (isset($attr["sub_modules"][$name])) {
+                    $flg    = true;
+                    break;
+                }
+            }
+        }
 
         if ($flg) {
             if (isset($sub)) {
@@ -159,13 +171,12 @@ final class Core {
 
         foreach ($this->_classes as $key => $val) {
             if ($target and $target !== $key) continue;
-            $srch       = array_fill_keys(array_keys($val), ["allow_list", "file"]);
-            $allow      = array_search_key($srch, $this->_classes);
+            $srch       = array_fill_keys(array_keys($val), ["instance", "allow_list", "sub_modules"]);
+            $allows     = array_search_key($srch, $val);
             $ret[$key]  = [];
 
-            foreach ($allow["allow_list"] as $allow_key => $allow_file) {
-                $allow_file = $allow_file[0];
-                if ($src === $allow_file) $ret[$key][] = implode(".", $this->srchClass($allow["file"][$allow_key]));
+            foreach ($allows as $class => $attr) {
+                if (array_search($src, $attr["allow_list"]) !== false) $ret[$key][$class] = $attr;
             }
         }
         return $ret;

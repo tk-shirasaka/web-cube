@@ -1,7 +1,6 @@
 <?php
 
 class I18n extends Common {
-    public  $allow_instance = true;
     private $_locale        = null;
 
     /**

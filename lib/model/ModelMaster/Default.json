@@ -15,36 +15,36 @@
         {
             "id"            : "Default",
             "name"          : "Default Page",
-            "Field"         : "System",
+            "user"         : "System",
             "path"          : "Default"
         },
         {
             "id"            : "Error",
             "name"          : "Error Page",
-            "Field"         : "System",
+            "user"         : "System",
             "path"          : "Error"
         }
     ],
     "PartsType" : [
         {
             "id"            : "Block",
-            "name"          : "Block Parts"
+            "name"          : "{I18n::$Block}"
         },
         {
             "id"            : "Form",
-            "name"          : "Form Parts"
+            "name"          : "{I18n::$Form}"
         },
         {
             "id"            : "Header",
-            "name"          : "Header Parts"
+            "name"          : "{I18n::$Header}"
         },
         {
             "id"            : "Input",
-            "name"          : "Input Parts"
+            "name"          : "{I18n::$Input}"
         },
         {
             "id"            : "Link",
-            "name"          : "Link Parts"
+            "name"          : "{I18n::$Link}"
         }
     ],
     "Parts" : [
@@ -52,8 +52,9 @@
             "id"            : "Header",
             "name"          : "Header Parts",
             "class"         : "NULL",
-            "rows"          : "0x000000000000000F",
+            "rows"          : 1,
             "cols"          : 12,
+            "offset"        : 0,
             "title"         : "",
             "page"          : "Default",
             "type"          : "Block",
@@ -63,8 +64,9 @@
             "id"            : "LeftSide",
             "name"          : "Left Sidebar Parts",
             "class"         : "NULL",
-            "rows"          : "0x0FFFFFFFFFFFFFF0",
+            "rows"          : 2,
             "cols"          : 2,
+            "offset"        : 0,
             "title"         : "",
             "page"          : "Default",
             "type"          : "Block",
@@ -74,8 +76,9 @@
             "id"            : "Main",
             "name"          : "Main Contents",
             "class"         : "NULL",
-            "rows"          : "0x0FFFFFFFFFFFFFF0",
+            "rows"          : 2,
             "cols"          : 8,
+            "offset"        : 2,
             "title"         : "",
             "page"          : "Default",
             "type"          : "Block",
@@ -85,8 +88,9 @@
             "id"            : "RightSide",
             "name"          : "Right Sidebar Parts",
             "class"         : "NULL",
-            "rows"          : "0x0FFFFFFFFFFFFFF0",
+            "rows"          : 2,
             "cols"          : 2,
+            "offset"        : 10,
             "title"         : "",
             "page"          : "Default",
             "type"          : "Block",
@@ -96,8 +100,9 @@
             "id"            : "Footer",
             "name"          : "Footer Parts",
             "class"         : "NULL",
-            "rows"          : "0xF000000000000000",
+            "rows"          : 3,
             "cols"          : 12,
+            "offset"        : 0,
             "title"         : "",
             "page"          : "Default",
             "type"          : "Block",
@@ -107,8 +112,9 @@
             "id"            : "Headline",
             "name"          : "Headline Parts",
             "class"         : "NULL",
-            "rows"          : "0x0000000000000001",
+            "rows"          : 1,
             "cols"          : 12,
+            "offset"        : 0,
             "title"         : "WebCube",
             "page"          : "Default",
             "type"          : "Block",
@@ -118,8 +124,9 @@
             "id"            : "PageTitle",
             "name"          : "Page Title Parts",
             "class"         : "NULL",
-            "rows"          : "0x0000000000000002",
+            "rows"          : 2,
             "cols"          : 12,
+            "offset"        : 0,
             "title"         : "",
             "page"          : "Default",
             "type"          : "Header",
@@ -129,8 +136,9 @@
             "id"            : "LoginForm",
             "name"          : "Login Form Parts",
             "class"         : "NULL",
-            "rows"          : "0x0000000000000003",
+            "rows"          : 1,
             "cols"          : 10,
+            "offset"        : 1,
             "title"         : "Login",
             "page"          : "Default",
             "type"          : "Form",
@@ -140,9 +148,10 @@
             "id"            : "LoginUser",
             "name"          : "Login User Input Form",
             "class"         : "NULL",
-            "rows"          : "0x0000000000000001",
+            "rows"          : 1,
             "cols"          : 8,
-	    "title"         : "{I18n::FORM_USER}",
+            "offset"        : 2,
+	        "title"         : "{I18n::$FORM_USER}",
             "page"          : "Default",
             "type"          : "Input",
             "parent"        : "LoginForm"
@@ -151,9 +160,10 @@
             "id"            : "LoginPassword",
             "name"          : "Login Password Input Form",
             "class"         : "NULL",
-            "rows"          : "0x0000000000000003",
+            "rows"          : 2,
             "cols"          : 8,
-            "title"         : "{I18n::FORM_PASSWORD}",
+            "offset"        : 2,
+            "title"         : "{I18n::$FORM_PASSWORD}",
             "page"          : "Default",
             "type"          : "Input",
             "parent"        : "LoginForm"
@@ -191,7 +201,7 @@
             "id"            : "LoginForm",
             "method"        : 1,
             "action"        : "/login",
-            "submit"        : "{I18n::FORM_SUBMIT}",
+            "submit"        : "{I18n::$FORM_SUBMIT}",
             "cancel"        : "NULL"
         }
     ],

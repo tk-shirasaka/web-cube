@@ -8,35 +8,35 @@ class ModelMaster extends Model {
     public function init() {
         parent::init();
 
-        if (empty($this->Source->show("Table"))) $this->_putDefault();
+        $this->_putDefault();
         $this->page = $this->getPage();
     }
 
-    private function _putDefault($table) {
-        foreach ($this->Schema as $table => $val) {
-            $this->Source->create($table);
-            if (empty($this->Default[$table])) continue;
-
-            foreach ($this->Default[$table] as $record) {
-                foreach ($record as $field => $val) {
-                    $val = trim($val);
-                    if ($val === "NULL") {
-                    } else if (substr($val, 0,1) === "{" and substr($val, -1,1) === "}") {
-                        $separator  = "::";
-                        $val        = preg_replace("/\{(.*)\}/", "$1", $val);
-                        $val        = explode($separator, $val);
-                        if (count($val) === 1) {
-                            $val    = constant($val[0]);
-                        } else if (count($val) === 2) {
-                            $val    = $val[0]::${$val[1]};
+    private function _putDefault() {
+        if (empty($this->Source->show("Table"))) {
+            foreach ($this->Schema as $table => $val) {
+                $this->Source->create($table);
+                if (empty($this->Default[$table])) continue;
+ 
+                foreach ($this->Default[$table] as $record) {
+                    foreach ($record as $field => $val) {
+                        $val = trim($val);
+                        if (substr($val, 0,1) === "{" and substr($val, -1,1) === "}") {
+                            $separator  = "::";
+                            $val        = preg_replace("/\{(.*)\}/", "$1", $val);
+                            if (defined($val)) $val = constant($val);
                         }
+                        $record[$field] = $val;
                     }
+                    $this->Source->save($table, $record);
                 }
             }
         }
     }
 
     public function getPage($conditions = []) {
+        $ret = [];
+
         if ($conditions) {
             $table  = isset($conditions["Table"]) ? $conditions["Table"] : [];
             $where  = isset($conditions["Where"]) ? $conditions["Where"] : [];
@@ -44,12 +44,18 @@ class ModelMaster extends Model {
             $where  = ["id" => $this->_params["Data"]["PageId"]];
         } else {
             $where  = [
-                "path" => implode("/", $this->_params["Path"]),
-                "user" => $this->_params["User"],
+                "path"      => implode("/", $this->_params["Path"]),
+                "user"      => $this->_params["User"],
+                "parent"    => ["Relation" => "IS NOT", "Value" => "NULL"],
             ];
         }
-        if (empty($table)) $table = ["Page", "Parts", "PartsType"];
+        if (empty($table)) $table = ["Page", "Parts"];
 
-        return $this->{MST_DB}->find($table, ["Where" => $where]);
+        $ret = $this->Source->find($table, ["Where" => $where]);
+        if (empty($ret) and $this->_params["User"] === SYS_USER) {
+            $where["user"]  = "System";
+            $ret            = $this->Source->find($table, ["Where" => $where]);
+        }
+        return $ret;
     }
 }

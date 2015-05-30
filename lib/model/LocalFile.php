@@ -1,7 +1,6 @@
 <?php
 
 class LocalFile extends Common {
-    public  $allow_instance = true;
     public  $source_type    = "File";
 
     private function _mkPath($path) {

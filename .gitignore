@@ -2,6 +2,7 @@
 GPATH
 GRTAGS
 GTAGS
+GSYMS
 
 # tmp files
 *.swp

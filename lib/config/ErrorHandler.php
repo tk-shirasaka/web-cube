@@ -1,7 +1,6 @@
 <?php
 
 class ErrorHandler extends Common {
-    public  $allow_instance = true;
     private $_debug_level   = null;
 
     private function _init() {

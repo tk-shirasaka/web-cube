@@ -2,12 +2,11 @@
 App::Uses("Model", "Database");
 
 class MySQL extends Database {
-    public  $allow_instance = true;
     public  $eoq            = ";";
     public  $connect        = null;
     public  $error          = ["connect" => "connect_error", "execute" => "error"];
 
-    public function connect() {
+    protected function _connect() {
         $path       = $this->config["Path"];
         $user       = $this->config["User"];
         $password   = $this->config["Password"];
@@ -21,14 +20,32 @@ class MySQL extends Database {
         }
     }
 
-    public function _execute($query) {
-        $ret    = [];
+    protected function _begin() {
+        if ($this->is_update and $this->connect) {
+            $this->connect->begin_transaction();
+        }
+    }
+
+    protected function _execute($query) {
         $result = $this->connect->query($query);
-        if ($result) {
+        $ret    = $this->is_update ? $result : [];
+        if ($result and !$this->is_update) {
             while ($ret[] = $result->fetch_assoc()) {}
             array_pop($ret);
             $result->free();
         }
         return $ret;
+    }
+
+    protected function _commit($result) {
+        if ($this->is_update and $this->connect) {
+            if ($result)    $this->connect->commit();
+            else            $this->connect->rollback();
+        }
+    }
+
+    protected function _close() {
+        $this->connect->close();
+        $this->is_update = false;
     }
 }

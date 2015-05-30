@@ -2,8 +2,6 @@
 App::Uses("Model", "LocalFile");
 
 class Json extends LocalFile {
-    public  $allow_instance = true;
-
     private function _search($data, $conditions) {
         $ret    = ($conditions) ? [] : $data;
         foreach ($conditions as $key => $val) {

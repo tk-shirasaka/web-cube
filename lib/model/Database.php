@@ -1,18 +1,21 @@
 <?php
 
-class Database extends Common {
-    public  $allow_instance = true;
+abstract class Database extends Common {
     public  $source_type    = "Database";
     public  $config         = null;
     public  $schema         = [];
     public  $eoq            = "";
-    public  $isUpdate       = false;
+    public  $is_update      = false;
     private $_debug_level   = null;
+
+    abstract protected function _connect();
+    abstract protected function _begin();
+    abstract protected function _execute($query);
+    abstract protected function _commit($result);
+    abstract protected function _close();
 
     private final function _init() {
         if (__CLASS__ !== $this->_name and !$this->_debug_level) {
-            $this->Format       = (is_array($this->Format))     ? array_merge($this->{"Model.Database"}->Format, $this->Format)     : $this->{"Model.Database"}->Format;
-            $this->Referer      = (is_array($this->Referer))    ? array_merge($this->{"Model.Database"}->Referer, $this->Referer)   : $this->{"Model.Database"}->Referer;
             $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
         }
     }
@@ -61,6 +64,24 @@ class Database extends Common {
         return ($is_sql) ? "{$format}{$this->eoq}" : $format;
     }
 
+    public function getConditions($table, $conditions) {
+        $options    = [];
+        $uses       = [];
+        foreach (array_keys($this->Format["Uses"]["Query"]) as $key) {
+            if (isset($conditions[$key])) {
+                if ($key === "Where") {
+                    $join       = $this->getJoin($table);
+                    $where      = $this->getWhere($conditions[$key]);
+                    $options[]  = ($join and $where) ? "{$join} AND {$where}" : "{$join}{$where}";
+                } else {
+                    $options[]  = $conditions[$key];
+                }
+                $uses[]     = $key;
+            }
+        }
+        return compact("options", "uses");
+    }
+
     public function getJoin($table) {
         $comp = [];
 
@@ -74,7 +95,7 @@ class Database extends Common {
                     $ref_field  = $val["Field"];
                     $base_field = $foreigns["Field"][$key];
 
-                    if (array_search($ref_table, $table) !== false) {
+                    if (array_search($ref_table, $table) !== false and $base_table !== $ref_table) {
                         $ret[]  = "{$base_table}.{$base_field} = {$ref_table}.{$ref_field}";
                         $comp[] = $ref_table;
                     }
@@ -106,19 +127,15 @@ class Database extends Common {
         return implode(" {$join} ", $ret);
     }
 
-    public function close() {
-        $this->connect->close();
-        $this->isUpdate = false;
-    }
-
     public function execute($query) {
         $start  = microtime(true);
 
-        $this->connect();
+        $this->_connect();
+        $this->_begin();
         $ret    = $this->_execute($query);
 
-        if ($this->isUpdate) $this->_commit();
-        $this->close();
+        $this->_commit($ret);
+        $this->_close();
 
         $end    = microtime(true);
         $time   = $end - $start;
@@ -128,8 +145,10 @@ class Database extends Common {
     }
 
     public function create($table) {
-        $query  = [];
-        $keys   = ["Primary" => [], "Foreign" => [], "Unique" => []];
+        $this->is_update    = true;
+        $query              = [];
+        $keys               = ["Primary" => [], "Foreign" => [], "Unique" => []];
+
         foreach ($this->schema[$table] as $field) {
             $type       = ["Type"];
             $options    = [$field["Field"], $field["Type"]];
@@ -149,7 +168,7 @@ class Database extends Common {
                 array_pop($type);
             } else if (is_string($field["Default"]) and $field["Default"] !== "NULL") {
                 $options[] = "'". $field["Default"]. "'";
-            } else if ($field["Default"] !== ""){
+            } else if ($field["Default"] !== "") {
                 $options[] = $field["Default"];
             }
             $query[]    = $this->getQuery("Column", $type, $options);
@@ -165,13 +184,46 @@ class Database extends Common {
 
     public function drop($table) {
         $flg = false;
+
         foreach ($this->show("Table") as $saved_table) {
             $saved_table    = array_values($saved_table)[0];
             if ($table !== $saved_table) continue;
-            $flg    = true;
+            $flg                = true;
+            $this->is_update    = true;
             break;
         }
         return ($flg) ? $this->execute($this->getQuery("Drop", "", $table)) : $flg;
+    }
+
+    public function save($table, $data, $conditions = "") {
+        $exec_query = true;
+        $insert     = [];
+        $update     = [];
+        foreach ($data as $key => $val) {
+            if (is_int($key) and is_array($val)) {
+                $this->save($table, $val);
+                $is_multi   = false;
+                continue;
+            }
+            if (strtoupper($val) === "NULL") $val = "NULL";
+            else if (is_string($val)) $val = "\"{$val}\"";
+            $insert[$key]   = $val;
+            $update[]       = "{$key} = {$val}";
+        }
+        if ($exec_query and is_array($data)) {
+            $this->is_update    = true;
+            $insert_query       = $this->getQuery("Insert", "", [$table, implode(", ", array_keys($insert)), implode(", ", $insert)]);
+            if ($conditions) {
+                $converted      = $this->getConditions($table, $conditions);
+                $update_query   = $this->getQuery("Update", $converted["uses"], array_merge([$table, implode(", ", $update)], $converted["options"]));
+                $select_query   = $this->getQuery("Select", $converted["uses"], array_merge(["*", $table], $converted["options"]));
+
+                $query = "IF EXISTS({$select_query}) {$update_query} ELSE {$insert_query}";
+            } else {
+                $query = $insert_query;
+            }
+            $this->execute($query);
+        }
     }
 
     public function show($type, $options = []) {
@@ -179,26 +231,13 @@ class Database extends Common {
     }
 
     public function find($table, $conditions = []) {
-        $ret        = [];
-        $uses       = [];
         $options    = [];
         $options[]  = (empty($conditions["Field"])) ? "*" : implode(" ,", $conditions["Field"]);
         $options[]  = is_array($table) ? implode(", ", $table) : $table;
 
-        foreach (array_keys($this->Format["Uses"]["Query"]) as $key) {
-            if (isset($conditions[$key])) {
-                if ($key === "Where") {
-                    $join       = $this->getJoin($table);
-                    $where      = $this->getWhere($conditions[$key]);
-                    $options[]  = ($join and $where) ? "{$join} AND {$where}" : "{$join}{$where}";
-                } else {
-                    $options[]  = $conditions[$key];
-                }
-                $uses[]     = $key;
-            }
-        }
+        $converted  = $this->getConditions($table, $conditions);
 
-        return $this->execute($this->getQuery("Select", $uses, $options));
+        return $this->execute($this->getQuery("Select", $converted["uses"], array_merge($options, $converted["options"])));
     }
 
     public function getSchema() {

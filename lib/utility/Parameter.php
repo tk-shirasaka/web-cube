@@ -1,7 +1,6 @@
 <?php
 
 class Parameter extends Common {
-    public  $allow_instance = true;
     private $_config        = null;
 
     private function _init() {

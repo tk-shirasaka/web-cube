@@ -17,13 +17,14 @@ function array_search_key($needle, $haystack, &$ret = []) {
                     $ret[$val] = array_search_key($val, $haystack);
                 }
             } else if (isset($haystack[$key])) {
-                array_search_key($val, $haystack[$key], $ret);
+                $ret[$key] = array_search_key($val, $haystack[$key]);
             } else if (array_search($key, $haystack) !== false) {
                 array_search_key($val, $haystack[$key], $ret);
             }
         }
     } else if (isset($haystack[$needle])) {
-        $ret[] = $haystack[$needle];
+        if (empty($ret))    $ret    =  $haystack[$needle];
+        else                $ret[]  = $haystack[$needle];
     } else {
         foreach ($haystack as $val) {
             if (is_array($val) and isset($val[$needle])) $ret[] = $val[$needle];

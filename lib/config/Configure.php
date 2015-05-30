@@ -5,7 +5,6 @@ App::Uses("Config", "Router");
 
 class Configure extends Common {
 
-    public  $allow_instance = true;
     private $_init          = false;
 
     private function _chkConfig($config) {

@@ -1,15 +1,13 @@
 <?php
 
-class Common {
-    public      $allow_instance = false;
+abstract class Common {
     private     $_exists        = false;
     protected   $_name          = null;
     protected   $_file          = null;
     protected   $_sub_dir       = null;
     protected   $_params        = [];
 
-    private final function __construct() {
-        $info           = new ReflectionClass($this);
+    private final function __construct($info) {
         $name           = $info->name;
         $this->_name    = $name;
         $this->_file    = $info->getFileName();
@@ -23,14 +21,23 @@ class Common {
     }
 
     public static final function Get() {
+        $ret        = true;
         $class      = get_called_class();
-        $instance   = new $class;
-        return $instance->chkInstance() ? $instance : false;
+        $info       = new ReflectionClass($class);
+
+        if ($info->isAbstract())            $ret = false;
+        if ($ret and $info->isInterface())  $ret = false;
+        if ($ret) {
+            $instance   = new $class($info);
+            $ret        = $instance->chkInstance();
+        }
+        if ($ret) $ret = $instance;
+
+        return $ret;
     }
 
     public final function chkInstance() {
-        $name   = $this->_name;
-        $ret    = ($this->allow_instance and !$this->_exists);
+        $ret    = (!$this->_exists);
         if ($ret) $this->_exists = true;
 
         return $ret;
