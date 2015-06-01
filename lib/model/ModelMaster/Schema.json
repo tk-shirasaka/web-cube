@@ -302,7 +302,7 @@
             "Field"         : "page",
             "Type"          : "char",
             "Length"        : 30,
-            "Null"          : false,
+            "Null"          : true,
             "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,

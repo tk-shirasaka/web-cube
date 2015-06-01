@@ -8,6 +8,7 @@ final class Core {
     private $_data          = [];
     private $_routing       = [];
     private $_params        = [];
+    private $_page          = [];
 
     private function __construct() {
         self::$_this =& $this;
@@ -27,12 +28,14 @@ final class Core {
         App::Uses("Utility",    "I18n");
         App::Uses("Config",     "ErrorHandler");
         App::Uses("Model",      "ModelMaster");
+        App::Uses("View",       "View");
 
         $this->getClass("Config.Configure",     __FILE__);
         $this->getClass("Utility.Parameter",    __FILE__);
         $this->getClass("Utility.I18n",         __FILE__);
         $this->getClass("Config.ErrorHandler",  __FILE__);
         $this->getClass("Model.ModelMaster",    __FILE__);
+        $this->getClass("View.View",            __FILE__);
     }
 
     public function setPropaty($propaty) {
@@ -185,6 +188,10 @@ final class Core {
 
     public function getParams() {
         return $this->_params;
+    }
+
+    public function getPage() {
+        return $this->_page;
     }
 
     public function getConfig($source = false) {

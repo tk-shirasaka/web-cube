@@ -5,6 +5,7 @@ abstract class Database extends Common {
     public  $config         = null;
     public  $schema         = [];
     public  $eoq            = "";
+    public  $separator      = ".";
     public  $is_update      = false;
     private $_debug_level   = null;
 
@@ -28,7 +29,7 @@ abstract class Database extends Common {
         $this->config   = $object->config;
         if (!$object->Schema) {
             $file_path  = $object->_sub_dir. DS. "Schema.json";
-            $schema     = $this->getSchema();
+            $schema     = $this->_getSchema();
             file_put_contents($file_path, json_encode($schema));
             $object->Schema = $schema;
         }
@@ -39,13 +40,62 @@ abstract class Database extends Common {
         if ($this->_debug_level) echo "{$query} : {$time}</br>";
     }
 
-    public function getQuery($type, $uses = [], $options = []) {
+    private function _getSchema() {
+        $ret        = [];
+        $ref        = ["Src" => $this->Referer["Src"], "Dst" => $this->Referer["Dst"]];
+        $foreign    = array_search_key(array_merge(array_values($ref["Src"]), array_values($ref["Dst"])), $this->find($this->Referer["Table"], $this->Referer));
+
+        foreach ($this->show("Table") as $table) {
+            $table          = $table[array_keys($table)[0]];
+            $columns        = $this->show("Column", $table);
+            foreach ($columns as $key => $val) {
+                $type                       = explode("(", $columns[$key]["Type"]);
+                $type[1]                    = (count($type) > 1) ? (int) str_replace(")", "", $type[1]) : null;
+                $columns[$key]["Type"]      = $type[0];
+                $columns[$key]["Length"]    = $type[1];
+                $columns[$key]["Null"]      = ($columns[$key]["Null"] === "YES");
+                $columns[$key]["Primary"]   = ($columns[$key]["Key"] === "PRI");
+                $columns[$key]["Foreign"]   = false;
+                $columns[$key]["Unique"]    = ($columns[$key]["Key"] === "UNI");
+                unset($columns[$key]["Key"]);
+            }
+            for ($i = 0; $i < count($foreign[$ref["Src"]["Table"]]); $i++) {
+                $s_table    = $foreign[$ref["Src"]["Table"]][$i];
+                $s_column   = $foreign[$ref["Src"]["Column"]][$i];
+                $d_table    = $foreign[$ref["Dst"]["Table"]][$i];
+                $d_column   = $foreign[$ref["Dst"]["Column"]][$i];
+
+                if ($table === $s_table and ($index = array_search($s_column, array_search_key("Field", $columns)))) $columns[$index]["Foreign"] = ["Table" => $d_table, "Field" => $d_column];
+            }
+            $ret[$table]    = $columns;
+        }
+        return $ret;
+    }
+
+    private function _getFields($tables, $fields = []) {
+        $ret = [];
+        if (!is_array($tables)) $tables = [$tables];
+
+        foreach ($tables as $table) {
+            if (empty($this->schema[$table])) continue;
+            foreach (array_search_key("Field", $this->schema[$table]) as $field) {
+                $cnv_field  = (count($tables) === 1) ? $field : "{$table}.{$field}";
+                $flg        = ($fields and array_search("{$table}.{$field}", $fields) === false);
+                if ($flg) $flg = ($fields and array_search($cnv_field, $fields) === false);
+                if ($flg) continue;
+                $ret[]      = "{$cnv_field} AS {$table}{$this->separator}{$field}";
+            }
+        }
+        return (empty($ret)) ? "" : implode(", ", $ret);
+    }
+
+    private function _getQuery($type, $uses = [], $options = []) {
         $options    = (is_array($options)) ? $options : [$options];
-        $format = $this->getFormat($type, $uses);
+        $format = $this->_getFormat($type, $uses);
         return ($options) ? vsprintf($format, $options) : $format;
     }
 
-    public function getFormat($type, $uses = []) {
+    private function _getFormat($type, $uses = []) {
         $is_sql     = (isset($this->Format[$type]["SQL"]));
         $formats    = ($is_sql) ? $this->Format[$type]["SQL"] : $this->Format["Uses"][$type];
         $uses       = (is_array($uses)) ? $uses : [$uses];
@@ -64,16 +114,21 @@ abstract class Database extends Common {
         return ($is_sql) ? "{$format}{$this->eoq}" : $format;
     }
 
-    public function getConditions($table, $conditions) {
+    private function _getConditions($table, $conditions) {
         $options    = [];
         $uses       = [];
         foreach (array_keys($this->Format["Uses"]["Query"]) as $key) {
             if (isset($conditions[$key])) {
-                if ($key === "Where") {
-                    $join       = $this->getJoin($table);
-                    $where      = $this->getWhere($conditions[$key]);
+                switch ($key) {
+                case "Where" :
+                    $join       = $this->_getJoin($table);
+                    $where      = $this->_getWhere($conditions[$key]);
                     $options[]  = ($join and $where) ? "{$join} AND {$where}" : "{$join}{$where}";
-                } else {
+                    break;
+                case "Sort" :
+                    $options[]  = $this->_getSort($conditions[$key]);
+                    break;
+                default :
                     $options[]  = $conditions[$key];
                 }
                 $uses[]     = $key;
@@ -82,8 +137,9 @@ abstract class Database extends Common {
         return compact("options", "uses");
     }
 
-    public function getJoin($table) {
-        $comp = [];
+    private function _getJoin($table) {
+        $comp   = [];
+        $ret    = [];
 
         if (is_array($table)) {
             foreach ($table as $base_table) {
@@ -103,22 +159,38 @@ abstract class Database extends Common {
             }
         }
 
-        return implode(" AND ", $ret);
+        return ($ret) ? implode(" AND ", $ret) : "";
     }
 
-    public function getWhere($where, $join = "AND") {
+    private function _getSort($sort) {
+        $sort   = (is_array($sort)) ? ["ASC" => $sort] : $sort;
+        $ret    = [];
+
+        foreach ($sort as $key => $val) {
+            if ($key === "ASC" or $key === "DESC") {
+                $val    = (is_array($val)) ? implode(", ", $val) : $val;
+                $ret[]  = "{$val} {$key}";
+            } else {
+                $ret[]  = "{$val} ASC";
+            }
+        }
+
+        return implode(", ", $ret);
+    }
+
+    private function _getWhere($where, $join = "AND") {
         $where  = (is_array($where)) ? $where : [$where];
         $ret    = [];
 
         foreach ($where as $key => $val) {
             if ($key === "And" or $key === "Or") {
-                $ret        = $this->getWhere($val, strtoupper($key));
+                $ret        = $this->_getWhere($val, strtoupper($key));
             } else if (isset($val["Relation"]) and isset($val["Value"])) {
                 $relation   = $val["Relation"];
                 $value      = $val["Value"];
                 $ret[]      = "{$key} {$relation} {$value}"; 
             } else if (is_array($val)) {
-                $ret[]      = $this->getWhere($val);
+                $ret[]      = $this->_getWhere($val);
             } else {
                 if (is_string($val)) $val = "'$val'";
                 $ret[]      = "{$key} = {$val}"; 
@@ -171,15 +243,15 @@ abstract class Database extends Common {
             } else if ($field["Default"] !== "") {
                 $options[] = $field["Default"];
             }
-            $query[]    = $this->getQuery("Column", $type, $options);
+            $query[]    = $this->_getQuery("Column", $type, $options);
         }
-        if ($keys["Primary"])   $query[] = $this->getQuery("Constraints", "Primary", implode(", ", $keys["Primary"]));
-        if ($keys["Unique"])    $query[] = $this->getQuery("Constraints", "Unique", implode(", ", $keys["Unique"]));
+        if ($keys["Primary"])   $query[] = $this->_getQuery("Constraints", "Primary", implode(", ", $keys["Primary"]));
+        if ($keys["Unique"])    $query[] = $this->_getQuery("Constraints", "Unique", implode(", ", $keys["Unique"]));
         foreach ($keys["Foreign"] as $val) {
-            $query[]    = $this->getQuery("Constraints", "Foreign", [$val["Field"], $val["Referer"]["Table"], $val["Referer"]["Field"]]);
+            $query[]    = $this->_getQuery("Constraints", "Foreign", [$val["Field"], $val["Referer"]["Table"], $val["Referer"]["Field"]]);
         }
 
-        return $this->execute($this->getQuery("Create", "", [$table, implode(", ", $query)]));
+        return $this->execute($this->_getQuery("Create", "", [$table, implode(", ", $query)]));
     }
 
     public function drop($table) {
@@ -192,7 +264,7 @@ abstract class Database extends Common {
             $this->is_update    = true;
             break;
         }
-        return ($flg) ? $this->execute($this->getQuery("Drop", "", $table)) : $flg;
+        return ($flg) ? $this->execute($this->_getQuery("Drop", "", $table)) : $flg;
     }
 
     public function save($table, $data, $conditions = "") {
@@ -212,11 +284,11 @@ abstract class Database extends Common {
         }
         if ($exec_query and is_array($data)) {
             $this->is_update    = true;
-            $insert_query       = $this->getQuery("Insert", "", [$table, implode(", ", array_keys($insert)), implode(", ", $insert)]);
+            $insert_query       = $this->_getQuery("Insert", "", [$table, implode(", ", array_keys($insert)), implode(", ", $insert)]);
             if ($conditions) {
-                $converted      = $this->getConditions($table, $conditions);
-                $update_query   = $this->getQuery("Update", $converted["uses"], array_merge([$table, implode(", ", $update)], $converted["options"]));
-                $select_query   = $this->getQuery("Select", $converted["uses"], array_merge(["*", $table], $converted["options"]));
+                $converted      = $this->_getConditions($table, $conditions);
+                $update_query   = $this->_getQuery("Update", $converted["uses"], array_merge([$table, implode(", ", $update)], $converted["options"]));
+                $select_query   = $this->_getQuery("Select", $converted["uses"], array_merge(["*", $table], $converted["options"]));
 
                 $query = "IF EXISTS({$select_query}) {$update_query} ELSE {$insert_query}";
             } else {
@@ -227,47 +299,24 @@ abstract class Database extends Common {
     }
 
     public function show($type, $options = []) {
-        return $this->execute($this->getQuery("Show", $type, $options));
+        return $this->execute($this->_getQuery("Show", $type, $options));
     }
 
     public function find($table, $conditions = []) {
-        $options    = [];
-        $options[]  = (empty($conditions["Field"])) ? "*" : implode(" ,", $conditions["Field"]);
-        $options[]  = is_array($table) ? implode(", ", $table) : $table;
-
-        $converted  = $this->getConditions($table, $conditions);
-
-        return $this->execute($this->getQuery("Select", $converted["uses"], array_merge($options, $converted["options"])));
-    }
-
-    public function getSchema() {
         $ret        = [];
-        $ref        = ["Src" => $this->Referer["Src"], "Dst" => $this->Referer["Dst"]];
-        $foreign    = array_search_key(array_merge(array_values($ref["Src"]), array_values($ref["Dst"])), $this->find($this->Referer["Table"], $this->Referer));
+        $options    = [];
+        $options[]  = (empty($conditions["Field"])) ? $this->_getFields($table) : $this->_getFields($table, $conditions["Field"]);
+        $options[]  = is_array($table) ? implode(", ", $table) : $table;
+        $converted  = $this->_getConditions($table, $conditions);
+        $result     = $this->execute($this->_getQuery("Select", $converted["uses"], array_merge($options, $converted["options"])));
 
-        foreach ($this->show("Table") as $table) {
-            $table          = $table[array_keys($table)[0]];
-            $columns        = $this->show("Column", $table);
-            foreach ($columns as $key => $val) {
-                $type                       = explode("(", $columns[$key]["Type"]);
-                $type[1]                    = (count($type) > 1) ? (int) str_replace(")", "", $type[1]) : null;
-                $columns[$key]["Type"]      = $type[0];
-                $columns[$key]["Length"]    = $type[1];
-                $columns[$key]["Null"]      = ($columns[$key]["Null"] === "YES");
-                $columns[$key]["Primary"]   = ($columns[$key]["Key"] === "PRI");
-                $columns[$key]["Foreign"]   = false;
-                $columns[$key]["Unique"]    = ($columns[$key]["Key"] === "UNI");
-                unset($columns[$key]["Key"]);
+        foreach ($result as $record) {
+            $ret_record = [];
+            foreach ($record as $key => $val) {
+                list($table, $field)        = explode($this->separator, $key);
+                $ret_record[$table][$field] = $val;
             }
-            for ($i = 0; $i < count($foreign[$ref["Src"]["Table"]]); $i++) {
-                $s_table    = $foreign[$ref["Src"]["Table"]][$i];
-                $s_column   = $foreign[$ref["Src"]["Column"]][$i];
-                $d_table    = $foreign[$ref["Dst"]["Table"]][$i];
-                $d_column   = $foreign[$ref["Dst"]["Column"]][$i];
-
-                if ($table === $s_table and ($index = array_search($s_column, array_search_key("Field", $columns)))) $columns[$index]["Foreign"] = ["Table" => $d_table, "Field" => $d_column];
-            }
-            $ret[$table]    = $columns;
+            $ret[] = $ret_record;
         }
         return $ret;
     }

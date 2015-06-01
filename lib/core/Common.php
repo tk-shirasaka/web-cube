@@ -6,6 +6,7 @@ abstract class Common {
     protected   $_file          = null;
     protected   $_sub_dir       = null;
     protected   $_params        = [];
+    protected   $_page          = [];
 
     private final function __construct($info) {
         $name           = $info->name;
@@ -13,6 +14,7 @@ abstract class Common {
         $this->_file    = $info->getFileName();
         $this->_sub_dir = dirname($this->_file). DS. str_replace(".php", "", basename($this->_file));
         $this->_params  = Core::Get()->getParams();
+        $this->_page    = Core::Get()->getPage();
     }
 
     public final function __get($name) {

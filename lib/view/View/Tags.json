@@ -1,0 +1,62 @@
+{
+    "Html" : {
+        "Start" : "<html>",
+        "End"   : "</html>"
+    },
+    "Head" : {
+        "Start" : "<head>",
+        "End"   : "</head>"
+    },
+    "Body" : {
+        "Start" : "<body>",
+        "End"   : "</body>"
+    },
+    "Meta" : {
+        "Start" : "<meta>",
+        "End"   : "</meta>"
+    },
+    "Title" : {
+        "Start" : "<title>",
+        "End"   : "</title>"
+    },
+    "H1" : {
+        "Start" : "<h1>",
+        "End"   : "</h1>"
+    },
+    "H2" : {
+        "Start" : "<h2>",
+        "End"   : "</h2>"
+    },
+    "H3" : {
+        "Start" : "<h3>",
+        "End"   : "</h3>"
+    },
+    "H4" : {
+        "Start" : "<h4>",
+        "End"   : "</h4>"
+    },
+    "H5" : {
+        "Start" : "<h5>",
+        "End"   : "</h5>"
+    },
+    "H6" : {
+        "Start" : "<h6>",
+        "End"   : "</h6>"
+    },
+    "Label" : {
+        "Start" : "<label>",
+        "End"   : "</label>"
+    },
+    "Input" : {
+        "Start" : "<input>",
+        "End"   : "</input>"
+    },
+    "Block" : {
+        "Start" : "<div %s>",
+        "End"   : "</div>"
+    },
+    "Form" : {
+        "Start" : "<form %s>",
+        "End"   : "</form>"
+    }
+}

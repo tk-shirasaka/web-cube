@@ -116,7 +116,7 @@
             "cols"          : 12,
             "offset"        : 0,
             "title"         : "WebCube",
-            "page"          : "Default",
+            "page"          : "NULL",
             "type"          : "Block",
             "parent"        : "Header"
         },
@@ -128,7 +128,7 @@
             "cols"          : 12,
             "offset"        : 0,
             "title"         : "",
-            "page"          : "Default",
+            "page"          : "NULL",
             "type"          : "Header",
             "parent"        : "Header"
         },
@@ -140,7 +140,7 @@
             "cols"          : 10,
             "offset"        : 1,
             "title"         : "Login",
-            "page"          : "Default",
+            "page"          : "NULL",
             "type"          : "Form",
             "parent"        : "Main"
         },
@@ -151,8 +151,8 @@
             "rows"          : 1,
             "cols"          : 8,
             "offset"        : 2,
-	        "title"         : "{I18n::$FORM_USER}",
-            "page"          : "Default",
+            "title"         : "{I18n::$FORM_USER}",
+            "page"          : "NULL",
             "type"          : "Input",
             "parent"        : "LoginForm"
         },
@@ -164,9 +164,21 @@
             "cols"          : 8,
             "offset"        : 2,
             "title"         : "{I18n::$FORM_PASSWORD}",
-            "page"          : "Default",
+            "page"          : "NULL",
             "type"          : "Input",
             "parent"        : "LoginForm"
+        },
+        {
+            "id"            : "Error",
+            "name"          : "Error Message",
+            "class"         : "NULL",
+            "rows"          : 2,
+            "cols"          : 8,
+            "offset"        : 2,
+            "title"         : "{I18n::$PAGE_ERROR}",
+            "page"          : "Error",
+            "type"          : "Text",
+            "parent"        : "NULL"
         }
     ],
     "BlockParts"   : [
@@ -191,7 +203,7 @@
     ],
     "HeaderParts"   : [
         {
-            "id"            : "Header",
+            "id"            : "PageTitle",
             "contents"      : "Web Cube",
             "type"          : 1
         }
@@ -215,6 +227,13 @@
             "id"            : "LoginPassword",
             "multiple"      : false,
             "password"      : true
+        }
+    ],
+    "TextParts"   : [
+        {
+            "id"            : "Error",
+            "contents"      : "{I18n::$PAGE_ERROR_MSG}",
+            "multiple"      : true
         }
     ]
 }

@@ -3,6 +3,7 @@ App::Uses("Model", "Database");
 
 class MySQL extends Database {
     public  $eoq            = ";";
+    public  $separator      = "__";
     public  $connect        = null;
     public  $error          = ["connect" => "connect_error", "execute" => "error"];
 

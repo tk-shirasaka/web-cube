@@ -9,7 +9,7 @@ class ModelMaster extends Model {
         parent::init();
 
         $this->_putDefault();
-        $this->page = $this->getPage();
+        Core::Get()->setPropaty(["page" => $this->getPage()]);
     }
 
     private function _putDefault() {
@@ -34,27 +34,56 @@ class ModelMaster extends Model {
         }
     }
 
+    private function _getChild($parent) {
+        $parts  = $parent["Parts"]["id"];
+        $ret    = $this->Source->find("Parts", ["Where" => ["parent" => $parts]]);
+
+        if ($ret) {
+            foreach ($ret as $key => $parent) {
+                $table  = $parent["Parts"]["type"]. "Parts";
+                $child  = $this->_getChild($parent);
+                $attr   = $this->Source->find($table, ["Where" => ["id" => $parent["Parts"]["id"]]]);
+                if ($child) $ret[$key]["Child"] = $child;
+                if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
+            }
+        }
+        return $ret;
+    }
+
     public function getPage($conditions = []) {
-        $ret = [];
+        $table  = ["Page", "Parts"];
+        $sort   = ["rows", "offset"];
+        $where  = [
+            "path"      => implode("/", $this->_params["Path"]),
+            "user"      => $this->_params["User"],
+        ];
 
         if ($conditions) {
-            $table  = isset($conditions["Table"]) ? $conditions["Table"] : [];
-            $where  = isset($conditions["Where"]) ? $conditions["Where"] : [];
+            $where  = isset($conditions["Where"]) ? $conditions["Where"] : $where;
         } else if ($this->_params["Method"] === "POST" and isset($this->_params["Data"]["PageId"])) {
             $where  = ["id" => $this->_params["Data"]["PageId"]];
-        } else {
-            $where  = [
-                "path"      => implode("/", $this->_params["Path"]),
-                "user"      => $this->_params["User"],
-                "parent"    => ["Relation" => "IS NOT", "Value" => "NULL"],
-            ];
         }
-        if (empty($table)) $table = ["Page", "Parts"];
 
-        $ret = $this->Source->find($table, ["Where" => $where]);
+        $ret    = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
         if (empty($ret) and $this->_params["User"] === SYS_USER) {
             $where["user"]  = "System";
-            $ret            = $this->Source->find($table, ["Where" => $where]);
+            $where["path"]  = "Default";
+            $ret            = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
+        }
+        if (empty($ret)) {
+            $where["user"]  = "System";
+            $where["path"]  = "Error";
+            $ret            = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
+        }
+        if (!empty($ret)) {
+            foreach($ret as $key => $parent) {
+                $table  = $parent["Parts"]["type"]. "Parts";
+                $child  = $this->_getChild($parent);
+                $where  = ["id" => $parent["Parts"]["id"]];
+                $attr   = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
+                if ($child) $ret[$key]["Child"] = $child;
+                if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
+            }
         }
         return $ret;
     }
