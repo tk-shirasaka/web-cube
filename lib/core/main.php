@@ -162,6 +162,9 @@ final class Core {
                 case "json" :
                     $class["instance"] = json_decode(file_get_contents($class["file"]), true);
                     break;
+                case "tpl" :
+                    $class["instance"] = str_replace("\"", "\\\"", file_get_contents($class["file"]));
+                    break;
                 }
             }
             $ret = $class["instance"];
