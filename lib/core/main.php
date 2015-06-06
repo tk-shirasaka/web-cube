@@ -9,6 +9,7 @@ final class Core {
     private $_routing       = [];
     private $_params        = [];
     private $_page          = [];
+    private $_query         = [];
 
     private function __construct() {
         self::$_this =& $this;
@@ -27,23 +28,28 @@ final class Core {
         App::Uses("Utility",    "Parameter");
         App::Uses("Utility",    "I18n");
         App::Uses("Config",     "ErrorHandler");
-        App::Uses("Model",      "ModelMaster");
+        App::Uses("Model",      "Master");
         App::Uses("View",       "View");
 
         $this->getClass("Config.Configure",     __FILE__);
         $this->getClass("Utility.Parameter",    __FILE__);
         $this->getClass("Utility.I18n",         __FILE__);
         $this->getClass("Config.ErrorHandler",  __FILE__);
-        $this->getClass("Model.ModelMaster",    __FILE__);
+        $this->getClass("Model.Master",         __FILE__);
         $this->getClass("View.View",            __FILE__);
     }
 
-    public function setPropaty($propaty) {
+    public function setPropaty($propaty, $append = false) {
         foreach ($propaty as $key => $val) {
             $key            = "_". strtolower($key);
 
             if (!isset($this->{$key})) continue;
-            $this->{$key}   = $val;
+            if ($append) {
+                if (is_array($this->{$key}))    $this->{$key}[] = $val;
+                if (is_string($this->{$key}))   $this->{$key}  .= $val;
+            } else {
+                $this->{$key}   = $val;
+            }
         }
     }
 
@@ -195,6 +201,10 @@ final class Core {
 
     public function getPage() {
         return $this->_page;
+    }
+
+    public function getQuery() {
+        return $this->_query;
     }
 
     public function getConfig($source = false) {

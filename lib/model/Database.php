@@ -36,8 +36,11 @@ abstract class Database extends Common {
         $this->schema   = $object->Schema;
     }
 
-    public function dumpQuery($query, $time) {
-        if ($this->_debug_level) echo "{$query} : {$time}</br>";
+    public function dumpQuery($result, $query, $time) {
+        if ($this->_debug_level) {
+            $class  = ($result) ? "success" : "danger";
+            Core::Get()->setPropaty(["query" => compact("query", "class", "time")], true);
+        }
     }
 
     private function _getSchema() {
@@ -211,7 +214,7 @@ abstract class Database extends Common {
 
         $end    = microtime(true);
         $time   = $end - $start;
-        $this->dumpQuery($query, $time);
+        $this->dumpQuery($ret, $query, $time);
 
         return $ret;
     }
