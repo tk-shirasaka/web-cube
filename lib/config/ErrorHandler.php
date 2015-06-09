@@ -14,11 +14,11 @@ class ErrorHandler extends Common {
         $error  = $this->Error["level"][$debug];
         $date   = date(I18n::$TIME_FORMAT);
         $serial = serialize($context);
+        Core::Get()->setPropaty(["error" => ["Level" => $error, "Place" => "{$src} : {$line}", "Message" => $message, "Context" => $serial]], true);
         return sprintf($this->Error["format"], $date, $error, $src, $line, $message, $serial);
     }
 
     private function _putMessage($message) {
-        echo "{$message}</br>";
     }
     public function init() {
         $this->_init();

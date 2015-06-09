@@ -10,6 +10,7 @@ final class Core {
     private $_params        = [];
     private $_page          = [];
     private $_query         = [];
+    private $_error         = [];
     private $_running       = null;
 
     private function __construct() {
@@ -37,6 +38,15 @@ final class Core {
         $this->getClass("View.View",            __FILE__);
     }
 
+    public function flushPropaty($key) {
+        $key    = "_". strtolower($key);
+
+        if (is_array($this->{$key}))    $this->{$key}   = [];
+        if (is_string($this->{$key}))   $this->{$key}   = "";
+        if ($this->{$key} === false)    $this->{$key}   = false;
+        if ($this->{$key} === null)     $this->{$key}   = null;
+    }
+
     public function setPropaty($propaty, $append = false) {
         foreach ($propaty as $key => $val) {
             $key            = "_". strtolower($key);
@@ -44,7 +54,7 @@ final class Core {
             if (!isset($this->{$key})) continue;
             if ($append) {
                 if (is_array($this->{$key}))    $this->{$key}[] = $val;
-                if (is_string($this->{$key}))   $this->{$key}  .= $val;
+                if (is_string($this->{$key}))   $this->{$key}  .= "\\{$val}";
             } else {
                 $this->{$key}   = $val;
             }
@@ -236,6 +246,10 @@ final class Core {
 
     public function getQuery() {
         return $this->_query;
+    }
+
+    public function getError() {
+        return $this->_error;
     }
 
     public function getConfig($source = "") {

@@ -1,8 +1,10 @@
 <?php
+App::Uses("View", "Html");
+
 class View extends Common {
     protected   $type   = "Html";
 
     public function init() {
-        $this->{$this->type}->view();
+        $this->{"View.{$this->type}"}->view();
     }
 }

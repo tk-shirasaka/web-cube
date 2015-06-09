@@ -82,6 +82,23 @@ class Html extends Viewer {
         return $ret;
     }
 
+    private function _mergeError() {
+        if (Core::Get()->getConfig("Configure.Debug")) {
+            $error              = Core::Get()->getError();
+            $thead              = ["Parts" => ["class" => "", "type" => "Thead"], "Attr" => ["contents" => ["Level", "Place", "Message", "Context"]]];
+            $tbody              = ["Parts" => ["class" => "danger", "type" => "Tbody"], "Attr" => ["contents" => []]];
+            $table              = ["Parts" => ["id" => "QueryDump", "class" => "table table-striped table-hover", "type" => "Table", "cols" => 12], "Child" => []];
+            $table["Child"][]   = $thead;
+
+            foreach ($error as $val) {
+                $tbody["Attr"]["contents"]  = array_values($val);
+                $table["Child"][]           = $tbody;
+            }
+            $this->_page[]      = $table;
+            Core::Get()->flushPropaty("error");
+        }
+    }
+
     private function _mergeQuery() {
         if (Core::Get()->getConfig("Configure.Debug")) {
             $query              = Core::Get()->getQuery();
@@ -96,9 +113,12 @@ class Html extends Viewer {
                 $table["Child"][]           = $tbody;
             }
             $this->_page[]      = $table;
+            Core::Get()->flushPropaty("query");
         }
     }
+
     public function view() {
+        $this->_mergeError();
         $this->_mergeQuery();
         $this->_html    = "";
         $this->_html    = $this->_render("Layout", $this->_page);
