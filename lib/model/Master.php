@@ -9,7 +9,6 @@ class Master extends Model {
         parent::init();
 
         $this->_putDefault();
-        Core::Get()->setPropaty(["page" => $this->getPage()]);
     }
 
     private function _putDefault() {
@@ -65,7 +64,7 @@ class Master extends Model {
         }
 
         $ret    = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
-        if (empty($ret) and $this->_params["User"] === SYS_USER) {
+        if (empty($ret) and $this->_params["User"] === "System") {
             $where["user"]  = "System";
             $where["path"]  = "Default";
             $ret            = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
@@ -85,6 +84,8 @@ class Master extends Model {
                 if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
             }
         }
+        Core::Get()->setPropaty(["page" => $ret]);
+
         return $ret;
     }
 }

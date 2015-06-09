@@ -27,7 +27,7 @@ class Configure extends Common {
         return ($ret1 and $ret2);
     }
 
-    private function _init() {
+    public function getConfig() {
         if (!$this->_init) {
             $this->_init = true;
             $Configure  = $this->Default["Configure"];
@@ -43,9 +43,5 @@ class Configure extends Common {
                 Core::Get()->setPropaty(compact("Routing"));
             }
         }
-    }
-
-    public function init() {
-        $this->_init();
     }
 }

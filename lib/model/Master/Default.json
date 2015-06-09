@@ -5,6 +5,7 @@
             "name"          : "{SYS_USER}",
             "password"      : "{SYS_PASSWORD}",
             "language"      : "{SYS_LANGUAGE}",
+            "domain"        : "NULL",
             "last_login"    : "{ACCESS_TIME}",
             "login_status"  : "localhost",
             "open_date"     : "{ACCESS_TIME}",
@@ -15,13 +16,13 @@
         {
             "id"            : "Default",
             "name"          : "Default Page",
-            "user"         : "System",
+            "user"          : "System",
             "path"          : "Default"
         },
         {
             "id"            : "Error",
             "name"          : "Error Page",
-            "user"         : "System",
+            "user"          : "System",
             "path"          : "Error"
         }
     ],

@@ -1,40 +1,70 @@
 <?php
+App::Uses("Model", "Master");
 
 class Parameter extends Common {
-    private $_config        = null;
 
-    private function _init() {
-        $this->_config  = Core::Get()->getConfig();
-        $this->_params   = [
-            "Host"      => $_SERVER["HTTP_HOST"],
-            "UA"        => $_SERVER["HTTP_USER_AGENT"],
-            "Name"      => $_SERVER["SERVER_NAME"],
-            "Addr"      => $_SERVER["SERVER_ADDR"],
-            "From"      => $_SERVER["REMOTE_ADDR"],
-            "Scheme"    => $_SERVER["REQUEST_SCHEME"],
-            "Method"    => $_SERVER["REQUEST_METHOD"],
-            "Path"      => explode("/", (strlen($_SERVER["QUERY_STRING"])) ? substr(str_replace($_SERVER["QUERY_STRING"], "", $_SERVER["REQUEST_URI"]), 0, -1) : $_SERVER["REQUEST_URI"]),
-            "Time"      => $_SERVER["REQUEST_TIME"],
-            "SSL"       => (strpos($_SERVER["REQUEST_SCHEME"], "https") !== false),
-            "Locale"    => $this->_config["Configure"]["Locale"],
-        ];
-        parse_str($_SERVER["QUERY_STRING"], $this->_params["Query"]);
-        array_shift($this->_params["Path"]);
-        $this->_params["User"] = $this->_getUser($this->_params["Path"][0]);
+    public function getParams($params = []) {
+        if (is_string($params)) $params = [$params];
+        $ret    = [];
 
-        Core::Get()->setPropaty(["params" => $this->_params]);
-    }
-
-    private function _getUser($user) {
-        $ret    = SYS_USER;
-        if ($this->_config["Configure"]["MultiUser"] and $user) {
-            $ret = $user;
+        foreach ($this->Params as $key => $val) {
+            if (!empty($params) and array_search($key, $params) === false) continue;
+            if ($val["Attr"]) $this->_params[$key] = $_SERVER[$val["Attr"]];
+            if (!$val["Normal"]) {
+                switch ($key) {
+                case "SSL" :
+                    $this->_params[$key]    = (strpos($this->_params[$key], "https") !== false);
+                    break;
+                case "Query" :
+                    parse_str($this->_params[$key], $this->_params[$key]);
+                    break;
+                case "Path" :
+                    $this->_params[$key]    = (strlen($_SERVER["QUERY_STRING"])) ? substr(str_replace($_SERVER["QUERY_STRING"], "", $this->_params[$key]), 0, -1): $this->_params[$key];
+                    $this->_params[$key]    = explode("/", $this->_params[$key]);
+                    array_shift($this->_params["Path"]);
+                    break;
+                case "Locale" :
+                    $this->_params[$key]    = Core::Get()->getConfig("Configure.Locale");
+                    break;
+                case "User" :
+                    $this->_params[$key]    = $this->_getUser();
+                    break;
+                }
+            }
+            $ret[$key]  = $this->_params[$key];
         }
+
+        if (empty($params)) Core::Get()->setPropaty(["params" => $this->_params]);
 
         return $ret;
     }
 
-    public function init() {
-        if (empty($this->_params)) $this->_init();
+    private function _getUser() {
+        $ret        = null;
+        $table      = "User";
+        $params     = ["Host"];
+
+        if (Core::Get()->getConfig("Configure.MultiUser")) $params += ["Path"];
+        $params     = $this->getParams($params);
+        $params    += ["User" => SYS_USER];
+
+        foreach ($params as $key => $val) {
+            switch ($key) {
+            case "Host" :
+                $where  = ["domain" => $val];
+                break;
+            case "Path" :
+                $where  = ["name" => $val[0]];
+                break;
+            case "User" :
+                $where  = ["name" => $val];
+                break;
+            }
+            $user   = $this->{"Model.Master"}->Source->find($table, ["Where" => $where]);
+
+            if (empty($user)) continue;
+            $ret    = $user[0][$table]["id"];
+        }
+        return $ret;
     }
 }

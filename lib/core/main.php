@@ -10,6 +10,7 @@ final class Core {
     private $_params        = [];
     private $_page          = [];
     private $_query         = [];
+    private $_running       = null;
 
     private function __construct() {
         self::$_this =& $this;
@@ -31,11 +32,8 @@ final class Core {
         App::Uses("Model",      "Master");
         App::Uses("View",       "View");
 
-        $this->getClass("Config.Configure",     __FILE__);
-        $this->getClass("Utility.Parameter",    __FILE__);
         $this->getClass("Utility.I18n",         __FILE__);
         $this->getClass("Config.ErrorHandler",  __FILE__);
-        $this->getClass("Model.Master",         __FILE__);
         $this->getClass("View.View",            __FILE__);
     }
 
@@ -122,6 +120,21 @@ final class Core {
         return $ret;
     }
 
+    public function classExists($name, $src) {
+        $ret    = false;
+        $src    = $this->srchClass($src);
+
+        if (!empty($src)) {
+            $root   = $src["root"];
+            $class  = $src["class"];
+
+            $class  = ($class === $name) ? $this->_classes[$root][$class] : $this->_classes[$root][$class]["sub_modules"][$name];
+            $ret    = ($class["instance"]);
+        }
+
+        return $ret;
+    }
+
     public function &getClass($name, $src) {
         $ret    = false;
         $name   = explode(".", $name);
@@ -160,16 +173,17 @@ final class Core {
             }
 
             if ($flg) {
+                $this->_running = $name;
                 switch ($class["ext"]) {
                 case "php" :
-                    $class["instance"] = $name::Get();
+                    $class["instance"]  = $name::Get();
                     if (method_exists($class["instance"], "init")) $class["instance"]->init();
                     break;
                 case "json" :
-                    $class["instance"] = json_decode(file_get_contents($class["file"]), true);
+                    $class["instance"]  = json_decode(file_get_contents($class["file"]), true);
                     break;
                 case "tpl" :
-                    $class["instance"] = str_replace("\"", "\\\"", file_get_contents($class["file"]));
+                    $class["instance"]  = str_replace("\"", "\\\"", file_get_contents($class["file"]));
                     break;
                 }
             }
@@ -196,10 +210,27 @@ final class Core {
     }
 
     public function getParams() {
+        static $skip    = false;
+        $ret            = $this->_params;
+        $class          = "Parameter";
+
+        if (!$skip and !$ret and $this->_running !== $class) {
+            $skip   = true;
+            $this->getClass("Utility.Parameter", __FILE__)->getParams();
+        }
+
         return $this->_params;
     }
 
     public function getPage() {
+        static $skip    = false;
+        $ret            = $this->_page;
+        $class          = "Master";
+
+        if (!$skip and !$ret and $this->_running !== $class) {
+            $skip   = true;
+            $this->getClass("Model.Master", __FILE__)->getPage();
+        }
         return $this->_page;
     }
 
@@ -207,11 +238,32 @@ final class Core {
         return $this->_query;
     }
 
-    public function getConfig($source = false) {
-        $ret        = ["Configure" => $this->_configure, "Data" => $this->_data, "Routing" => $this->_routing];
-        $sources    = ["Configure" => "_configure", "Data" => "_data", "Routing" => "_routing"];
+    public function getConfig($source = "") {
+        static $skip    = false;
+        $ret            = ["Configure" => $this->_configure, "Data" => $this->_data, "Routing" => $this->_routing];
+        $sources        = ["Configure" => "_configure", "Data" => "_data", "Routing" => "_routing"];
+        $class          = "Configure";
 
-        if ($source) $ret = $this->{$sources[$source]};
+        foreach ($sources as $val) {
+            if (!$this->{$val}) continue;
+            $skip   = true;
+            break;
+        }
+
+        if (!$skip and $this->_running !== $class) {
+            $this->getClass("Config.Configure", __FILE__)->getConfig();
+            $skip   = true;
+            $ret    = ["Configure" => $this->_configure, "Data" => $this->_data, "Routing" => $this->_routing];
+        }
+
+        foreach (explode(".", $source) as $key) {
+            if (isset($ret[$key])) {
+                $ret = $ret[$key];
+                continue;
+            }
+            $ret    = [];
+            break;
+        }
 
         return $ret;
     }

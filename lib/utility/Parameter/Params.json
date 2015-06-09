@@ -1,0 +1,58 @@
+{
+    "Host"      : {
+        "Attr"      : "HTTP_HOST",
+        "Normal"    : true
+    },
+    "UA"        : {
+        "Attr"      : "HTTP_USER_AGENT",
+        "Normal"    : true
+    },
+    "Name"      : {
+        "Attr"      : "SERVER_NAME",
+        "Normal"    : true
+    },
+    "Addr"      : {
+        "Attr"      : "SERVER_ADDR",
+        "Normal"    : true
+    },
+    "From"      : {
+        "Attr"      : "REMOTE_ADDR",
+        "Normal"    : true
+    },
+    "Scheme"    : {
+        "Attr"      : "REQUEST_SCHEME",
+        "Normal"    : true
+    },
+    "Method"    : {
+        "Attr"      : "REQUEST_METHOD",
+        "Normal"    : true
+    },
+    "Time"      : {
+        "Attr"      : "REQUEST_TIME",
+        "Normal"    : true
+    },
+    "Path"      : {
+        "Attr"      : "REQUEST_TIME",
+        "Normal"    : true
+    },
+    "SSL"       : {
+        "Attr"      : "REQUEST_SCHEME",
+        "Normal"    : false
+    },
+    "Query"     : {
+        "Attr"      : "QUERY_STRING",
+        "Normal"    : false
+    },
+    "Path"      : {
+        "Attr"      : "REQUEST_URI",
+        "Normal"    : false
+    },
+    "Locale"    : {
+        "Attr"      : null,
+        "Normal"    : false
+    },
+    "User"      : {
+        "Attr"      : null,
+        "Normal"    : false
+    }
+}

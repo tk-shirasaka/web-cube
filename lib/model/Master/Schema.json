@@ -45,6 +45,17 @@
             "Foreign"       : false
         },
         {
+            "Description"   : "User uses domain name",
+            "Field"         : "domain",
+            "Type"          : "varchar",
+            "Length"        : 40,
+            "Null"          : true,
+            "Default"       : "NULL",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
             "Description"   : "Last login date time",
             "Field"         : "last_login",
             "Type"          : "datetime",
