@@ -83,7 +83,7 @@ class Html extends Viewer {
     }
 
     private function _mergeQuery() {
-        if (Core::Get()->getConfig("Configure")["Debug"]) {
+        if (Core::Get()->getConfig("Configure.Debug")) {
             $query              = Core::Get()->getQuery();
             $thead              = ["Parts" => ["class" => "", "type" => "Thead"], "Attr" => ["contents" => ["#", "SQL", "Time"]]];
             $tbody              = ["Parts" => ["class" => "", "type" => "Tbody"], "Attr" => ["contents" => []]];

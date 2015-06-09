@@ -17,7 +17,7 @@ abstract class Database extends Common {
 
     private final function _init() {
         if (__CLASS__ !== $this->_name and !$this->_debug_level) {
-            $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
+            $this->_debug_level = Core::Get()->getConfig("Configure.Debug");
         }
     }
 

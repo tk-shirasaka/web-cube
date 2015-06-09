@@ -5,7 +5,7 @@ class ErrorHandler extends Common {
 
     private function _init() {
         if (!$this->_debug_level) {
-            $this->_debug_level = Core::Get()->getConfig("Configure")["Debug"];
+            $this->_debug_level = Core::Get()->getConfig("Configure.Debug");
             set_error_handler([$this, "Error"]);
         }
     }
