@@ -2,9 +2,70 @@
 App::Uses("View", "Viewer");
 
 class Html extends Viewer {
-    private $_html  = "";
+    private $_html      = "";
+    private $_row       = 0;
+    private $_offset    = 0;
+    private $_parent    = null;
+
+    private function _getClass($parts) {
+        $ret    = "";
+
+        if ($this->_offset < (int) $parts["offset"]) {
+            $ret   .= "col-xs-offset-". ($parts["offset"] - $this->_offset). " ";
+            $ret   .= "col-md-offset-". ($parts["offset"] - $this->_offset). " ";
+            $ret   .= "col-sm-offset-". ($parts["offset"] - $this->_offset). " ";
+        }
+        if ((int) $parts["cols"]) {
+            $ret   .= "col-xs-". $parts["cols"]. " ";
+            $ret   .= "col-md-". $parts["cols"]. " ";
+            $ret   .= "col-sm-". $parts["cols"]. " ";
+        }
+        if ($parts["class"]) {
+            $ret   .= $parts["class"];
+        }
+
+        return $ret;
+    }
+
+    private function _getChildren($child) {
+        $ret            = "";
+        $row            = $this->_row;
+        $offset         = $this->_offset;
+        $parent         = $this->_parent;
+        $this->_row     = 0;
+        $this->_offset  = 0;
+        $this->_parent  = null;
+        foreach ($child as $key => $val) {
+            $ret .= $this->_render($key, $val);
+        }
+        $this->_row     = $row;
+        $this->_offset  = $offset;
+        $this->_parent  = $parent;
+
+        return $ret;
+    }
+
+    private function _commonTag($tag, $parts, $attr, $options = []) {
+        $id         = $parts["id"];
+        $class      = $this->_getClass($parts);
+
+        foreach ($options as $key => $val) {
+            ${$key} = $val;
+        }
+
+        eval("\$ret .= \"{$this->{$tag}}\";");
+
+        return $ret;
+    }
+    private function _hasChildTag($tag, $parts, $attr, $child, $options = []) {
+        $children   = $this->_getChildren($child);
+        return $this->_commonTag($tag, $parts, $attr, compact("children") + $options);
+    }
 
     private function _render($tag_type, $data) {
+        static $row     = 0;
+        static $parent  = null;
+
         $ret = "";
 
         $id             = "";
@@ -15,8 +76,15 @@ class Html extends Viewer {
         $method         = "";
         $action         = "";
         $contents       = "";
-        $placeholder    = "";
         $children       = "";
+
+        if (isset($data["Parts"])) {
+            if ($this->_row !== (int) $data["Parts"]["rows"]) {
+                $this->_row    = (int) $data["Parts"]["rows"];
+                $this->_offset = 0;
+            }
+            $this->_offset = (int) $data["Parts"]["cols"];
+        }
 
         switch ((string) $tag_type) {
         case "Layout" :
@@ -38,49 +106,24 @@ class Html extends Viewer {
         case "Block" :
         case "Navi" :
         case "Table" :
+            $method = strtolower($tag_type);
+            $ret    = $this->{$method}($data["Parts"], $data["Attr"], $data["Child"]);
+            break;
         case "Text" :
         case "Header" :
         case "Input" :
-            $id     = ($data["Parts"]["id"]);
-            $class .= "col-xs-". $data["Parts"]["cols"]. " ";
-            $class .= "col-md-". $data["Parts"]["cols"]. " ";
-            $class .= "col-sm-". $data["Parts"]["cols"]. " ";
-            $class .= ($data["Parts"]["class"]) ? $data["Parts"]["class"] : "";
-            switch ((string) $tag_type) {
-                case "Header" :
-                    $type       = $data["Attr"]["type"];
-                    $contents   = $data["Attr"]["contents"];
-                    if ($this->{$tag_type}) eval("\$children .= \"{$this->{$tag_type}}\";");
-                    $tag_type   = "Block";
-                    break;
-                case "Input" :
-                    $title      = $data["Parts"]["title"];
-                    break;
-                case "Table" :
-                    $thead      = "";
-                    $tbody      = "";
-                case "Form" :
-                case "Block" :
-                case "Navi" :
-                    if (isset($data["Child"])) {
-                        foreach ($data["Child"] as $key => $val) {
-                            if ($tag_type === "Table") {
-                                if ($val["Parts"]["type"] === "Thead") $thead .= $this->_render($key, $val);
-                                if ($val["Parts"]["type"] === "Tbody") $tbody .= $this->_render($key, $val);
-                            } else {
-                                $children .= $this->_render($key, $val);
-                            }
-                        }
-                    }
-                    break;
-            }
+            $method = strtolower($tag_type);
+            $ret    = $this->{$method}($data["Parts"], $data["Attr"]);
             break;
         default :
             if (isset($data["Parts"])) $ret .= $this->_render($data["Parts"]["type"], $data);
             break;
         }
 
-        if ($this->{$tag_type}) eval("\$ret .= \"{$this->{$tag_type}}\";");
+        if ($this->{$tag_type} and !$ret) eval("\$ret .= \"{$this->{$tag_type}}\";");
+        if (isset($data["Parts"])) {
+            $this->_offset = (int) $data["Parts"]["cols"];
+        }
 
         return $ret;
     }
@@ -118,6 +161,53 @@ class Html extends Viewer {
             $this->_page[]      = $table;
             Core::Get()->flushPropaty("query");
         }
+    }
+
+    protected function table($parts, $attr, $child) {
+        $thead  = "";
+        $tbody  = "";
+        foreach ($child as $key => $val) {
+            if ($val["Parts"]["type"] === "Thead") $thead .= $this->_render($key, $val);
+            if ($val["Parts"]["type"] === "Tbody") $tbody .= $this->_render($key, $val);
+        }
+
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("thead", "tbody"));
+    }
+
+    protected function form($parts, $attr, $child) {
+        $title_parts            = $parts;
+        $title_parts["id"]     .= "Title";
+        $title_parts["cols"]    = 0;
+        $title_parts["rows"]    = 0;
+        $title_parts["offset"]  = 0;
+        $title_parts["class"]   = null;
+        $title  = $this->header($title_parts, ["type" => 3, "contents" => $data["Parts"]["title"]]);
+
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("title"));
+    }
+
+    protected function block($parts, $attr, $child) {
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child);
+    }
+
+    protected function navi($parts, $attr, $child) {
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child);
+    }
+
+    protected function header($parts, $attr) {
+        $type       = $attr["type"];
+        $contents   = $attr["contents"];
+        eval("\$children   .= \"{$this->{ucfirst(__FUNCTION__)}}\";");
+
+        return $this->_commonTag("Block", $parts, $attr, compact("type", "contents", "children"));
+    }
+
+    protected function input($parts, $attr) {
+        $title          = $parts["title"];
+        $name           = "";
+        $placeholder    = "";
+
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("title", "name", "placeholder"));
     }
 
     public function view() {

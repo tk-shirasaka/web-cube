@@ -18,8 +18,9 @@ abstract class Common {
     }
 
     public final function __get($name) {
-        $this->{$name} =& Core::Get()->getClass($name, $this->_file);
-        return $this->{$name};
+        $ret           =& Core::Get()->getClass($name, $this->_file);
+        if ($ret) $this->{$name} =& $ret;
+        return $ret;
     }
 
     public static final function Get() {
