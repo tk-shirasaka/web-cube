@@ -36,6 +36,7 @@ class Html extends Viewer {
             break;
         case "Form" :
         case "Block" :
+        case "Navi" :
         case "Table" :
         case "Text" :
         case "Header" :
@@ -43,6 +44,7 @@ class Html extends Viewer {
             $id     = ($data["Parts"]["id"]);
             $class .= "col-xs-". $data["Parts"]["cols"]. " ";
             $class .= "col-md-". $data["Parts"]["cols"]. " ";
+            $class .= "col-sm-". $data["Parts"]["cols"]. " ";
             $class .= ($data["Parts"]["class"]) ? $data["Parts"]["class"] : "";
             switch ((string) $tag_type) {
                 case "Header" :
@@ -59,6 +61,7 @@ class Html extends Viewer {
                     $tbody      = "";
                 case "Form" :
                 case "Block" :
+                case "Navi" :
                     if (isset($data["Child"])) {
                         foreach ($data["Child"] as $key => $val) {
                             if ($tag_type === "Table") {

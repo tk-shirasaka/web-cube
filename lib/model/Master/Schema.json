@@ -596,6 +596,22 @@
             }
         }
     ],
+    "NaviParts"   : [
+        {
+            "Description"   : "Parts id",
+            "Field"         : "id",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : true,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "Parts",
+                "Field" : "id"
+            }
+        }
+    ],
     "TextParts"   : [
         {
             "Description"   : "Parts id",
