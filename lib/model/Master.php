@@ -35,7 +35,8 @@ class Master extends Model {
 
     private function _getChild($parent) {
         $parts  = $parent["Parts"]["id"];
-        $ret    = $this->Source->find("Parts", ["Where" => ["parent" => $parts]]);
+        $sort   = ["rows", "offset"];
+        $ret    = $this->Source->find("Parts", ["Where" => ["parent" => $parts], "Sort" => $sort]);
 
         if ($ret) {
             foreach ($ret as $key => $parent) {

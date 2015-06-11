@@ -47,6 +47,10 @@
         "Attr"      : "REQUEST_URI",
         "Normal"    : false
     },
+    "Request"      : {
+        "Attr"      : null,
+        "Normal"    : false
+    },
     "Locale"    : {
         "Attr"      : null,
         "Normal"    : false

@@ -113,8 +113,8 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Page name (use page title)",
-            "Field"         : "name",
+            "Description"   : "Page title (use page title)",
+            "Field"         : "title",
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
@@ -243,17 +243,6 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Parts name (used html name attr)",
-            "Field"         : "name",
-            "Type"          : "varchar",
-            "Length"        : 40,
-            "Null"          : false,
-            "Default"       : "",
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : false
-        },
-        {
             "Description"   : "Parts class",
             "Field"         : "class",
             "Type"          : "varchar",
@@ -367,12 +356,23 @@
             }
         },
         {
-            "Description"   : "Use multi line flg",
-            "Field"         : "multiple",
-            "Type"          : "tinyint",
-            "Length"        : 1,
+            "Description"   : "Used html name attr",
+            "Field"         : "name",
+            "Type"          : "varchar",
+            "Length"        : 40,
             "Null"          : false,
-            "Default"       : 0,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Used placeholder",
+            "Field"         : "placeholder",
+            "Type"          : "varchar",
+            "Length"        : 40,
+            "Null"          : true,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -403,6 +403,17 @@
                 "Table" : "Parts",
                 "Field" : "id"
             }
+        },
+        {
+            "Description"   : "Used html name attr",
+            "Field"         : "name",
+            "Type"          : "varchar",
+            "Length"        : 40,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
         },
         {
             "Description"   : "Choices (use json data structure [{key : val},...]), when raddio button, null isn't allow",

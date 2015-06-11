@@ -23,6 +23,9 @@ class Parameter extends Common {
                     $this->_params[$key]    = explode("/", $this->_params[$key]);
                     array_shift($this->_params["Path"]);
                     break;
+                case "Request" :
+                    $this->_params[$key]    = $_POST;
+                    break;
                 case "Locale" :
                     $this->_params[$key]    = Core::Get()->getConfig("Configure.Locale");
                     break;

@@ -81,7 +81,7 @@ class Html extends Viewer {
 
         switch ((string) $tag_type) {
         case "Layout" :
-            $title      = $data[0]["Page"]["name"];
+            $title      = $data[0]["Page"]["title"];
             foreach ($data as $key => $val) {
                 $contents  .= $this->_render($key, $val); 
             }
@@ -178,15 +178,16 @@ class Html extends Viewer {
     }
 
     protected function form($parts, $attr, $child) {
-        $name           = $parts["name"];
         $action         = $attr["action"];
         $method         = ($attr["method"]) ? "POST" : "GET";
+        $submit         = $attr["submit"];
+        $cancel         = $attr["cancel"];
         $title_parts    = ["id" => $parts["id"]."Title", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
         $title          = $this->header($title_parts, ["type" => 3, "contents" => $parts["title"]]);
         $block_parts    = ["id" => "", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
         $block          = $this->block($block_parts, [], []);
 
-        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("title", "name", "action", "method", "block"));
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("title", "action", "method", "block", "submit", "cancel"));
     }
 
     protected function block($parts, $attr, $child) {
@@ -207,10 +208,11 @@ class Html extends Viewer {
 
     protected function input($parts, $attr) {
         $title          = $parts["title"];
-        $name           = "";
-        $placeholder    = "";
+        $name           = $attr["name"];
+        $type           = ($attr["password"]) ? "password" : "text";
+        $placeholder    = $attr["placeholder"];
 
-        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("title", "name", "placeholder"));
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("title", "name", "type", "placeholder"));
     }
 
     public function view() {
