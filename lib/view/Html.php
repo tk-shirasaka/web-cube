@@ -73,8 +73,9 @@ class Html extends Viewer {
 
         if ($this->{$tag_type} and isset($data["Parts"])) {
             if ($this->_row !== (int) $data["Parts"]["rows"]) {
-                $this->_row    = (int) $data["Parts"]["rows"];
-                $this->_offset = 0;
+                $ret           .= $this->block(["id" => "", "class" => "", "cols" => 0, "offset" => 0], [], []);
+                $this->_row     = (int) $data["Parts"]["rows"];
+                $this->_offset  = 0;
             }
         }
 
@@ -94,22 +95,22 @@ class Html extends Viewer {
             if (empty($data["Attr"]))   $data["Attr"]   = [];
             if (empty($data["Child"]))  $data["Child"]  = [];
             $method = strtolower($tag_type);
-            $ret    = $this->{$method}($data["Parts"], $data["Attr"], $data["Child"]);
+            $ret   .= $this->{$method}($data["Parts"], $data["Attr"], $data["Child"]);
             break;
         case "Text" :
         case "Header" :
         case "Input" :
             if (empty($data["Attr"]))   $data["Attr"]   = [];
             $method = strtolower($tag_type);
-            $ret    = $this->{$method}($data["Parts"], $data["Attr"]);
+            $ret   .= $this->{$method}($data["Parts"], $data["Attr"]);
             break;
         default :
-            if (isset($data["Parts"])) $ret = $this->_render($data["Parts"]["type"], $data);
+            if (isset($data["Parts"])) $ret .= $this->_render($data["Parts"]["type"], $data);
             break;
         }
 
         if ($this->{$tag_type} and !$ret) {
-            eval("\$ret = \"{$this->{$tag_type}}\";");
+            eval("\$ret .= \"{$this->{$tag_type}}\";");
         }
         if ($this->{$tag_type} and isset($data["Parts"])) {
             $this->_offset = (int) $data["Parts"]["cols"];
@@ -179,11 +180,13 @@ class Html extends Viewer {
     protected function form($parts, $attr, $child) {
         $name           = $parts["name"];
         $action         = $attr["action"];
-        $method         = $attr["method"];
-        $title_parts    = ["id" => $parts["id"]."Title", "cols" => 0, "rows" => 0, "offset" => 0, "class" => null];
+        $method         = ($attr["method"]) ? "POST" : "GET";
+        $title_parts    = ["id" => $parts["id"]."Title", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
         $title          = $this->header($title_parts, ["type" => 3, "contents" => $parts["title"]]);
+        $block_parts    = ["id" => "", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
+        $block          = $this->block($block_parts, [], []);
 
-        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("title", "name", "action", "method"));
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("title", "name", "action", "method", "block"));
     }
 
     protected function block($parts, $attr, $child) {
