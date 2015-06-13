@@ -1,3 +1,3 @@
-<div id="{$id}" class="container-fluid {$class}">
+<{$type} id="{$id}" class="{$class}">
     $children
-</div>
+</{$type}>

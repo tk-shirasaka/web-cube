@@ -73,7 +73,7 @@ class Html extends Viewer {
 
         if ($this->{$tag_type} and isset($data["Parts"])) {
             if ($this->_row !== (int) $data["Parts"]["rows"]) {
-                $ret           .= $this->block(["id" => "", "class" => "", "cols" => 0, "offset" => 0], [], []);
+                if ($this->_row) $ret .= $this->block(["id" => "", "class" => "", "cols" => 0, "offset" => 0], [], []);
                 $this->_row     = (int) $data["Parts"]["rows"];
                 $this->_offset  = 0;
             }
@@ -82,6 +82,7 @@ class Html extends Viewer {
         switch ((string) $tag_type) {
         case "Layout" :
             $title      = $data[0]["Page"]["title"];
+            $locale     = $this->_params["Locale"];
             foreach ($data as $key => $val) {
                 $contents  .= $this->_render($key, $val); 
             }
@@ -90,11 +91,11 @@ class Html extends Viewer {
             break;
         case "Form" :
         case "Block" :
-        case "Navi" :
         case "Table" :
+        case "ListContents" :
             if (empty($data["Attr"]))   $data["Attr"]   = [];
             if (empty($data["Child"]))  $data["Child"]  = [];
-            $method = strtolower($tag_type);
+            $method = lcfirst($tag_type);
             $ret   .= $this->{$method}($data["Parts"], $data["Attr"], $data["Child"]);
             break;
         case "Text" :
@@ -191,21 +192,45 @@ class Html extends Viewer {
     }
 
     protected function block($parts, $attr, $child) {
-        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child);
+        if (!$parts)    $parts  = ["class" => ""];
+        if (!$attr)     $attr   = ["tag_type" => 0];
+        $class = "";
+        switch ($attr["tag_type"]) {
+        case 0 :
+            $type   = "div";
+            $class  = "container-fluid";
+            break;
+        case 1 :
+            $type   = "navi";
+            $class  = "navi";
+            break;
+        case 2 :
+            $type   = "ul";
+            break;
+        }
+        $parts["class"] = "{$class} ". $parts["class"];
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("type"));
     }
 
-    protected function navi($parts, $attr, $child) {
-        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child);
+    protected function listContents($parts, $attr, $child) {
+        $contents   = (string) $parts["title"];
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("contents"));
     }
 
     protected function header($parts, $attr) {
         $type       = $attr["type"];
         $contents   = $attr["contents"];
         eval("\$children   = \"{$this->{ucfirst(__FUNCTION__)}}\";");
+        $type       = "div";
 
-        return $this->_commonTag("Block", $parts, $attr, compact("children"));
+        return $this->_commonTag("Block", $parts, $attr, compact("children", "type"));
     }
 
+    protected function text($parts, $attr) {
+        $contents   = $attr["contents"];
+
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("contents"));
+    }
     protected function input($parts, $attr) {
         $title          = $parts["title"];
         $name           = $attr["name"];

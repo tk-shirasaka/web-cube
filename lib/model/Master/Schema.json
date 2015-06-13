@@ -290,7 +290,7 @@
             "Description"   : "Parts title (used parts title e.g. h3 tag)",
             "Field"         : "title",
             "Type"          : "varchar",
-            "Length"        : 20,
+            "Length"        : 40,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
@@ -490,6 +490,36 @@
             }
         }
     ],
+    "ListContentsParts"     : [
+        {
+            "Description"   : "Parts id",
+            "Field"         : "id",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : true,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "Parts",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Link id",
+            "Field"         : "link",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Default"       : "NULL",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "LinkParts",
+                "Field" : "id"
+            }
+        }
+    ],
     "ButtonParts"   : [
         {
             "Description"   : "Parts id",
@@ -605,22 +635,17 @@
                 "Table" : "Parts",
                 "Field" : "id"
             }
-        }
-    ],
-    "NaviParts"   : [
+        },
         {
-            "Description"   : "Parts id",
-            "Field"         : "id",
-            "Type"          : "char",
-            "Length"        : 30,
+            "Description"   : "Tag type (0: div, 1: navi, 2: list)",
+            "Field"         : "tag_type",
+            "Type"          : "tinyint",
+            "Length"        : 1,
             "Null"          : false,
-            "Default"       : "",
-            "Primary"       : true,
+            "Default"       : 0,
+            "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "Parts",
-                "Field" : "id"
-            }
+            "Foreign"       : false
         }
     ],
     "TextParts"   : [

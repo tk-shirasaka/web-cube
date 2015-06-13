@@ -36,12 +36,12 @@
             "name"          : "{I18n::$Form}"
         },
         {
-            "id"            : "Navi",
-            "name"          : "{I18n::$Navi}"
-        },
-        {
             "id"            : "Header",
             "name"          : "{I18n::$Header}"
+        },
+        {
+            "id"            : "Text",
+            "name"          : "{I18n::$Text}"
         },
         {
             "id"            : "Input",
@@ -50,6 +50,10 @@
         {
             "id"            : "Link",
             "name"          : "{I18n::$Link}"
+        },
+        {
+            "id"            : "ListContents",
+            "name"          : "{I18n::$ListContents}"
         }
     ],
     "Parts" : [
@@ -110,25 +114,80 @@
         },
         {
             "id"            : "HeadNavi",
-            "class"         : "navbar-inverse navbar-fixed-top",
+            "class"         : "navbar-inverse navbar-static-top",
             "rows"          : 1,
             "cols"          : 12,
             "offset"        : 0,
             "title"         : "Header Navigation",
             "page"          : "NULL",
-            "type"          : "Navi",
+            "type"          : "Block",
             "parent"        : "Header"
         },
         {
+            "id"            : "NaviHeader",
+            "class"         : "navbar-header",
+            "rows"          : 1,
+            "cols"          : 3,
+            "offset"        : 0,
+            "title"         : "Page Title Parts",
+            "page"          : "NULL",
+            "type"          : "Block",
+            "parent"        : "HeadNavi"
+        },
+        {
             "id"            : "PageTitle",
-            "class"         : "page-header",
-            "rows"          : 2,
+            "class"         : "navbar-brand",
+            "rows"          : 1,
             "cols"          : 12,
             "offset"        : 0,
             "title"         : "Page Title Parts",
             "page"          : "NULL",
-            "type"          : "Header",
-            "parent"        : "Header"
+            "type"          : "Text",
+            "parent"        : "NaviHeader"
+        },
+        {
+            "id"            : "SideList",
+            "class"         : "nav nav-sidebar",
+            "rows"          : 1,
+            "cols"          : 12,
+            "offset"        : 0,
+            "title"         : "Sidebar contents list",
+            "page"          : "NULL",
+            "type"          : "Block",
+            "parent"        : "LeftSide"
+        },
+        {
+            "id"            : "FormPartsList",
+            "class"         : "NULL",
+            "rows"          : 1,
+            "cols"          : 0,
+            "offset"        : 0,
+            "title"         : "Form Parts",
+            "page"          : "NULL",
+            "type"          : "ListContents",
+            "parent"        : "SideList"
+        },
+        {
+            "id"            : "BlockPartsList",
+            "class"         : "NULL",
+            "rows"          : 2,
+            "cols"          : 0,
+            "offset"        : 0,
+            "title"         : "Block Parts",
+            "page"          : "NULL",
+            "type"          : "ListContents",
+            "parent"        : "SideList"
+        },
+        {
+            "id"            : "TextPartsList",
+            "class"         : "NULL",
+            "rows"          : 3,
+            "cols"          : 0,
+            "offset"        : 0,
+            "title"         : "Text Parts",
+            "page"          : "NULL",
+            "type"          : "ListContents",
+            "parent"        : "SideList"
         },
         {
             "id"            : "LoginForm",
@@ -177,31 +236,36 @@
     ],
     "BlockParts"   : [
         {
-            "id"            : "Header"
+            "id"            : "Header",
+            "tag_type"      : 0
         },
         {
-            "id"            : "LeftSide"
+            "id"            : "LeftSide",
+            "tag_type"      : 0
         },
         {
-            "id"            : "Main"
+            "id"            : "Main",
+            "tag_type"      : 0
         },
         {
-            "id"            : "RightSide"
+            "id"            : "RightSide",
+            "tag_type"      : 0
         },
         {
-            "id"            : "Footer"
-        }
-    ],
-    "NaviParts"   : [
+            "id"            : "Footer",
+            "tag_type"      : 0
+        },
         {
-            "id"            : "HeadNavi"
-        }
-    ],
-    "HeaderParts"   : [
+            "id"            : "NaviHeader",
+            "tag_type"      : 0
+        },
         {
-            "id"            : "PageTitle",
-            "contents"      : "Web Cube",
-            "type"          : 1
+            "id"            : "HeadNavi",
+            "tag_type"      : 1
+        },
+        {
+            "id"            : "SideList",
+            "tag_type"      : 2
         }
     ],
     "FormParts"   : [
@@ -228,6 +292,11 @@
         }
     ],
     "TextParts"   : [
+        {
+            "id"            : "PageTitle",
+            "contents"      : "Web Cube",
+            "multiple"      : false
+        },
         {
             "id"            : "Error",
             "contents"      : "{I18n::$PAGE_ERROR_MSG}",

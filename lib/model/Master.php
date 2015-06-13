@@ -80,7 +80,7 @@ class Master extends Model {
                 $table  = $parent["Parts"]["type"]. "Parts";
                 $child  = $this->_getChild($parent);
                 $where  = ["id" => $parent["Parts"]["id"]];
-                $attr   = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
+                $attr   = $this->Source->find($table, ["Where" => $where]);
                 if ($child) $ret[$key]["Child"] = $child;
                 if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
             }
