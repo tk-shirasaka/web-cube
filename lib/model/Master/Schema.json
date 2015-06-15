@@ -255,7 +255,7 @@
         },
         {
             "Description"   : "Use row nums",
-            "Field"         : "rows",
+            "Field"         : "row",
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : false,
@@ -266,7 +266,7 @@
         },
         {
             "Description"   : "Use col nums (Bootstrap cols [1-12])",
-            "Field"         : "cols",
+            "Field"         : "col",
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
@@ -291,8 +291,8 @@
             "Field"         : "title",
             "Type"          : "varchar",
             "Length"        : 40,
-            "Null"          : false,
-            "Default"       : "",
+            "Null"          : true,
+            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false

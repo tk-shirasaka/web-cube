@@ -35,7 +35,7 @@ class Master extends Model {
 
     private function _getChild($parent) {
         $parts  = $parent["Parts"]["id"];
-        $sort   = ["rows", "offset"];
+        $sort   = ["row", "offset"];
         $ret    = $this->Source->find("Parts", ["Where" => ["parent" => $parts], "Sort" => $sort]);
 
         if ($ret) {
@@ -52,7 +52,7 @@ class Master extends Model {
 
     public function getPage($conditions = []) {
         $table  = ["Page", "Parts"];
-        $sort   = ["rows", "offset"];
+        $sort   = ["row", "offset"];
         $where  = [
             "path"      => implode("/", $this->_params["Path"]),
             "user"      => $this->_params["User"],

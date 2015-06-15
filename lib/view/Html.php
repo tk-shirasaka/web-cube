@@ -22,10 +22,10 @@ class Html extends Viewer {
             $ret   .= "col-md-offset-". ($parts["offset"] - $this->_offset). " ";
             $ret   .= "col-sm-offset-". ($parts["offset"] - $this->_offset). " ";
         }
-        if ((int) $parts["cols"]) {
-            $ret   .= "col-xs-". $parts["cols"]. " ";
-            $ret   .= "col-md-". $parts["cols"]. " ";
-            $ret   .= "col-sm-". $parts["cols"]. " ";
+        if ((int) $parts["col"]) {
+            $ret   .= "col-xs-". $parts["col"]. " ";
+            $ret   .= "col-md-". $parts["col"]. " ";
+            $ret   .= "col-sm-". $parts["col"]. " ";
         }
         if ($parts["class"]) {
             $ret   .= $parts["class"];
@@ -72,9 +72,9 @@ class Html extends Viewer {
         $contents   = "";
 
         if ($this->{$tag_type} and isset($data["Parts"])) {
-            if ($this->_row !== (int) $data["Parts"]["rows"]) {
-                if ($this->_row) $ret .= $this->block(["id" => "", "class" => "", "cols" => 0, "offset" => 0], [], []);
-                $this->_row     = (int) $data["Parts"]["rows"];
+            if ($this->_row !== (int) $data["Parts"]["row"] or (int) $data["Parts"]["row"] === 0) {
+                if ($this->_row) $ret .= $this->block(["id" => "", "class" => "", "col" => 0, "offset" => 0], [], []);
+                $this->_row     = (int) $data["Parts"]["row"];
                 $this->_offset  = 0;
             }
         }
@@ -110,7 +110,7 @@ class Html extends Viewer {
             eval("\$ret .= \"{$this->{$tag_type}}\";");
         }
         if ($this->{$tag_type} and isset($data["Parts"])) {
-            $this->_offset = (int) $data["Parts"]["cols"];
+            $this->_offset = (int) $data["Parts"]["col"];
         }
 
         return $ret;
@@ -123,7 +123,7 @@ class Html extends Viewer {
             $error          = Core::Get()->getError();
             $thead          = ["Parts" => ["id" => "", "class" => "", "type" => "Thead"], "Attr" => ["contents" => "Level\\\\Place\\\\Message\\\\Context"]];
             $tbody          = ["Parts" => ["id" => "", "class" => "danger", "type" => "Tbody"], "Attr" => ["contents" => []]];
-            $ret            = ["Parts" => ["id" => "Error", "class" => "table table-striped table-hover", "type" => "Table", "cols" => 12], "Child" => []];
+            $ret            = ["Parts" => ["id" => "Error", "class" => "table table-striped table-hover", "type" => "Table", "col" => 12], "Child" => []];
             $ret["Child"][] = $thead;
 
             foreach ($error as $val) {
@@ -142,7 +142,7 @@ class Html extends Viewer {
             $query          = Core::Get()->getQuery();
             $thead          = ["Parts" => ["class" => "", "type" => "Thead"], "Attr" => ["contents" => "#\\\\SQL\\\\Time"]];
             $tbody          = ["Parts" => ["class" => "", "type" => "Tbody"], "Attr" => ["contents" => []]];
-            $ret            = ["Parts" => ["id" => "QueryDump", "class" => "table table-striped table-hover", "type" => "Table", "cols" => 12], "Child" => []];
+            $ret            = ["Parts" => ["id" => "QueryDump", "class" => "table table-striped table-hover", "type" => "Table", "col" => 12], "Child" => []];
             $ret["Child"][] = $thead;
 
             foreach ($query as $key => $val) {
@@ -179,9 +179,9 @@ class Html extends Viewer {
         $method         = ($attr["method"]) ? "POST" : "GET";
         $submit         = $attr["submit"];
         $cancel         = $attr["cancel"];
-        $title_parts    = ["id" => $parts["id"]."Title", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
+        $title_parts    = ["id" => $parts["id"]."Title", "col" => 0, "row" => 0, "offset" => 0, "class" => "text-center"];
         $title          = $this->header($title_parts, ["type" => 3, "contents" => $parts["title"]], []);
-        $block_parts    = ["id" => "", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
+        $block_parts    = ["id" => "", "col" => 0, "row" => 0, "offset" => 0, "class" => "text-center"];
         $block          = $this->block($block_parts, [], []);
 
         return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("title", "action", "method", "block", "submit", "cancel"));
