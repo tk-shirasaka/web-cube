@@ -506,6 +506,17 @@
             }
         },
         {
+            "Description"   : "Clickable list flg",
+            "Field"         : "clickable",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : true,
+            "Default"       : "NULL",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
             "Description"   : "Link id",
             "Field"         : "link",
             "Type"          : "char",

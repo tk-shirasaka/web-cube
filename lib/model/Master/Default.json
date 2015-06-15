@@ -70,7 +70,7 @@
         },
         {
             "id"            : "LeftSide",
-            "class"         : "NULL",
+            "class"         : "row",
             "rows"          : 2,
             "cols"          : 2,
             "offset"        : 0,
@@ -92,7 +92,7 @@
         },
         {
             "id"            : "RightSide",
-            "class"         : "NULL",
+            "class"         : "row",
             "rows"          : 2,
             "cols"          : 2,
             "offset"        : 10,
@@ -114,7 +114,7 @@
         },
         {
             "id"            : "HeadNavi",
-            "class"         : "navbar-inverse navbar-static-top",
+            "class"         : "row navbar-inverse navbar-static-top",
             "rows"          : 1,
             "cols"          : 12,
             "offset"        : 0,
@@ -147,7 +147,7 @@
         },
         {
             "id"            : "SideList",
-            "class"         : "nav nav-sidebar",
+            "class"         : "list-group",
             "rows"          : 1,
             "cols"          : 12,
             "offset"        : 0,
@@ -158,7 +158,7 @@
         },
         {
             "id"            : "FormPartsList",
-            "class"         : "NULL",
+            "class"         : "list-group-item",
             "rows"          : 1,
             "cols"          : 0,
             "offset"        : 0,
@@ -169,7 +169,7 @@
         },
         {
             "id"            : "BlockPartsList",
-            "class"         : "NULL",
+            "class"         : "list-group-item",
             "rows"          : 2,
             "cols"          : 0,
             "offset"        : 0,
@@ -180,7 +180,7 @@
         },
         {
             "id"            : "TextPartsList",
-            "class"         : "NULL",
+            "class"         : "list-group-item",
             "rows"          : 3,
             "cols"          : 0,
             "offset"        : 0,
@@ -268,6 +268,23 @@
             "tag_type"      : 2
         }
     ],
+    "ListContentsParts"   : [
+        {
+            "id"            : "FormPartsList",
+            "clickable"     : 1,
+            "link"          : "NULL"
+        },
+        {
+            "id"            : "BlockPartsList",
+            "clickable"     : 1,
+            "link"          : "NULL"
+        },
+        {
+            "id"            : "TextPartsList",
+            "clickable"     : 1,
+            "link"          : "NULL"
+        }
+    ],
     "FormParts"   : [
         {
             "id"            : "LoginForm",
@@ -281,13 +298,13 @@
         {
             "id"            : "LoginUser",
             "name"          : "user",
-            "password"      : false,
+            "password"      : 0,
             "placeholder"   : "user"
         },
         {
             "id"            : "LoginPassword",
             "name"          : "password",
-            "password"      : true,
+            "password"      : 1,
             "placeholder"   : "password"
         }
     ],
@@ -295,12 +312,12 @@
         {
             "id"            : "PageTitle",
             "contents"      : "Web Cube",
-            "multiple"      : false
+            "multiple"      : 0
         },
         {
             "id"            : "Error",
             "contents"      : "{I18n::$PAGE_ERROR_MSG}",
-            "multiple"      : true
+            "multiple"      : 1
         }
     ]
 }

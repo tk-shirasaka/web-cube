@@ -93,17 +93,13 @@ class Html extends Viewer {
         case "Block" :
         case "Table" :
         case "ListContents" :
-            if (empty($data["Attr"]))   $data["Attr"]   = [];
-            if (empty($data["Child"]))  $data["Child"]  = [];
-            $method = lcfirst($tag_type);
-            $ret   .= $this->{$method}($data["Parts"], $data["Attr"], $data["Child"]);
-            break;
         case "Text" :
         case "Header" :
         case "Input" :
             if (empty($data["Attr"]))   $data["Attr"]   = [];
-            $method = strtolower($tag_type);
-            $ret   .= $this->{$method}($data["Parts"], $data["Attr"]);
+            if (empty($data["Child"]))  $data["Child"]  = [];
+            $method = lcfirst($tag_type);
+            $ret   .= $this->{$method}($data["Parts"], $data["Attr"], $data["Child"]);
             break;
         default :
             if (isset($data["Parts"])) $ret .= $this->_render($data["Parts"]["type"], $data);
@@ -159,7 +155,7 @@ class Html extends Viewer {
         return $ret;
     }
 
-    protected function tableContents($parts, $attr) {
+    protected function tableContents($parts, $attr, $child) {
         $children   = "";
         $type       = ($parts["type"] === "Thead") ? "th" : "td";
         foreach (explode("\\\\", $attr["contents"]) as $contents) {
@@ -184,7 +180,7 @@ class Html extends Viewer {
         $submit         = $attr["submit"];
         $cancel         = $attr["cancel"];
         $title_parts    = ["id" => $parts["id"]."Title", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
-        $title          = $this->header($title_parts, ["type" => 3, "contents" => $parts["title"]]);
+        $title          = $this->header($title_parts, ["type" => 3, "contents" => $parts["title"]], []);
         $block_parts    = ["id" => "", "cols" => 0, "rows" => 0, "offset" => 0, "class" => "text-center"];
         $block          = $this->block($block_parts, [], []);
 
@@ -213,11 +209,23 @@ class Html extends Viewer {
     }
 
     protected function listContents($parts, $attr, $child) {
-        $contents   = (string) $parts["title"];
+        if ($attr["clickable"]) {
+            $contents       = $this->link(["class" => ""] + $parts, ["path" => "#"], []);
+            $parts["id"]    = "";
+        } else {
+            $contents       = (string) $parts["title"];
+        }
         return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("contents"));
     }
 
-    protected function header($parts, $attr) {
+    protected function link($parts, $attr, $child) {
+        $contents   = $parts["title"];
+        $href   = $attr["path"];
+
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("contents", "href"));
+    }
+
+    protected function header($parts, $attr, $child) {
         $type       = $attr["type"];
         $contents   = $attr["contents"];
         eval("\$children   = \"{$this->{ucfirst(__FUNCTION__)}}\";");
@@ -226,16 +234,17 @@ class Html extends Viewer {
         return $this->_commonTag("Block", $parts, $attr, compact("children", "type"));
     }
 
-    protected function text($parts, $attr) {
-        $contents   = $attr["contents"];
+    protected function text($parts, $attr, $child) {
+        $contents   = isset($attr["contents"]) ? $attr["contents"] : "";
 
         return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("contents"));
     }
-    protected function input($parts, $attr) {
+
+    protected function input($parts, $attr, $child) {
         $title          = $parts["title"];
-        $name           = $attr["name"];
-        $type           = ($attr["password"]) ? "password" : "text";
-        $placeholder    = $attr["placeholder"];
+        $name           = isset($attr["name"]) ? $attr["name"] : "";
+        $type           = (isset($attr["password"]) and ($attr["password"])) ? "password" : "text";
+        $placeholder    = isset($attr["placeholder"]) ? $attr["placeholder"] : "";
 
         return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("title", "name", "type", "placeholder"));
     }
