@@ -14,6 +14,16 @@ class Html extends Viewer {
         $this->_parent  = null;
     }
 
+    private function _getModel($model) {
+        $model  = explode(".", $model);
+        $root   = array_shift($model);
+        $class  = array_shift($model);
+        $method = array_shift($model);
+
+        App::Uses($root, $class);
+
+        return call_user_func_array([$this->{"{$root}.{$class}"}, $method], $model);
+    }
     private function _getClass($parts) {
         $ret    = "";
 
@@ -96,6 +106,8 @@ class Html extends Viewer {
         case "Text" :
         case "Header" :
         case "Input" :
+        case "Options" :
+        case "Choice" :
             if (empty($data["Attr"]))   $data["Attr"]   = [];
             if (empty($data["Child"]))  $data["Child"]  = [];
             $method = lcfirst($tag_type);
@@ -110,7 +122,7 @@ class Html extends Viewer {
             eval("\$ret .= \"{$this->{$tag_type}}\";");
         }
         if ($this->{$tag_type} and isset($data["Parts"])) {
-            $this->_offset = (int) $data["Parts"]["col"];
+            $this->_offset = max($this->_offset, (int) $data["Parts"]["offset"]) + (int) $data["Parts"]["col"];
         }
 
         return $ret;
@@ -243,10 +255,84 @@ class Html extends Viewer {
     protected function input($parts, $attr, $child) {
         $title          = $parts["title"];
         $name           = isset($attr["name"]) ? $attr["name"] : "";
-        $type           = (isset($attr["password"]) and ($attr["password"])) ? "password" : "text";
         $placeholder    = isset($attr["placeholder"]) ? $attr["placeholder"] : "";
+        if (empty($attr["type"])) $attr["type"] = 0;
 
-        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("title", "name", "type", "placeholder"));
+        switch ((int) $attr["type"]) {
+        case 0 :
+            $type       = "text";
+            $tag_type   = "input";
+            break;
+        case 1 :
+            $type       = "number";
+            $tag_type   = "input";
+            break;
+        case 2 :
+            $type       = "";
+            $tag_type   = "textarea";
+            break;
+        case 3 :
+            $type       = "password";
+            $tag_type   = "input";
+            break;
+        }
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("tag_type", "title", "name", "type", "placeholder"));
+    }
+
+    protected function options($parts, $attr, $child) {
+        $name       = isset($attr["name"]) ? $attr["name"] : "";
+        $value      = $attr["value"];
+        $contents   = $attr["contents"];
+        if (empty($attr["type"])) $attr["type"] = 1;
+
+        switch ((int) $attr["type"]) {
+        case 1 :
+            $type       = "";
+            $tag_type   = "option";
+            break;
+        case 2 :
+            $type       = "raddio";
+            $tag_type   = "input";
+            break;
+        }
+
+        return $this->_CommonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("tag_type", "name", "type", "value", "contents"));
+    }
+
+    protected function choice($parts, $attr, $child) {
+        $title  = $parts["title"];
+        $name   = isset($attr["name"]) ? $attr["name"] : "";
+        $value  = "";
+        if (empty($attr["type"])) $attr["type"] = 0;
+
+        switch ((int) $attr["type"]) {
+        case 0 :
+            $type       = "checkbox";
+            $tag_type   = "input";
+            $value      = 1;
+            break;
+        case 1 :
+        case 2 :
+            switch ((int) $attr["type"]) {
+            case 1 :
+                $type       = "";
+                $tag_type   = "select";
+                break;
+            case 2 :
+                $type       = "raddio";
+                $tag_type   = "input";
+                break;
+            }
+            if ($attr["model"]) {
+                $child      = [];
+                $cparts     = ["type" => "Options"] + $parts;
+                foreach ($this->_getModel($attr["model"]) as $key => $val) {
+                    $child[]    = ["Parts" => $cparts, "Attr" => ["value" => $key, "contents" => $val]];
+                }
+            }
+            break;
+        }
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("tag_type", "title", "name", "type", "value"));
     }
 
     public function view() {

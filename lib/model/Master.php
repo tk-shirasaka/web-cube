@@ -89,4 +89,12 @@ class Master extends Model {
 
         return $ret;
     }
+
+    public function getColRange() {
+        return range(0, 12);
+    }
+
+    public function getOffsetRange() {
+        return range(0, 11);
+    }
 }

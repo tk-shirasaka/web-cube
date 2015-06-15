@@ -378,8 +378,8 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Use password flg",
-            "Field"         : "password",
+            "Description"   : "Input type (0: text, 1: number, 2: multiline text, 3: password)",
+            "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
@@ -416,10 +416,10 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Choices (use json data structure [{key : val},...]), when raddio button, null isn't allow",
-            "Field"         : "options",
+            "Description"   : "If aparts get option data from model, use this field (e.g <Root>.<Class>.<Method>[.<args>])",
+            "Field"         : "model",
             "Type"          : "varchar",
-            "Length"        : 200,
+            "Length"        : 40,
             "Null"          : true,
             "Default"       : "NULL",
             "Primary"       : false,
@@ -427,8 +427,8 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "CheckBox/RaddioButton switch [check : 0, raddio : 1]",
-            "Field"         : "choice_kbn",
+            "Description"   : "Choice type (0: checkbox, 1: selectbox, 2: raddiobutton])",
+            "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,

@@ -48,6 +48,10 @@
             "name"          : "{I18n::$Input}"
         },
         {
+            "id"            : "Choice",
+            "name"          : "{I18n::$Choice}"
+        },
+        {
             "id"            : "Link",
             "name"          : "{I18n::$Link}"
         },
@@ -204,8 +208,8 @@
             "id"            : "PartsClassInput",
             "class"         : "NULL",
             "row"           : 1,
-            "col"           : 8,
-            "offset"        : 2,
+            "col"           : 0,
+            "offset"        : 0,
             "title"         : "Class",
             "page"          : "NULL",
             "type"          : "Input",
@@ -215,41 +219,41 @@
             "id"            : "PartsRowInput",
             "class"         : "NULL",
             "row"           : 2,
-            "col"           : 8,
-            "offset"        : 2,
+            "col"           : 4,
+            "offset"        : 0,
             "title"         : "Row",
             "page"          : "NULL",
             "type"          : "Input",
             "parent"        : "PartsDialog"
         },
         {
-            "id"            : "PartsColInput",
+            "id"            : "PartsColChoice",
             "class"         : "NULL",
-            "row"           : 3,
-            "col"           : 8,
-            "offset"        : 2,
+            "row"           : 2,
+            "col"           : 4,
+            "offset"        : 4,
             "title"         : "Col",
             "page"          : "NULL",
-            "type"          : "Input",
+            "type"          : "Choice",
             "parent"        : "PartsDialog"
         },
         {
-            "id"            : "PartsOffsetInput",
+            "id"            : "PartsOffsetChoice",
             "class"         : "NULL",
-            "row"           : 4,
-            "col"           : 8,
-            "offset"        : 2,
+            "row"           : 2,
+            "col"           : 4,
+            "offset"        : 8,
             "title"         : "Offset",
             "page"          : "NULL",
-            "type"          : "Input",
+            "type"          : "Choice",
             "parent"        : "PartsDialog"
         },
         {
             "id"            : "PartsTitleInput",
             "class"         : "NULL",
-            "row"           : 5,
-            "col"           : 8,
-            "offset"        : 2,
+            "row"           : 3,
+            "col"           : 0,
+            "offset"        : 0,
             "title"         : "Title",
             "page"          : "NULL",
             "type"          : "Input",
@@ -258,9 +262,9 @@
         {
             "id"            : "PartsPageInput",
             "class"         : "NULL",
-            "row"           : 6,
-            "col"           : 8,
-            "offset"        : 2,
+            "row"           : 4,
+            "col"           : 4,
+            "offset"        : 0,
             "title"         : "Page",
             "page"          : "NULL",
             "type"          : "Input",
@@ -269,9 +273,9 @@
         {
             "id"            : "PartsTypeInput",
             "class"         : "NULL",
-            "row"           : 7,
-            "col"           : 8,
-            "offset"        : 2,
+            "row"           : 4,
+            "col"           : 4,
+            "offset"        : 4,
             "title"         : "Type",
             "page"          : "NULL",
             "type"          : "Input",
@@ -280,9 +284,9 @@
         {
             "id"            : "PartsParentInput",
             "class"         : "NULL",
-            "row"           : 8,
-            "col"           : 8,
-            "offset"        : 2,
+            "row"           : 4,
+            "col"           : 4,
+            "offset"        : 8,
             "title"         : "Parent",
             "page"          : "NULL",
             "type"          : "Input",
@@ -446,62 +450,64 @@
         {
             "id"            : "PartsClassInput",
             "name"          : "class",
-            "password"      : 0,
+            "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsRowInput",
             "name"          : "row",
-            "password"      : 0,
-            "placeholder"   : "NULL"
-        },
-        {
-            "id"            : "PartsColInput",
-            "name"          : "col",
-            "password"      : 0,
-            "placeholder"   : "NULL"
-        },
-        {
-            "id"            : "PartsOffsetInput",
-            "name"          : "offset",
-            "password"      : 0,
+            "type"          : 1,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsTitleInput",
             "name"          : "title",
-            "password"      : 0,
+            "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsPageInput",
             "name"          : "page",
-            "password"      : 0,
+            "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsTypeInput",
             "name"          : "type",
-            "password"      : 0,
+            "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsParentInput",
             "name"          : "type",
-            "password"      : 0,
+            "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "LoginUser",
             "name"          : "user",
-            "password"      : 0,
+            "type"          : 0,
             "placeholder"   : "user"
         },
         {
             "id"            : "LoginPassword",
             "name"          : "password",
-            "password"      : 1,
+            "type"          : 3,
             "placeholder"   : "password"
+        }
+    ],
+    "ChoiceParts"    : [
+        {
+            "id"            : "PartsColChoice",
+            "name"          : "col",
+            "model"         : "Model.Master.getColRange",
+            "type"          : 1
+        },
+        {
+            "id"            : "PartsOffsetChoice",
+            "name"          : "offset",
+            "model"         : "Model.Master.getOffsetRange",
+            "type"          : 1
         }
     ],
     "TextParts"   : [
