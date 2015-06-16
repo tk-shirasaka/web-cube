@@ -194,6 +194,17 @@
             "parent"        : "SideList"
         },
         {
+            "id"            : "PartsForm",
+            "class"         : "well",
+            "row"           : 1,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Parts Settings",
+            "page"          : "NULL",
+            "type"          : "Form",
+            "parent"        : "Main"
+        },
+        {
             "id"            : "PartsDialog",
             "class"         : "NULL",
             "row"           : 0,
@@ -202,13 +213,13 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "Main"
+            "parent"        : "PartsForm"
         },
         {
             "id"            : "PartsClassInput",
             "class"         : "NULL",
             "row"           : 1,
-            "col"           : 0,
+            "col"           : 5,
             "offset"        : 0,
             "title"         : "Class",
             "page"          : "NULL",
@@ -218,9 +229,9 @@
         {
             "id"            : "PartsRowInput",
             "class"         : "NULL",
-            "row"           : 2,
-            "col"           : 4,
-            "offset"        : 0,
+            "row"           : 1,
+            "col"           : 2,
+            "offset"        : 6,
             "title"         : "Row",
             "page"          : "NULL",
             "type"          : "Input",
@@ -229,9 +240,9 @@
         {
             "id"            : "PartsColChoice",
             "class"         : "NULL",
-            "row"           : 2,
-            "col"           : 4,
-            "offset"        : 4,
+            "row"           : 1,
+            "col"           : 2,
+            "offset"        : 8,
             "title"         : "Col",
             "page"          : "NULL",
             "type"          : "Choice",
@@ -240,9 +251,9 @@
         {
             "id"            : "PartsOffsetChoice",
             "class"         : "NULL",
-            "row"           : 2,
-            "col"           : 4,
-            "offset"        : 8,
+            "row"           : 1,
+            "col"           : 2,
+            "offset"        : 10,
             "title"         : "Offset",
             "page"          : "NULL",
             "type"          : "Choice",
@@ -251,8 +262,8 @@
         {
             "id"            : "PartsTitleInput",
             "class"         : "NULL",
-            "row"           : 3,
-            "col"           : 0,
+            "row"           : 2,
+            "col"           : 5,
             "offset"        : 0,
             "title"         : "Title",
             "page"          : "NULL",
@@ -262,9 +273,9 @@
         {
             "id"            : "PartsPageInput",
             "class"         : "NULL",
-            "row"           : 4,
-            "col"           : 4,
-            "offset"        : 0,
+            "row"           : 2,
+            "col"           : 2,
+            "offset"        : 6,
             "title"         : "Page",
             "page"          : "NULL",
             "type"          : "Input",
@@ -273,9 +284,9 @@
         {
             "id"            : "PartsTypeInput",
             "class"         : "NULL",
-            "row"           : 4,
-            "col"           : 4,
-            "offset"        : 4,
+            "row"           : 2,
+            "col"           : 2,
+            "offset"        : 8,
             "title"         : "Type",
             "page"          : "NULL",
             "type"          : "Input",
@@ -284,9 +295,9 @@
         {
             "id"            : "PartsParentInput",
             "class"         : "NULL",
-            "row"           : 4,
-            "col"           : 4,
-            "offset"        : 8,
+            "row"           : 2,
+            "col"           : 2,
+            "offset"        : 10,
             "title"         : "Parent",
             "page"          : "NULL",
             "type"          : "Input",
@@ -301,7 +312,7 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "Main"
+            "parent"        : "PartsForm"
         },
         {
             "id"            : "BlockPartsDialog",
@@ -312,7 +323,7 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "Main"
+            "parent"        : "PartsForm"
         },
         {
             "id"            : "TextPartsDialog",
@@ -323,7 +334,40 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "Main"
+            "parent"        : "PartsForm"
+        },
+        {
+            "id"            : "PartsPager",
+            "class"         : "pager",
+            "row"           : 1,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "NULL",
+            "page"          : "NULL",
+            "type"          : "Block",
+            "parent"        : "PartsForm"
+        },
+        {
+            "id"            : "PartsPrevious",
+            "class"         : "NULL",
+            "row"           : 1,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Previous",
+            "page"          : "NULL",
+            "type"          : "ListContents",
+            "parent"        : "PartsPager"
+        },
+        {
+            "id"            : "PartsNext",
+            "class"         : "NULL",
+            "row"           : 1,
+            "col"           : 0,
+            "offset"        : 1,
+            "title"         : "Next",
+            "page"          : "NULL",
+            "type"          : "ListContents",
+            "parent"        : "PartsPager"
         },
         {
             "id"            : "LoginForm",
@@ -418,6 +462,10 @@
         {
             "id"            : "TextPartsDialog",
             "tag_type"      : 0
+        },
+        {
+            "id"            : "PartsPager",
+            "tag_type"      : 2
         }
     ],
     "ListContentsParts"   : [
@@ -435,6 +483,16 @@
             "id"            : "TextPartsList",
             "clickable"     : 1,
             "link"          : "NULL"
+        },
+        {
+            "id"            : "PartsPrevious",
+            "clickable"     : 1,
+            "link"          : "NULL"
+        },
+        {
+            "id"            : "PartsNext",
+            "clickable"     : 1,
+            "link"          : "NULL"
         }
     ],
     "FormParts"   : [
@@ -443,6 +501,13 @@
             "method"        : 1,
             "action"        : "/login",
             "submit"        : "Login",
+            "cancel"        : "Cancel"
+        },
+        {
+            "id"            : "PartsForm",
+            "method"        : 1,
+            "action"        : "/parts",
+            "submit"        : "Confirm",
             "cancel"        : "Cancel"
         }
     ],

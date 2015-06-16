@@ -21,7 +21,6 @@ class Master extends Model {
                     foreach ($record as $field => $val) {
                         $val = trim($val);
                         if (substr($val, 0,1) === "{" and substr($val, -1,1) === "}") {
-                            $separator  = "::";
                             $val        = preg_replace("/\{(.*)\}/", "$1", $val);
                             if (defined($val)) $val = constant($val);
                         }
