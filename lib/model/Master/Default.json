@@ -194,15 +194,59 @@
             "parent"        : "SideList"
         },
         {
+            "id"            : "PartsFormParent",
+            "class"         : "navbar navbar-inverse navbar-fixed-bottom",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "NULL",
+            "page"          : "NULL",
+            "type"          : "Block",
+            "parent"        : "Footer"
+        },
+        {
+            "id"            : "PartsFormSlider",
+            "class"         : "NULL",
+            "row"           : 1,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "NULL",
+            "page"          : "NULL",
+            "type"          : "Block",
+            "parent"        : "PartsFormParent"
+        },
+        {
+            "id"            : "PartsFormUp",
+            "class"         : "btn btn-info glyphicon glyphicon-chevron-up",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "",
+            "page"          : "NULL",
+            "type"          : "ListContents",
+            "parent"        : "PartsFormSlider"
+        },
+        {
+            "id"            : "PartsFormDown",
+            "class"         : "btn btn-info glyphicon glyphicon-chevron-down",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "",
+            "page"          : "NULL",
+            "type"          : "ListContents",
+            "parent"        : "PartsFormSlider"
+        },
+        {
             "id"            : "PartsForm",
             "class"         : "well",
-            "row"           : 1,
+            "row"           : 2,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Parts Settings",
             "page"          : "NULL",
             "type"          : "Form",
-            "parent"        : "Main"
+            "parent"        : "PartsFormParent"
         },
         {
             "id"            : "PartsDialog",
@@ -340,7 +384,7 @@
             "id"            : "PartsPager",
             "class"         : "pager",
             "row"           : 1,
-            "col"           : 0,
+            "col"           : 12,
             "offset"        : 0,
             "title"         : "NULL",
             "page"          : "NULL",
@@ -368,39 +412,6 @@
             "page"          : "NULL",
             "type"          : "ListContents",
             "parent"        : "PartsPager"
-        },
-        {
-            "id"            : "LoginForm",
-            "class"         : "well",
-            "row"           : 1,
-            "col"           : 10,
-            "offset"        : 1,
-            "title"         : "Login",
-            "page"          : "NULL",
-            "type"          : "Form",
-            "parent"        : "Main"
-        },
-        {
-            "id"            : "LoginUser",
-            "class"         : "NULL",
-            "row"           : 1,
-            "col"           : 8,
-            "offset"        : 2,
-            "title"         : "{I18n::$FORM_USER}",
-            "page"          : "NULL",
-            "type"          : "Input",
-            "parent"        : "LoginForm"
-        },
-        {
-            "id"            : "LoginPassword",
-            "class"         : "NULL",
-            "row"           : 2,
-            "col"           : 8,
-            "offset"        : 2,
-            "title"         : "{I18n::$FORM_PASSWORD}",
-            "page"          : "NULL",
-            "type"          : "Input",
-            "parent"        : "LoginForm"
         },
         {
             "id"            : "Error",
@@ -448,6 +459,14 @@
             "tag_type"      : 2
         },
         {
+            "id"            : "PartsFormParent",
+            "tag_type"      : 0
+        },
+        {
+            "id"            : "PartsFormSlider",
+            "tag_type"      : 2
+        },
+        {
             "id"            : "PartsDialog",
             "tag_type"      : 0
         },
@@ -485,6 +504,16 @@
             "link"          : "NULL"
         },
         {
+            "id"            : "PartsFormUp",
+            "clickable"     : 1,
+            "link"          : "NULL"
+        },
+        {
+            "id"            : "PartsFormDown",
+            "clickable"     : 1,
+            "link"          : "NULL"
+        },
+        {
             "id"            : "PartsPrevious",
             "clickable"     : 1,
             "link"          : "NULL"
@@ -496,13 +525,6 @@
         }
     ],
     "FormParts"   : [
-        {
-            "id"            : "LoginForm",
-            "method"        : 1,
-            "action"        : "/login",
-            "submit"        : "Login",
-            "cancel"        : "Cancel"
-        },
         {
             "id"            : "PartsForm",
             "method"        : 1,
