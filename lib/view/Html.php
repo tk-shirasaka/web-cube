@@ -91,8 +91,10 @@ class Html extends Viewer {
 
         switch ((string) $tag_type) {
         case "Layout" :
+            App::Uses("View", $data[0]["Page"]["path"], "js");
             $title      = $data[0]["Page"]["title"];
             $locale     = $this->_params["Locale"];
+            $script     = $this->{"View.". $data[0]["Page"]["path"]};
             foreach ($data as $key => $val) {
                 $contents  .= $this->_render($key, $val); 
             }

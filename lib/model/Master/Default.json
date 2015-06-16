@@ -206,41 +206,19 @@
         },
         {
             "id"            : "PartsFormSlider",
-            "class"         : "NULL",
+            "class"         : "btn btn-info glyphicon glyphicon-chevron-down",
             "row"           : 1,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "NULL",
             "page"          : "NULL",
-            "type"          : "Block",
+            "type"          : "ListContents",
             "parent"        : "PartsFormParent"
-        },
-        {
-            "id"            : "PartsFormUp",
-            "class"         : "btn btn-info glyphicon glyphicon-chevron-up",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "",
-            "page"          : "NULL",
-            "type"          : "ListContents",
-            "parent"        : "PartsFormSlider"
-        },
-        {
-            "id"            : "PartsFormDown",
-            "class"         : "btn btn-info glyphicon glyphicon-chevron-down",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "",
-            "page"          : "NULL",
-            "type"          : "ListContents",
-            "parent"        : "PartsFormSlider"
         },
         {
             "id"            : "PartsForm",
             "class"         : "well",
-            "row"           : 1,
+            "row"           : 2,
             "col"           : 10,
             "offset"        : 1,
             "title"         : "Parts Settings",
@@ -504,13 +482,8 @@
             "link"          : "NULL"
         },
         {
-            "id"            : "PartsFormUp",
-            "clickable"     : 1,
-            "link"          : "NULL"
-        },
-        {
-            "id"            : "PartsFormDown",
-            "clickable"     : 1,
+            "id"            : "PartsFormSlider",
+            "clickable"     : 0,
             "link"          : "NULL"
         },
         {

@@ -189,6 +189,9 @@ final class Core {
                     $class["instance"]  = $name::Get();
                     if (method_exists($class["instance"], "init")) $class["instance"]->init();
                     break;
+                case "js" :
+                    $class["instance"]  = file_get_contents($class["file"]);
+                    break;
                 case "json" :
                     $class["instance"]  = json_decode(file_get_contents($class["file"]), true);
                     break;

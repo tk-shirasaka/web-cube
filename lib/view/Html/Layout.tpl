@@ -16,7 +16,11 @@
             $contents
         </div>
        
+        <script src="//fb.me/react-0.13.3.js"></script>
+        <script src="//fb.me/JSXTransformer-0.13.3.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+        $script
     </body>
 </html>
