@@ -96,4 +96,15 @@ class Master extends Model {
     public function getOffsetRange() {
         return range(0, 11);
     }
+
+    public function getPartsType() {
+        $ret    = [];
+        $table  = "PartsType";
+
+        foreach ($this->Source->find($table, ["Field" => ["id", "name"]]) as $type) {
+            $ret[$type[$table]["id"]] = $type[$table]["name"];
+        }
+
+        return $ret;
+    }
 }

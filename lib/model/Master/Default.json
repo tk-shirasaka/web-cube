@@ -240,9 +240,9 @@
         {
             "id"            : "PartsForm",
             "class"         : "well",
-            "row"           : 2,
-            "col"           : 0,
-            "offset"        : 0,
+            "row"           : 1,
+            "col"           : 10,
+            "offset"        : 1,
             "title"         : "Parts Settings",
             "page"          : "NULL",
             "type"          : "Form",
@@ -326,14 +326,14 @@
             "parent"        : "PartsDialog"
         },
         {
-            "id"            : "PartsTypeInput",
+            "id"            : "PartsTypeChoice",
             "class"         : "NULL",
             "row"           : 2,
             "col"           : 2,
             "offset"        : 8,
             "title"         : "Type",
             "page"          : "NULL",
-            "type"          : "Input",
+            "type"          : "Choice",
             "parent"        : "PartsDialog"
         },
         {
@@ -559,12 +559,6 @@
             "placeholder"   : "NULL"
         },
         {
-            "id"            : "PartsTypeInput",
-            "name"          : "type",
-            "type"          : 0,
-            "placeholder"   : "NULL"
-        },
-        {
             "id"            : "PartsParentInput",
             "name"          : "type",
             "type"          : 0,
@@ -594,6 +588,12 @@
             "id"            : "PartsOffsetChoice",
             "name"          : "offset",
             "model"         : "Model.Master.getOffsetRange",
+            "type"          : 1
+        },
+        {
+            "id"            : "PartsTypeChoice",
+            "name"          : "type",
+            "model"         : "Model.Master.getPartsType",
             "type"          : 1
         }
     ],
