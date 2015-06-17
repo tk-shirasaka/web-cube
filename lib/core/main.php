@@ -165,43 +165,57 @@ final class Core {
 
         if (!$flg and isset($sub)) {
             $uses   = $this->getUses($src, $root);
-            foreach ($uses[$root] as $class => $attr) {
+            foreach ($uses[$root] as $key => $attr) {
                 if (isset($attr["sub_modules"][$name])) {
                     $flg    = true;
                     break;
                 }
             }
+            if ($flg) $class = $key;
         }
 
         if ($flg) {
             if (isset($sub)) {
-                $class  =& $this->_classes[$root][$class]["sub_modules"][$sub];
-                $flg    = ($class["file"] and $class["instance"] === null);
+                $class_list =& $this->_classes[$root][$class]["sub_modules"][$sub];
+                $flg        = ($class_list["file"] and $class_list["instance"] === null);
             } else {
-                $class  =& $this->_classes[$root][$class];
-                $flg    = (array_search($src, $class["allow_list"]) !== false and $class["file"] and $class["instance"] === null);
+                $class_list =& $this->_classes[$root][$class];
+                $flg        = (array_search($src, $class_list["allow_list"]) !== false and $class_list["file"] and $class_list["instance"] === null);
             }
 
             if ($flg) {
                 $this->_running = $name;
-                switch ($class["ext"]) {
+                switch ($class_list["ext"]) {
                 case "php" :
-                    $class["instance"]  = $name::Get();
-                    if (method_exists($class["instance"], "init")) $class["instance"]->init();
+                    $class_list["instance"]  = $name::Get();
+                    if (method_exists($class_list["instance"], "init")) $class_list["instance"]->init();
                     break;
                 case "js" :
                 case "css" :
-                    $class["instance"]  = file_get_contents($class["file"]);
+                    $class_list["instance"]  = file_get_contents($class_list["file"]);
                     break;
                 case "json" :
-                    $class["instance"]  = json_decode(file_get_contents($class["file"]), true);
+                    $class_list["instance"]  = json_decode(file_get_contents($class_list["file"]), true);
                     break;
                 case "tpl" :
-                    $class["instance"]  = str_replace("\"", "\\\"", file_get_contents($class["file"]));
+                    $class_list["instance"]  = str_replace("\"", "\\\"", file_get_contents($class_list["file"]));
                     break;
                 }
             }
-            $ret = $class["instance"];
+            $ret = $class_list["instance"];
+        }
+
+        if (!$ret) {
+            foreach ($this->_classes[$root][$class]["allow_list"] as $allow) {
+                $uses       = $this->srchClass($allow);
+                $instance   = ($uses) ? $this->_classes[$uses["root"]][$uses["class"]]["instance"] : null;
+                if (!isset($sub))           $name   = "{$root}.{$name}";
+                if (is_object($instance))   $ret    = $instance->{$name};
+                if ($ret) {
+                    if (isset($class_list["allow_list"])) $class_list["allow_list"][] = $src;
+                    break;
+                }
+            }
         }
         return $ret;
     }
@@ -228,7 +242,7 @@ final class Core {
 
         if (!$ret and !empty($this->_page)) {
             $path           = explode("/", $this->_page[0]["Page"]["path"]);
-            $ret["Class"]   = array_shift($path);
+            $ret["Class"]   = ucfirst(array_shift($path));
             $ret["Action"]  = array_shift($path);
             $ret["Args"]    = $path;
         }
