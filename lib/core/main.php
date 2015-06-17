@@ -190,6 +190,7 @@ final class Core {
                     if (method_exists($class["instance"], "init")) $class["instance"]->init();
                     break;
                 case "js" :
+                case "css" :
                     $class["instance"]  = file_get_contents($class["file"]);
                     break;
                 case "json" :
