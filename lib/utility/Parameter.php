@@ -47,7 +47,7 @@ class Parameter extends Common {
         $table      = "User";
         $params     = ["Host"];
 
-        if (Core::Get()->getConfig("Configure.MultiUser")) $params += ["Path"];
+        if (Core::Get()->getConfig("Configure.MultiUser")) $params[] = "Path";
         $params     = $this->getParams($params);
         $params    += ["User" => SYS_USER];
 
