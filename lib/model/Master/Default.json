@@ -17,7 +17,7 @@
             "id"            : "Default",
             "title"         : "Default Page",
             "user"          : "System",
-            "path"          : "Default"
+            "path"          : "maintenance/page"
         },
         {
             "id"            : "Error",
@@ -501,7 +501,7 @@
         {
             "id"            : "PartsForm",
             "method"        : 1,
-            "action"        : "/parts",
+            "action"        : "maintenance/ajax_parts",
             "submit"        : "Confirm",
             "cancel"        : "Cancel"
         }

@@ -94,7 +94,7 @@ class Html extends Viewer {
             App::Uses("View", $data[0]["Page"]["path"]. "_script", "js");
             App::Uses("View", $data[0]["Page"]["path"]. "_style", "css");
             $title      = $data[0]["Page"]["title"];
-            $locale     = $this->_params["Locale"];
+            $locale     = $this->getParams("Locale");
             $script     = $this->{"View.". $data[0]["Page"]["path"]. "_script"};
             $style      = $this->{"View.". $data[0]["Page"]["path"]. "_style"};
             foreach ($data as $key => $val) {
@@ -342,7 +342,7 @@ class Html extends Viewer {
     public function view($type = "Layout") {
         $this->_refresh();
 
-        $this->_html = $this->_render($type, $this->_page);
+        $this->_html = $this->_render($type, $this->getPage());
 
         echo $this->_html;
     }

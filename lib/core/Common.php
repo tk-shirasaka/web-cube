@@ -7,6 +7,7 @@ abstract class Common {
     protected   $_sub_dir       = null;
     protected   $_page          = [];
     protected   $_params        = [];
+    protected   $_view          = [];
 
     private final function __construct($info) {
         $name           = $info->name;
@@ -15,11 +16,28 @@ abstract class Common {
         $this->_sub_dir = dirname($this->_file). DS. str_replace(".php", "", basename($this->_file));
         $this->_page    = Core::Get()->getPage();
         $this->_params  = Core::Get()->getParams();
+        $this->_view    = Core::Get()->getView();
     }
 
     public final function __get($name) {
         $ret           =& Core::Get()->getClass($name, $this->_file);
         if ($ret) $this->{$name} =& $ret;
+        return $ret;
+    }
+
+    public final function __call($method, $args) {
+        $ret            = null;
+        if (strpos($method, "get") === 0) {
+            $name = strtolower(preg_replace("/[A-Z]/", "_\\0", substr($method, 3)));
+            if (!isset($this->{$name})) continue;
+            if (!is_array($args)) $args = [$args];
+            $ret = $this->{$name};
+
+            foreach ($args as $key) {
+                $ret = (isset($ret[$key])) ? $ret[$key] : null;
+                if ($ret === null) break;
+            }
+        }
         return $ret;
     }
 

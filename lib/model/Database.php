@@ -16,7 +16,7 @@ abstract class Database extends Common {
     abstract protected function _close();
 
     private final function _init() {
-        if (__CLASS__ !== $this->_name and !$this->_debug_level) {
+        if (__CLASS__ !== $this->getName() and !$this->_debug_level) {
             $this->_debug_level = Core::Get()->getConfig("Configure.Debug");
         }
     }
@@ -28,7 +28,7 @@ abstract class Database extends Common {
     public function setConfig(&$object) {
         $this->config   = $object->config;
         if (!$object->Schema) {
-            $file_path  = $object->_sub_dir. DS. "Schema.json";
+            $file_path  = $object->getSubDir(). DS. "Schema.json";
             $schema     = $this->_getSchema();
             file_put_contents($file_path, json_encode($schema));
             $object->Schema = $schema;

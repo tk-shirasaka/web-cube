@@ -55,7 +55,7 @@ class I18n extends Common {
     public static   $COM_PREV;
 
     private function _init() {
-        $locale         = $this->Locales[$this->_params["Locale"]];
+        $locale         = $this->Locales[$this->getParams("Locale")];
         $this->_locale  = $this->{$locale};
 
         foreach ($this->Dictionary as $category => $keys) {

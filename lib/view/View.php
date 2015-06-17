@@ -1,19 +1,27 @@
 <?php
-App::Uses("View", "Html");
-
 class View extends Common {
     protected   $type           = "Html";
     protected   $auto_render    = true;
     protected   $layout         = "Layout";
 
     final public function init() {
-        $path   = explode("/", $this->_page[0]["Page"]["path"]);
-        $action = (count($path) < 2) ? "" : $path[1];
-        array_shift($path);
-        array_shift($path);
-        if (method_exists($this, "beforeRender"))   $this->beforeRender();
-        if (method_exists($this, $action))          call_user_func_array([$this, $action], $path);
-        if ($this->auto_render)                     $this->{"View.{$this->type}"}->view($this->layout);
-        if (method_exists($this, "afterRender"))    $this->afterRender();
+        $class      = $this->getView("Class");
+        $action     = $this->getView("Action");
+        $args       = $this->getView("Args");
+        $renderd    = false;
+
+        if (__CLASS__ === $this->getName()) {
+            App::Uses("View", $this->type);
+            App::Uses("View", $class);
+ 
+            if (is_object($this->{"View.{$class}"})) $renderd = true;
+        }
+
+        if (!$renderd) {
+            if (method_exists($this, "beforeRender"))   $this->beforeRender();
+            if (method_exists($this, $action))          call_user_func_array([$this, $action], $args);
+            if ($this->auto_render)                     $this->{"View.{$this->type}"}->view($this->layout);
+            if (method_exists($this, "afterRender"))    $this->afterRender();
+        }
     }
 }

@@ -53,18 +53,18 @@ class Master extends Model {
         $table  = ["Page", "Parts"];
         $sort   = ["row", "offset"];
         $where  = [
-            "path"      => implode("/", $this->_params["Path"]),
-            "user"      => $this->_params["User"],
+            "path"      => implode("/", $this->getParams("Path")),
+            "user"      => $this->getParams("User"),
         ];
 
         if ($conditions) {
             $where  = isset($conditions["Where"]) ? $conditions["Where"] : $where;
-        } else if ($this->_params["Method"] === "POST" and isset($this->_params["Data"]["PageId"])) {
-            $where  = ["id" => $this->_params["Data"]["PageId"]];
+        } else if ($this->getParams("Method") === "POST" and $this->getParams(["Data", "PageId"])) {
+            $where  = ["id" => $this->getParams(["Data", "PageId"])];
         }
 
         $ret    = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
-        if (empty($ret) and $this->_params["User"] === "System") {
+        if (empty($ret) and $this->getParams("User") === "System") {
             $where["user"]  = "System";
             $where["path"]  = "Default";
             $ret            = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);

@@ -223,12 +223,24 @@ final class Core {
 
     }
 
+    public function getView() {
+        static $ret     = [];
+
+        if (!$ret and !empty($this->_page)) {
+            $path           = explode("/", $this->_page[0]["Page"]["path"]);
+            $ret["Class"]   = array_shift($path);
+            $ret["Action"]  = array_shift($path);
+            $ret["Args"]    = $path;
+        }
+
+        return $ret;
+    }
+
     public function getParams() {
         static $skip    = false;
-        $ret            = $this->_params;
         $class          = "Parameter";
 
-        if (!$skip and !$ret and $this->_running !== $class) {
+        if (!$skip and !$this->_params and $this->_running !== $class) {
             $skip   = true;
             $this->getClass("Utility.Parameter", __FILE__)->getParams();
         }
@@ -238,10 +250,9 @@ final class Core {
 
     public function getPage() {
         static $skip    = false;
-        $ret            = $this->_page;
         $class          = "Master";
 
-        if (!$skip and !$ret and $this->_running !== $class) {
+        if (!$skip and !$this->_page and $this->_running !== $class) {
             $skip   = true;
             $this->getClass("Model.Master", __FILE__)->getPage();
         }
