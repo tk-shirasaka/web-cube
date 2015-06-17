@@ -20,6 +20,7 @@ class ErrorHandler extends Common {
 
     private function _putMessage($message) {
     }
+
     public function init() {
         $this->_init();
     }

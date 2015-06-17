@@ -20,6 +20,12 @@
             "path"          : "maintenance/page"
         },
         {
+            "id"            : "AjaxParts",
+            "title"         : "Ajax Parts",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_parts"
+        },
+        {
             "id"            : "Error",
             "title"         : "Error Page",
             "user"          : "System",
@@ -392,6 +398,17 @@
             "parent"        : "PartsPager"
         },
         {
+            "id"            : "AjaxParts",
+            "class"         : "NULL",
+            "row"           : 2,
+            "col"           : 8,
+            "offset"        : 2,
+            "title"         : "{I18n::$PAGE_ERROR}",
+            "page"          : "AjaxParts",
+            "type"          : "Text",
+            "parent"        : "NULL"
+        },
+        {
             "id"            : "Error",
             "class"         : "NULL",
             "row"           : 2,
@@ -574,6 +591,11 @@
         {
             "id"            : "PageTitle",
             "contents"      : "Web Cube",
+            "multiple"      : 0
+        },
+        {
+            "id"            : "AjaxParts",
+            "contents"      : "",
             "multiple"      : 0
         },
         {

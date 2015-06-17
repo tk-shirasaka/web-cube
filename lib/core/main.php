@@ -243,7 +243,7 @@ final class Core {
         if (!$ret and !empty($this->_page)) {
             $path           = explode("/", $this->_page[0]["Page"]["path"]);
             $ret["Class"]   = ucfirst(array_shift($path));
-            $ret["Action"]  = array_shift($path);
+            $ret["Action"]  = str_replace(" ", "", lcfirst(ucwords(strtr(array_shift($path), '_', ' '))));
             $ret["Args"]    = $path;
         }
 
