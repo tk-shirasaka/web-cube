@@ -4,6 +4,6 @@
     $block
     <div class="text-center">
         <button type="submit" class="btn btn-primary">$submit</button>
-        <a class="btn btn-default">$cancel</a>
+        <button type="reset" class="btn btn-default">$cancel</button>
     </div>
 </form>
