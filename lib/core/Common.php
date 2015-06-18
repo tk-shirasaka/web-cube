@@ -27,16 +27,18 @@ abstract class Common {
 
     public final function __call($method, $args) {
         $ret            = null;
-        if (strpos($method, "get") === 0) {
+        $args           = implode(".", $args);
+        while (strpos($method, "get") === 0) {
             $name = strtolower(preg_replace("/[A-Z]/", "_\\0", substr($method, 3)));
-            if (!isset($this->{$name})) continue;
-            if (!is_array($args)) $args = [$args];
+            if (!isset($this->{$name})) break;
             $ret = $this->{$name};
 
-            foreach ($args as $key) {
+            if (!$args) break;
+            foreach (explode(".", $args) as $key) {
                 $ret = (isset($ret[$key])) ? $ret[$key] : null;
                 if ($ret === null) break;
             }
+            break;
         }
         return $ret;
     }

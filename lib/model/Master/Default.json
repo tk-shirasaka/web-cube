@@ -23,7 +23,7 @@
             "id"            : "AjaxParts",
             "title"         : "Ajax Parts",
             "user"          : "System",
-            "path"          : "maintenance/ajax_parts"
+            "path"          : "maintenance/ajax_parts_render"
         },
         {
             "id"            : "Error",
@@ -518,7 +518,7 @@
         {
             "id"            : "PartsForm",
             "method"        : 1,
-            "action"        : "maintenance/ajax_parts",
+            "action"        : "/maintenance/ajax_parts_render",
             "submit"        : "Confirm",
             "cancel"        : "Cancel"
         }

@@ -59,8 +59,8 @@ class Master extends Model {
 
         if ($conditions) {
             $where  = isset($conditions["Where"]) ? $conditions["Where"] : $where;
-        } else if ($this->getParams("Method") === "POST" and $this->getParams(["Data", "PageId"])) {
-            $where  = ["id" => $this->getParams(["Data", "PageId"])];
+        } else if ($this->getParams("Method") === "POST" and $this->getParams("Data.PageId")) {
+            $where  = ["id" => $this->getParams("Data.PageId")];
         }
 
         $ret    = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);

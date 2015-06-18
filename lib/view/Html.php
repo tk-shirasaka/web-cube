@@ -337,10 +337,11 @@ class Html extends Viewer {
         return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("tag_type", "title", "name", "type", "value"));
     }
 
-    public function view($type = "Layout") {
+    public function view($type = "Layout", $data = null) {
+        if (is_null($data)) $data = $this->getPage();
         $this->_refresh();
 
-        $this->_html = $this->_render($type, $this->getPage());
+        $this->_html = $this->_render($type, $data);
 
         echo $this->_html;
     }
