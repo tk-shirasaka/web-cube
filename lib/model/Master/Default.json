@@ -332,6 +332,17 @@
             "parent"        : "PartsDialog"
         },
         {
+            "id"            : "PartsAttrDialog",
+            "class"         : "NULL",
+            "row"           : 1,
+            "col"           : 12,
+            "offset"        : 0,
+            "title"         : "NULL",
+            "page"          : "NULL",
+            "type"          : "Block",
+            "parent"        : "PartsForm"
+        },
+        {
             "id"            : "FormPartsDialog",
             "class"         : "NULL",
             "row"           : 0,
@@ -340,7 +351,51 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "PartsForm"
+            "parent"        : "PartsAttrDialog"
+        },
+        {
+            "id"            : "FormMethodChoice",
+            "class"         : "NULL",
+            "row"           : 1,
+            "col"           : 2,
+            "offset"        : 0,
+            "title"         : "Method",
+            "page"          : "NULL",
+            "type"          : "Choice",
+            "parent"        : "FormPartsDialog"
+        },
+        {
+            "id"            : "FormActionInput",
+            "class"         : "NULL",
+            "row"           : 1,
+            "col"           : 8,
+            "offset"        : 4,
+            "title"         : "Submit URI",
+            "page"          : "NULL",
+            "type"          : "Input",
+            "parent"        : "FormPartsDialog"
+        },
+        {
+            "id"            : "FormSubmitInput",
+            "class"         : "NULL",
+            "row"           : 2,
+            "col"           : 6,
+            "offset"        : 0,
+            "title"         : "Submit Text",
+            "page"          : "NULL",
+            "type"          : "Input",
+            "parent"        : "FormPartsDialog"
+        },
+        {
+            "id"            : "FormCancelInput",
+            "class"         : "NULL",
+            "row"           : 2,
+            "col"           : 6,
+            "offset"        : 6,
+            "title"         : "Cancel Text",
+            "page"          : "NULL",
+            "type"          : "Input",
+            "parent"        : "FormPartsDialog"
         },
         {
             "id"            : "BlockPartsDialog",
@@ -351,7 +406,18 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "PartsForm"
+            "parent"        : "PartsAttrDialog"
+        },
+        {
+            "id"            : "BlockTagTypeChoice",
+            "class"         : "NULL",
+            "row"           : 1,
+            "col"           : 4,
+            "offset"        : 0,
+            "title"         : "Tag Type",
+            "page"          : "NULL",
+            "type"          : "Choice",
+            "parent"        : "BlockPartsDialog"
         },
         {
             "id"            : "TextPartsDialog",
@@ -362,42 +428,31 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "PartsForm"
+            "parent"        : "PartsAttrDialog"
         },
         {
-            "id"            : "PartsPager",
-            "class"         : "pager",
+            "id"            : "TextContentsInput",
+            "class"         : "NULL",
             "row"           : 1,
             "col"           : 12,
             "offset"        : 0,
-            "title"         : "NULL",
+            "title"         : "Text Contents",
             "page"          : "NULL",
-            "type"          : "Block",
-            "parent"        : "PartsForm"
+            "type"          : "Input",
+            "parent"        : "TextPartsDialog"
         },
         {
-            "id"            : "PartsPrevious",
+            "id"            : "TextMultipleChoice",
             "class"         : "NULL",
-            "row"           : 1,
-            "col"           : 0,
+            "row"           : 2,
+            "col"           : 4,
             "offset"        : 0,
-            "title"         : "Previous",
+            "title"         : "Use multi line text",
             "page"          : "NULL",
-            "type"          : "ListContents",
-            "parent"        : "PartsPager"
+            "type"          : "Choice",
+            "parent"        : "TextPartsDialog"
         },
-        {
-            "id"            : "PartsNext",
-            "class"         : "NULL",
-            "row"           : 1,
-            "col"           : 0,
-            "offset"        : 1,
-            "title"         : "Next",
-            "page"          : "NULL",
-            "type"          : "ListContents",
-            "parent"        : "PartsPager"
-        },
-        {
+                {
             "id"            : "AjaxParts",
             "class"         : "NULL",
             "row"           : 2,
@@ -502,16 +557,6 @@
             "id"            : "PartsFormSlider",
             "clickable"     : 0,
             "link"          : "NULL"
-        },
-        {
-            "id"            : "PartsPrevious",
-            "clickable"     : 1,
-            "link"          : "NULL"
-        },
-        {
-            "id"            : "PartsNext",
-            "clickable"     : 1,
-            "link"          : "NULL"
         }
     ],
     "FormParts"   : [
@@ -526,65 +571,95 @@
     "InputParts"    : [
         {
             "id"            : "PartsClassInput",
-            "name"          : "class",
+            "name"          : "Parts[class]",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsRowInput",
-            "name"          : "row",
+            "name"          : "Parts[row]",
             "type"          : 1,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsTitleInput",
-            "name"          : "title",
+            "name"          : "Parts[title]",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsPageInput",
-            "name"          : "page",
+            "name"          : "Parts[page]",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsParentInput",
-            "name"          : "type",
+            "name"          : "Parts[parent]",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
-            "id"            : "LoginUser",
-            "name"          : "user",
+            "id"            : "FormActionInput",
+            "name"          : "Attr[action]",
             "type"          : 0,
-            "placeholder"   : "user"
+            "placeholder"   : "NULL"
         },
         {
-            "id"            : "LoginPassword",
-            "name"          : "password",
-            "type"          : 3,
-            "placeholder"   : "password"
+            "id"            : "FormSubmitInput",
+            "name"          : "Attr[submit]",
+            "type"          : 0,
+            "placeholder"   : "NULL"
+        },
+        {
+            "id"            : "FormCancelInput",
+            "name"          : "Attr[cancel]",
+            "type"          : 0,
+            "placeholder"   : "NULL"
+        },
+        {
+            "id"            : "TextContentsInput",
+            "name"          : "Attr[contents]",
+            "type"          : 0,
+            "placeholder"   : "NULL"
         }
     ],
     "ChoiceParts"    : [
         {
             "id"            : "PartsColChoice",
-            "name"          : "col",
+            "name"          : "Parts[col]",
             "model"         : "Model.Master.getColRange",
             "type"          : 1
         },
         {
             "id"            : "PartsOffsetChoice",
-            "name"          : "offset",
+            "name"          : "Parts[offset]",
             "model"         : "Model.Master.getOffsetRange",
             "type"          : 1
         },
         {
             "id"            : "PartsTypeChoice",
-            "name"          : "type",
+            "name"          : "Parts[type]",
             "model"         : "Model.Master.getPartsType",
             "type"          : 1
+        },
+        {
+            "id"            : "FormMethodChoice",
+            "name"          : "Attr[method]",
+            "model"         : "Model.Master.getMethodType",
+            "type"          : 1
+        },
+        {
+            "id"            : "BlockTagTypeChoice",
+            "name"          : "Attr[tag_type]",
+            "model"         : "Model.Master.getBlockTagType",
+            "type"          : 1
+        },
+        {
+            "id"            : "TextMultipleChoice",
+            "name"          : "Attr[multiple]",
+            "model"         : "NULL",
+            "type"          : 0
         }
     ],
     "TextParts"   : [

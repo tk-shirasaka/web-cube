@@ -107,4 +107,12 @@ class Master extends Model {
 
         return $ret;
     }
+
+    public function getMethodType() {
+        return ["GET", "POST"];
+    }
+
+    public function getBlockTagType() {
+        return ["div", "navi", "list"];
+    }
 }
