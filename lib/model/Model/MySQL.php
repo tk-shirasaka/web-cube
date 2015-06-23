@@ -28,9 +28,11 @@ class MySQL extends Database {
     }
 
     protected function _execute($query) {
+        $ret    = [];
         $result = $this->connect->query($query);
-        $ret    = $this->is_update ? $result : [];
-        if ($result and !$this->is_update) {
+
+        if ($this->is_update) return $result;
+        if ($result) {
             while ($ret[] = $result->fetch_assoc()) {}
             array_pop($ret);
             $result->free();

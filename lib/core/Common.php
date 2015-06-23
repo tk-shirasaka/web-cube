@@ -2,12 +2,12 @@
 
 abstract class Common {
     private     $_exists        = false;
-    protected   $_name          = null;
-    protected   $_file          = null;
-    protected   $_sub_dir       = null;
-    protected   $_page          = [];
-    protected   $_params        = [];
-    protected   $_view          = [];
+    private     $_name          = null;
+    private     $_file          = null;
+    private     $_sub_dir       = null;
+    private     $_page          = [];
+    private     $_params        = [];
+    private     $_view          = [];
 
     private final function __construct($info) {
         $name           = $info->name;
@@ -26,38 +26,34 @@ abstract class Common {
     }
 
     public final function __call($method, $args) {
-        $ret            = null;
-        $args           = implode(".", $args);
-        while (strpos($method, "get") === 0) {
-            $name = strtolower(preg_replace("/[A-Z]/", "_\\0", substr($method, 3)));
-            if (!isset($this->{$name})) break;
-            $ret = $this->{$name};
+        $ret    = null;
+        $args   = implode(".", $args);
+        $name   = strtolower(preg_replace("/[A-Z]/", "_\\0", substr($method, 3)));
 
-            if (!$args) break;
+        if (strpos($method, "get") === 0) {
+            if (empty($this->{$name}))  return null;
+            if (!$args)                 return $this->{$name};
+
+            $ret = $this->{$name};
             foreach (explode(".", $args) as $key) {
-                $ret = (isset($ret[$key])) ? $ret[$key] : null;
-                if ($ret === null) break;
+                if (empty($ret[$key]))  return null;
+                $ret = $ret[$key];
             }
-            break;
         }
         return $ret;
     }
 
     public static final function Get() {
-        $ret        = true;
         $class      = get_called_class();
         $info       = new ReflectionClass($class);
 
-        if (Core::Get()->classExists($info->name, $info->getFileName()))    $ret = false;
-        if ($info->isAbstract())                                            $ret = false;
-        if ($ret and $info->isInterface())                                  $ret = false;
-        if ($ret) {
-            $instance   = new $class($info);
-            $ret        = $instance->chkInstance();
-        }
-        if ($ret) $ret = $instance;
+        if (Core::Get()->classExists($info->name, $info->getFileName()))    return false;
+        if ($info->isAbstract() or $info->isInterface())                    return false;
 
-        return $ret;
+        $instance   = new $class($info);
+        if ($instance->chkInstance()) return $instance;
+
+        return false;
     }
 
     public final function chkInstance() {

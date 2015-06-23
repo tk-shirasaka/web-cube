@@ -112,26 +112,20 @@ final class Core {
     }
 
     public function srchClass($src) {
-        $ret = [];
         foreach ($this->_classes as $root => $classes) {
-            if (!empty($ret)) break;
             foreach ($classes as $class => $val) {
                 $srch       = array_fill_keys(array_keys($val["sub_modules"]), "file");
                 $sub_files  = array_search_key($srch, $val["sub_modules"]);
-                if ($val["file"] === $src or array_search($src, $sub_files) !== false) {
-                    $ret = [
-                        "root"  => $root,
-                        "class" => $class,
-                    ];
-                    break;
+
+                if (isset($val["file"]) and $val["file"] === $src or array_search($src, $sub_files) !== false) {
+                    return ["root"  => $root, "class" => $class];
                 }
             }
         }
-        return $ret;
+        return [];
     }
 
     public function classExists($name, $src) {
-        $ret    = false;
         $src    = $this->srchClass($src);
 
         if (!empty($src)) {
@@ -139,10 +133,9 @@ final class Core {
             $class  = $src["class"];
 
             $class  = ($class === $name) ? $this->_classes[$root][$class] : $this->_classes[$root][$class]["sub_modules"][$name];
-            $ret    = ($class["instance"]);
         }
 
-        return $ret;
+        return (isset($class) and ($class["instance"])) ? $class["instance"] : false;
     }
 
     public function &getClass($name, $src) {
@@ -159,64 +152,55 @@ final class Core {
             $class  = $name[1];
             $name   = $name[1];
         }
-        $flg    = isset($sub) ?
-                  (isset($this->_classes[$root]) and isset($this->_classes[$root][$class]) and isset($this->_classes[$root][$class]["sub_modules"][$sub])) :
-                  (isset($this->_classes[$root]) and isset($this->_classes[$root][$class]));
-
-        if (!$flg and isset($sub)) {
+        if (empty($this->_classes[$root]) or empty($this->_classes[$root][$class]) or (isset($sub) and empty($this->_classes[$root][$class]["sub_modules"][$name]))) {
             $uses   = $this->getUses($src, $root);
-            foreach ($uses[$root] as $key => $attr) {
-                if (isset($attr["sub_modules"][$name])) {
-                    $flg    = true;
+            if (isset($uses[$root])) {
+                foreach ($uses[$root] as $key => $attr) {
+                    if (isset($sub) and empty($attr["sub_modules"][$name])) continue;
+                    $class = $key;
                     break;
                 }
             }
-            if ($flg) $class = $key;
+        }
+
+        if (isset($sub)) {
+            $class_list =& $this->_classes[$root][$class]["sub_modules"][$sub];
+            $flg        = ($class_list["file"] and $class_list["instance"] === null);
+        } else {
+            $class_list =& $this->_classes[$root][$class];
+            $flg        = (array_search($src, $class_list["allow_list"]) !== false and $class_list["file"] and $class_list["instance"] === null);
         }
 
         if ($flg) {
-            if (isset($sub)) {
-                $class_list =& $this->_classes[$root][$class]["sub_modules"][$sub];
-                $flg        = ($class_list["file"] and $class_list["instance"] === null);
-            } else {
-                $class_list =& $this->_classes[$root][$class];
-                $flg        = (array_search($src, $class_list["allow_list"]) !== false and $class_list["file"] and $class_list["instance"] === null);
+            $this->_running = $name;
+            switch ($class_list["ext"]) {
+            case "php" :
+                $class_list["instance"]  = $name::Get();
+                if (method_exists($class_list["instance"], "init")) $class_list["instance"]->init();
+                break;
+            case "js" :
+            case "css" :
+                $class_list["instance"]  = file_get_contents($class_list["file"]);
+                break;
+            case "json" :
+                $class_list["instance"]  = json_decode(file_get_contents($class_list["file"]), true);
+                break;
+            case "tpl" :
+                $class_list["instance"]  = str_replace("\"", "\\\"", file_get_contents($class_list["file"]));
+                break;
             }
-
-            if ($flg) {
-                $this->_running = $name;
-                switch ($class_list["ext"]) {
-                case "php" :
-                    $class_list["instance"]  = $name::Get();
-                    if (method_exists($class_list["instance"], "init")) $class_list["instance"]->init();
-                    break;
-                case "js" :
-                case "css" :
-                    $class_list["instance"]  = file_get_contents($class_list["file"]);
-                    break;
-                case "json" :
-                    $class_list["instance"]  = json_decode(file_get_contents($class_list["file"]), true);
-                    break;
-                case "tpl" :
-                    $class_list["instance"]  = str_replace("\"", "\\\"", file_get_contents($class_list["file"]));
-                    break;
-                }
-            }
-            $ret = $class_list["instance"];
         }
 
-        if (!$ret) {
+        $ret = $class_list["instance"];
+        if (!$ret and isset($this->_classes[$root][$class]["allow_list"])) {
             foreach ($this->_classes[$root][$class]["allow_list"] as $allow) {
-                $uses       = $this->srchClass($allow);
-                $instance   = ($uses) ? $this->_classes[$uses["root"]][$uses["class"]]["instance"] : null;
-                if (!isset($sub))           $name   = "{$root}.{$name}";
-                if (is_object($instance))   $ret    = $instance->{$name};
-                if ($ret) {
-                    if (isset($class_list["allow_list"])) $class_list["allow_list"][] = $src;
-                    break;
-                }
+                if ($src === $allow or !($name))        continue;
+                if (empty($sub))                        $name = "{$root}.{$name}";
+                if (isset($class_list["allow_list"]))   $class_list["allow_list"][] = $src;
+                if ($ret = $this->getClass($name, $allow)) break;
             }
         }
+
         return $ret;
     }
 
@@ -284,19 +268,11 @@ final class Core {
     public function getConfig($source = "") {
         static $skip    = false;
         $ret            = ["Configure" => $this->_configure, "Data" => $this->_data, "Routing" => $this->_routing];
-        $sources        = ["Configure" => "_configure", "Data" => "_data", "Routing" => "_routing"];
         $class          = "Configure";
-
-        foreach ($sources as $val) {
-            if (!$this->{$val}) continue;
-            $skip   = true;
-            break;
-        }
 
         if (!$skip and $this->_running !== $class) {
             $this->getClass("Config.Configure", __FILE__)->getConfig();
             $skip   = true;
-            $ret    = ["Configure" => $this->_configure, "Data" => $this->_data, "Routing" => $this->_routing];
         }
 
         foreach (explode(".", $source) as $key) {
@@ -304,8 +280,7 @@ final class Core {
                 $ret = $ret[$key];
                 continue;
             }
-            $ret    = [];
-            break;
+            return false;
         }
 
         return $ret;

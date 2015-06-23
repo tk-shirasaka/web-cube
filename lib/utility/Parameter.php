@@ -9,35 +9,34 @@ class Parameter extends Common {
 
         foreach ($this->Params as $key => $val) {
             if (!empty($params) and array_search($key, $params) === false) continue;
-            if ($val["Attr"]) $this->_params[$key] = $_SERVER[$val["Attr"]];
+            if ($val["Attr"]) $ret[$key] = $_SERVER[$val["Attr"]];
             if (!$val["Normal"]) {
                 switch ($key) {
                 case "SSL" :
-                    $this->_params[$key]    = (strpos($this->_params[$key], "https") !== false);
+                    $ret[$key]  = (strpos($ret[$key], "https") !== false);
                     break;
                 case "Query" :
-                    parse_str($this->_params[$key], $this->_params[$key]);
+                    parse_str($ret[$key], $ret[$key]);
                     break;
                 case "Path" :
-                    $this->_params[$key]    = (strlen($_SERVER["QUERY_STRING"])) ? substr(str_replace($_SERVER["QUERY_STRING"], "", $this->_params[$key]), 0, -1): $this->_params[$key];
-                    $this->_params[$key]    = explode("/", $this->_params[$key]);
-                    array_shift($this->_params["Path"]);
+                    $ret[$key]  = (strlen($_SERVER["QUERY_STRING"])) ? substr(str_replace($_SERVER["QUERY_STRING"], "", $ret[$key]), 0, -1) : $ret[$key];
+                    $ret[$key]  = explode("/", $ret[$key]);
+                    array_shift($ret["Path"]);
                     break;
                 case "Request" :
-                    $this->_params[$key]    = $_POST;
+                    $ret[$key]  = $_POST;
                     break;
                 case "Locale" :
-                    $this->_params[$key]    = Core::Get()->getConfig("Configure.Locale");
+                    $ret[$key]  = Core::Get()->getConfig("Configure.Locale");
                     break;
                 case "User" :
-                    $this->_params[$key]    = $this->_getUser();
+                    $ret[$key]  = $this->_getUser();
                     break;
                 }
             }
-            $ret[$key]  = $this->_params[$key];
         }
 
-        if (empty($params)) Core::Get()->setPropaty(["params" => $this->_params]);
+        if (empty($params)) Core::Get()->setPropaty(["params" => $ret]);
 
         return $ret;
     }

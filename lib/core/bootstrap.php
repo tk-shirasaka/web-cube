@@ -25,7 +25,7 @@ function array_search_key($needle, $haystack, &$ret = []) {
     } else if (isset($haystack[$needle])) {
         if (empty($ret))    $ret    =  $haystack[$needle];
         else                $ret[]  = $haystack[$needle];
-    } else {
+    } else if (is_array($haystack)) {
         foreach ($haystack as $val) {
             if (is_array($val) and isset($val[$needle])) $ret[] = $val[$needle];
         }

@@ -131,14 +131,21 @@ class Html extends Viewer {
     }
 
     private function _getError() {
-        $ret = [];
+        $ret    = [];
+        $parts  = ["id" => "", "class" => "", "row" => 0, "col" => "", "offset" => "", "type" => ""];
 
         if (Core::Get()->getConfig("Configure.Debug")) {
-            $error          = Core::Get()->getError();
-            $thead          = ["Parts" => ["id" => "", "class" => "", "type" => "Thead"], "Attr" => ["contents" => "Level\\\\Place\\\\Message\\\\Context"]];
-            $tbody          = ["Parts" => ["id" => "", "class" => "danger", "type" => "Tbody"], "Attr" => ["contents" => []]];
-            $ret            = ["Parts" => ["id" => "Error", "class" => "table table-striped table-hover", "type" => "Table", "col" => 12], "Child" => []];
-            $ret["Child"][] = $thead;
+            $error                  = Core::Get()->getError();
+            $thead                  = ["Parts" => $parts, "Attr" => ["contents" => "Level\\\\Place\\\\Message\\\\Context"]];
+            $thead["Parts"]["type"] = "Thead";
+            $tbody                  = ["Parts" => $parts, "Attr" => ["contents" => []]];
+            $tbody["Parts"]["type"] = "Tbody";
+            $ret                    = ["Parts" => $parts, "Child" => []];
+            $ret["Parts"]["id"]     = "Error";
+            $ret["Parts"]["class"]  = "table table-striped table-hover";
+            $ret["Parts"]["type"]   = "Table";
+            $ret["Parts"]["col"]    = 12;
+            $ret["Child"][]         = $thead;
 
             foreach ($error as $val) {
                 $tbody["Attr"]["contents"]  = implode("\\\\", array_values($val));
@@ -150,14 +157,21 @@ class Html extends Viewer {
     }
 
     private function _getQuery() {
-        $ret = [];
+        $ret    = [];
+        $parts  = ["id" => "", "class" => "", "row" => 0, "col" => "", "offset" => "", "type" => ""];
 
         if (Core::Get()->getConfig("Configure.Debug")) {
-            $query          = Core::Get()->getQuery();
-            $thead          = ["Parts" => ["class" => "", "type" => "Thead"], "Attr" => ["contents" => "#\\\\SQL\\\\Time"]];
-            $tbody          = ["Parts" => ["class" => "", "type" => "Tbody"], "Attr" => ["contents" => []]];
-            $ret            = ["Parts" => ["id" => "QueryDump", "class" => "table table-striped table-hover", "type" => "Table", "col" => 12], "Child" => []];
-            $ret["Child"][] = $thead;
+            $query                  = Core::Get()->getQuery();
+            $thead                  = ["Parts" => $parts, "Attr" => ["contents" => "#\\\\SQL\\\\Time"]];
+            $thead["Parts"]["type"] = "Thead";
+            $tbody                  = ["Parts" => $parts, "Attr" => ["contents" => []]];
+            $tbody["Parts"]["type"] = "Tbody";
+            $ret                    = ["Parts" => $parts, "Child" => []];
+            $ret["Parts"]["id"]     = "QueryDump";
+            $ret["Parts"]["class"]  = "table table-striped table-hover";
+            $ret["Parts"]["type"]   = "Table";
+            $ret["Parts"]["col"]    = 12;
+            $ret["Child"][]         = $thead;
 
             foreach ($query as $key => $val) {
                 $tbody["Parts"]["class"]    = $val["class"];
@@ -182,7 +196,7 @@ class Html extends Viewer {
         $tbody  = "";
         foreach ($child as $key => $val) {
             $type       = ($val["Parts"]["type"] === "Thead") ? "thead" : "tbody";
-            ${$type}    .= $this->tableContents($val["Parts"], $val["Attr"]);
+            ${$type}    .= $this->tableContents($val["Parts"], $val["Attr"], []);
         }
 
         return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("thead", "tbody"));

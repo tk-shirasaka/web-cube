@@ -4,12 +4,10 @@ class LocalFile extends Common {
     public  $source_type    = "File";
 
     private function _mkPath($path) {
-        $ret    = false;
         $path   = str_replace("/", DS, $path);
         $path   = ROOT. DS. $this->_config["Path"]. DS. $path;
-        if (file_exists($path) and is_file($path)) $ret = $path;
 
-        return $ret;
+        return (file_exists($path) and is_file($path)) ? $path : false;
     }
     private function _get($path) {
         return ($path = $this->_mkPath($path)) ? file_get_contents($path) : false;

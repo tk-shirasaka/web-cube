@@ -35,16 +35,15 @@ class Master extends Model {
     private function _getChild($parent) {
         $parts  = $parent["Parts"]["id"];
         $sort   = ["row", "offset"];
-        $ret    = $this->Source->find("Parts", ["Where" => ["parent" => $parts], "Sort" => $sort]);
 
-        if ($ret) {
-            foreach ($ret as $key => $parent) {
-                $table  = $parent["Parts"]["type"]. "Parts";
-                $child  = $this->_getChild($parent);
-                $attr   = $this->Source->find($table, ["Where" => ["id" => $parent["Parts"]["id"]]]);
-                if ($child) $ret[$key]["Child"] = $child;
-                if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
-            }
+        if (!($ret = $this->Source->find("Parts", ["Where" => ["parent" => $parts], "Sort" => $sort]))) return false;
+
+        foreach ($ret as $key => $parent) {
+            $table  = $parent["Parts"]["type"]. "Parts";
+            $child  = $this->_getChild($parent);
+            $attr   = $this->Source->find($table, ["Where" => ["id" => $parent["Parts"]["id"]]]);
+            if ($child) $ret[$key]["Child"] = $child;
+            if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
         }
         return $ret;
     }

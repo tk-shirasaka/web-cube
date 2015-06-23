@@ -5,6 +5,6 @@ class Maintenance extends View {
         $this->auto_render  = false;
         $parts              = $this->getParams("Request");
 
-        $this->Viewer->view($parts["type"], $parts);
+        $this->Viewer->view($parts["Parts"]["type"], $parts);
     }
 }
