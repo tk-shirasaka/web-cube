@@ -250,8 +250,9 @@ class Html extends Viewer {
 
     protected function text($parts, $attr, $child) {
         $contents   = isset($attr["contents"]) ? $attr["contents"] : "";
+        $multiple   = isset($attr["multiple"]) ? $attr["multiple"] : "";
 
-        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("contents"));
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("contents", "multiple"));
     }
 
     protected function input($parts, $attr, $child) {
