@@ -571,55 +571,55 @@
     "InputParts"    : [
         {
             "id"            : "PartsClassInput",
-            "name"          : "Parts[class]",
+            "name"          : "Parts.class",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsRowInput",
-            "name"          : "Parts[row]",
+            "name"          : "Parts.row",
             "type"          : 1,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsTitleInput",
-            "name"          : "Parts[title]",
+            "name"          : "Parts.title",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsPageInput",
-            "name"          : "Parts[page]",
+            "name"          : "Parts.page",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "PartsParentInput",
-            "name"          : "Parts[parent]",
+            "name"          : "Parts.parent",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "FormActionInput",
-            "name"          : "Attr[action]",
+            "name"          : "Attr.action",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "FormSubmitInput",
-            "name"          : "Attr[submit]",
+            "name"          : "Attr.submit",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "FormCancelInput",
-            "name"          : "Attr[cancel]",
+            "name"          : "Attr.cancel",
             "type"          : 0,
             "placeholder"   : "NULL"
         },
         {
             "id"            : "TextContentsInput",
-            "name"          : "Attr[contents]",
+            "name"          : "Attr.contents",
             "type"          : 0,
             "placeholder"   : "NULL"
         }
@@ -627,37 +627,37 @@
     "ChoiceParts"    : [
         {
             "id"            : "PartsColChoice",
-            "name"          : "Parts[col]",
+            "name"          : "Parts.col",
             "model"         : "Model.Master.getColRange",
             "type"          : 1
         },
         {
             "id"            : "PartsOffsetChoice",
-            "name"          : "Parts[offset]",
+            "name"          : "Parts.offset",
             "model"         : "Model.Master.getOffsetRange",
             "type"          : 1
         },
         {
             "id"            : "PartsTypeChoice",
-            "name"          : "Parts[type]",
+            "name"          : "Parts.type",
             "model"         : "Model.Master.getPartsType",
             "type"          : 1
         },
         {
             "id"            : "FormMethodChoice",
-            "name"          : "Attr[method]",
+            "name"          : "Attr.method",
             "model"         : "Model.Master.getMethodType",
             "type"          : 1
         },
         {
             "id"            : "BlockTagTypeChoice",
-            "name"          : "Attr[tag_type]",
+            "name"          : "Attr.tag_type",
             "model"         : "Model.Master.getBlockTagType",
             "type"          : 1
         },
         {
             "id"            : "TextMultipleChoice",
-            "name"          : "Attr[multiple]",
+            "name"          : "Attr.multiple",
             "model"         : "NULL",
             "type"          : 0
         }
