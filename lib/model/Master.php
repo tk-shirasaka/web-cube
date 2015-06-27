@@ -96,6 +96,23 @@ class Master extends Model {
         return range(0, 11);
     }
 
+    public function getHeaderRange() {
+        $ret    = range(0, 6);
+        unset($ret[0]);
+        return $ret;
+    }
+
+    public function getPages() {
+        $ret    = ["New Page"];
+        $table  = "Page";
+
+        foreach ($this->Source->find($table, ["Field" => ["id", "title"], "Where" => ["user" => $this->getParams("User")]]) as $page) {
+            $ret[$page[$table]["id"]] = $page[$table]["title"];
+        }
+
+        return $ret;
+    }
+
     public function getPartsType() {
         $ret    = [];
         $table  = "PartsType";
@@ -105,6 +122,25 @@ class Master extends Model {
         }
 
         return $ret;
+    }
+
+    public function getImageIds() {
+        $ret    = ["Not use"];
+        $table  = "Image";
+
+        foreach ($this->Source->find($table, ["Field" => ["id", "name"], "Where" => ["user" => $this->getParams("User")]]) as $image) {
+            $ret[$image[$table]["id"]] = $image[$table]["name"];
+        }
+
+        return $ret;
+    }
+
+    public function getChoiceType() {
+        return ["checkbox", "selectbox", "radio button"];
+    }
+
+    public function getInputType() {
+        return ["text", "number", "multiline text", "hidden"];
     }
 
     public function getMethodType() {

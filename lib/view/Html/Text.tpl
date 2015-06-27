@@ -1,3 +1,3 @@
-<p class="{$class}" parts-markdown="{$multiple}">
+<p id="{$id}" class="{$class}" parts-markdown="{$multiple}">
     $contents
 </p>

@@ -27,17 +27,17 @@ class Html extends Viewer {
     private function _getClass($parts) {
         $ret    = "";
 
-        if ($this->_offset < (int) $parts["offset"]) {
+        if (isset($parts["offset"]) and $this->_offset < (int) $parts["offset"]) {
             $ret   .= "col-xs-offset-". ($parts["offset"] - $this->_offset). " ";
             $ret   .= "col-md-offset-". ($parts["offset"] - $this->_offset). " ";
             $ret   .= "col-sm-offset-". ($parts["offset"] - $this->_offset). " ";
         }
-        if ((int) $parts["col"]) {
+        if (isset($parts["col"])) {
             $ret   .= "col-xs-". $parts["col"]. " ";
             $ret   .= "col-md-". $parts["col"]. " ";
             $ret   .= "col-sm-". $parts["col"]. " ";
         }
-        if ($parts["class"]) {
+        if (isset($parts["class"])) {
             $ret   .= $parts["class"];
         }
 
@@ -61,7 +61,7 @@ class Html extends Viewer {
     }
 
     private function _commonTag($tag, $parts, $attr, $options = []) {
-        $id         = $parts["id"];
+        $id         = (isset($parts["id"])) ? $parts["id"] : "";
         $class      = $this->_getClass($parts);
 
         foreach ($options as $key => $val) {
@@ -83,7 +83,7 @@ class Html extends Viewer {
 
         if ($this->{$tag_type} and isset($data["Parts"])) {
             if ($this->_row !== (int) $data["Parts"]["row"] or (int) $data["Parts"]["row"] === 0) {
-                if ($this->_row) $ret .= $this->block(["id" => "", "class" => "", "col" => 0, "offset" => 0], [], []);
+                if ($this->_row) $ret .= $this->block(["id" => "", "class" => "", "col" => 12, "offset" => 0], [], []);
                 $this->_row     = (int) $data["Parts"]["row"];
                 $this->_offset  = 0;
             }
@@ -104,7 +104,7 @@ class Html extends Viewer {
         case "Form" :
         case "Block" :
         case "Table" :
-        case "ListContents" :
+        case "Link" :
         case "Text" :
         case "Header" :
         case "Input" :
@@ -205,8 +205,8 @@ class Html extends Viewer {
     protected function form($parts, $attr, $child) {
         $action         = $attr["action"];
         $method         = ($attr["method"]) ? "POST" : "GET";
-        $submit         = $attr["submit"];
-        $cancel         = $attr["cancel"];
+        $submit         = $this->button(["class" => "btn btn-primary"], ["type" => "submit", "contents" => $attr["submit"]], []);
+        $cancel         = ($attr["cancel"]) ? $this->button(["class" => "btn btn-default"], ["type" => "reset", "contents" => $attr["cancel"]], []) : "";
         $title_parts    = ["id" => $parts["id"]."Title", "col" => 0, "row" => 0, "offset" => 0, "class" => "text-center"];
         $title          = $this->header($title_parts, ["type" => 3, "contents" => $parts["title"]], []);
         $block_parts    = ["id" => "", "col" => 0, "row" => 0, "offset" => 0, "class" => "text-center"];
@@ -217,12 +217,11 @@ class Html extends Viewer {
 
     protected function block($parts, $attr, $child) {
         if (!$parts)    $parts  = ["class" => ""];
-        if (!$attr)     $attr   = ["tag_type" => 0];
+        if (!$attr)     $attr   = ["type" => 0];
         $class = "";
-        switch ($attr["tag_type"]) {
+        switch ($attr["type"]) {
         case 0 :
             $type   = "div";
-            $class  = "container-fluid";
             break;
         case 1 :
             $type   = "navi";
@@ -231,24 +230,24 @@ class Html extends Viewer {
         case 2 :
             $type   = "ul";
             break;
+        case 3 :
+            $type   = "li";
+            break;
         }
         $parts["class"] = "{$class} ". $parts["class"];
         return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("type"));
     }
 
-    protected function listContents($parts, $attr, $child) {
-        if ($attr["clickable"]) {
-            $contents       = $this->link(["class" => ""] + $parts, ["path" => "#"], []);
-            $parts["id"]    = "";
-        } else {
-            $contents       = (string) $parts["title"];
-        }
-        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("contents"));
+    protected function button($parts, $attr, $child) {
+        $type       = $attr["type"];
+        $contents   = $attr["contents"];
+
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("type", "contents"));
     }
 
     protected function link($parts, $attr, $child) {
         $contents   = $parts["title"];
-        $href   = $attr["path"];
+        $href       = $attr["path"];
 
         return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("contents", "href"));
     }
@@ -271,29 +270,36 @@ class Html extends Viewer {
 
     protected function input($parts, $attr, $child) {
         $title          = $parts["title"];
-        $name           = isset($attr["name"]) ? $attr["name"] : "";
-        $placeholder    = isset($attr["placeholder"]) ? $attr["placeholder"] : "";
+        $name           = isset($attr["name"])          ? $attr["name"] : "";
+        $placeholder    = isset($attr["placeholder"])   ? $attr["placeholder"] : "";
+        $l_col          = !empty($attr["label_col"])    ? "col-sm-". $attr["label_col"] : "";
+        $i_col          = !empty($l_col)                ? "col-sm-". (12 - $attr["label_col"]) : "";
         if (empty($attr["type"])) $attr["type"] = 0;
 
         switch ((int) $attr["type"]) {
         case 0 :
-            $type       = "text";
-            $tag_type   = "input";
+            $type           = "text";
+            $tag_type       = "input";
             break;
         case 1 :
-            $type       = "number";
-            $tag_type   = "input";
+            $type           = "number";
+            $tag_type       = "input";
             break;
         case 2 :
-            $type       = "";
-            $tag_type   = "textarea";
+            $type           = "";
+            $tag_type       = "textarea";
             break;
         case 3 :
-            $type       = "password";
-            $tag_type   = "input";
+            $type           = "password";
+            $tag_type       = "input";
+            break;
+        case 4 :
+            $type           = "hidden";
+            $tag_type       = "input";
+            $parts["class"] = "hide";
             break;
         }
-        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("tag_type", "title", "name", "type", "placeholder"));
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("tag_type", "title", "name", "type", "placeholder", "l_col", "i_col"));
     }
 
     protected function options($parts, $attr, $child) {
@@ -318,7 +324,9 @@ class Html extends Viewer {
 
     protected function choice($parts, $attr, $child) {
         $title  = $parts["title"];
-        $name   = isset($attr["name"]) ? $attr["name"] : "";
+        $name   = isset($attr["name"])          ? $attr["name"] : "";
+        $l_col  = !empty($attr["label_col"])    ? "col-sm-". $attr["label_col"] : "";
+        $i_col  = !empty($l_col)                ? "col-sm-". (12 - $attr["label_col"]) : "";
         $value  = "";
         if (empty($attr["type"])) $attr["type"] = 0;
 
@@ -336,7 +344,7 @@ class Html extends Viewer {
                 $tag_type   = "select";
                 break;
             case 2 :
-                $type       = "raddio";
+                $type       = "radio";
                 $tag_type   = "input";
                 break;
             }
@@ -349,7 +357,7 @@ class Html extends Viewer {
             }
             break;
         }
-        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("tag_type", "title", "name", "type", "value"));
+        return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("tag_type", "title", "l_col", "i_col", "name", "type", "value"));
     }
 
     public function view($type = "Layout", $data = null) {

@@ -124,7 +124,7 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Page owner user account name",
+            "Description"   : "Page owner user account",
             "Field"         : "user",
             "Type"          : "char",
             "Length"        : 30,
@@ -204,6 +204,20 @@
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
+        },
+        {
+            "Description"   : "Image ouwner user account",
+            "Field"         : "user",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Default"       : "NULL",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "User",
+                "Field" : "id"
+            }
         }
     ],
     "PartsType" : [
@@ -256,8 +270,8 @@
         {
             "Description"   : "Use row nums",
             "Field"         : "row",
-            "Type"          : "int",
-            "Length"        : 8,
+            "Type"          : "tinyint",
+            "Length"        : 1,
             "Null"          : false,
             "Default"       : "",
             "Primary"       : false,
@@ -367,6 +381,17 @@
             "Foreign"       : false
         },
         {
+            "Description"   : "Label cols",
+            "Field"         : "label_col",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
             "Description"   : "Used placeholder",
             "Field"         : "placeholder",
             "Type"          : "varchar",
@@ -378,7 +403,7 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Input type (0: text, 1: number, 2: multiline text, 3: password)",
+            "Description"   : "Input type (0: text, 1: number, 2: multiline text, 3: password, 4: hidden)",
             "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
@@ -416,6 +441,17 @@
             "Foreign"       : false
         },
         {
+            "Description"   : "Label cols",
+            "Field"         : "label_col",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
             "Description"   : "If aparts get option data from model, use this field (e.g <Root>.<Class>.<Method>[.<args>])",
             "Field"         : "model",
             "Type"          : "varchar",
@@ -427,7 +463,7 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Choice type (0: checkbox, 1: selectbox, 2: raddiobutton])",
+            "Description"   : "Choice type (0: checkbox, 1: selectbox, 2: radio button])",
             "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
@@ -465,8 +501,8 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Inner/Outer link switch [inner : 0, outer : 1]",
-            "Field"         : "link_kbn",
+            "Description"   : "Outer link flg",
+            "Field"         : "outerlink",
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
@@ -486,47 +522,6 @@
             "Unique"        : false,
             "Foreign"       : {
                 "Table" : "Image",
-                "Field" : "id"
-            }
-        }
-    ],
-    "ListContentsParts"     : [
-        {
-            "Description"   : "Parts id",
-            "Field"         : "id",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : false,
-            "Default"       : "",
-            "Primary"       : true,
-            "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "Parts",
-                "Field" : "id"
-            }
-        },
-        {
-            "Description"   : "Clickable list flg",
-            "Field"         : "clickable",
-            "Type"          : "tinyint",
-            "Length"        : 1,
-            "Null"          : true,
-            "Default"       : "NULL",
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : false
-        },
-        {
-            "Description"   : "Link id",
-            "Field"         : "link",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : true,
-            "Default"       : "NULL",
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "LinkParts",
                 "Field" : "id"
             }
         }
@@ -649,7 +644,7 @@
         },
         {
             "Description"   : "Tag type (0: div, 1: navi, 2: list)",
-            "Field"         : "tag_type",
+            "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,

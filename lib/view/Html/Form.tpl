@@ -3,7 +3,7 @@
     $children
     $block
     <div class="text-center">
-        <button type="submit" class="btn btn-primary">$submit</button>
-        <button type="reset" class="btn btn-default">$cancel</button>
+        $submit
+        $cancel
     </div>
 </form>
