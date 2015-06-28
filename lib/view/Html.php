@@ -216,7 +216,6 @@ class Html extends Viewer {
     }
 
     protected function block($parts, $attr, $child) {
-        if (!$parts)    $parts  = ["class" => ""];
         if (!$attr)     $attr   = ["type" => 0];
         $class = "";
         switch ($attr["type"]) {
@@ -225,7 +224,6 @@ class Html extends Viewer {
             break;
         case 1 :
             $type   = "navi";
-            $class  = "navi";
             break;
         case 2 :
             $type   = "ul";
@@ -234,7 +232,6 @@ class Html extends Viewer {
             $type   = "li";
             break;
         }
-        $parts["class"] = "{$class} ". $parts["class"];
         return $this->_hasChildTag(ucfirst(__FUNCTION__), $parts, $attr, $child, compact("type"));
     }
 

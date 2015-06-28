@@ -148,6 +148,6 @@ class Master extends Model {
     }
 
     public function getBlockTagType() {
-        return ["div", "navi", "list"];
+        return ["div", "navi", "list", "list item"];
     }
 }

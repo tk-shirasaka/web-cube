@@ -115,7 +115,7 @@
         },
         {
             "id"            : "HeadNavi",
-            "class"         : "row navbar-inverse navbar-static-top",
+            "class"         : "row navbar navbar-inverse navbar-static-top",
             "row"           : 1,
             "col"           : 12,
             "offset"        : 0,
@@ -147,6 +147,17 @@
             "parent"        : "NaviHeader"
         },
         {
+            "id"            : "PanelBody",
+            "class"         : "panel-body",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Panel Body Parts",
+            "page"          : "NULL",
+            "type"          : "Block",
+            "parent"        : "LeftSide"
+        },
+        {
             "id"            : "FormTab",
             "class"         : "nav nav-tabs nav-justified",
             "row"           : 1,
@@ -155,7 +166,7 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "LeftSide"
+            "parent"        : "PanelBody"
         },
         {
             "id"            : "PartsTabParent",
@@ -192,7 +203,7 @@
         },
         {
             "id"            : "PageTabChild",
-            "class"         : "NULL",
+            "class"         : "active",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
@@ -210,7 +221,7 @@
             "title"         : "NULL",
             "page"          : "NULL",
             "type"          : "Block",
-            "parent"        : "LeftSide"
+            "parent"        : "PanelBody"
         },
         {
             "id"            : "PartsFormParent",
@@ -225,7 +236,7 @@
         },
         {
             "id"            : "PageFormParent",
-            "class"         : "tab-pane fade",
+            "class"         : "tab-pane fade in active",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
@@ -728,6 +739,10 @@
         },
         {
             "id"            : "PageFormParent",
+            "type"          : 0
+        },
+        {
+            "id"            : "PanelBody",
             "type"          : 0
         },
         {

@@ -1,4 +1,8 @@
 <style type="text/css">
+#parts-contents {
+    pointer-events : none;
+}
+
 .parts-active {
     background: rgba(128, 128, 128, 0.3);
     border: 2px solid #5cb85c;
