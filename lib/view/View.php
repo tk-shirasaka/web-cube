@@ -23,7 +23,7 @@ class View extends Common {
 
             if (method_exists($this, "beforeRender"))   $this->beforeRender();
             if (method_exists($this, $action))          call_user_func_array([$this, $action], $args);
-            if ($this->auto_render)                     $this->Viewer->view($this->layout);
+            if ($this->auto_render)                     echo $this->Viewer->view($this->layout);
             if (method_exists($this, "afterRender"))    $this->afterRender();
         }
     }

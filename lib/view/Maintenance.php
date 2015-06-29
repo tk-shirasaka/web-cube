@@ -5,7 +5,7 @@ class Maintenance extends View {
         $this->auto_render  = false;
         $parts              = $this->getParams("Request");
 
-        $this->Viewer->view($parts["Parts"]["type"], $parts);
+        echo json_encode(["html" => $this->Viewer->view($parts["Parts"]["type"], $parts)]);
     }
 
     public function ajaxPageRender() {

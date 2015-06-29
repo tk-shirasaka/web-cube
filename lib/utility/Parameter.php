@@ -5,7 +5,8 @@ class Parameter extends Common {
 
     public function getParams($params = []) {
         if (is_string($params)) $params = [$params];
-        $ret    = [];
+        $ret        = [];
+        $headers    = getallheaders();
 
         foreach ($this->Params as $key => $val) {
             if (!empty($params) and array_search($key, $params) === false) continue;
@@ -24,7 +25,11 @@ class Parameter extends Common {
                     array_shift($ret["Path"]);
                     break;
                 case "Request" :
-                    $ret[$key]  = $_POST;
+                    if (isset($headers["Content-Type"]) and strtolower($headers["Content-Type"]) === "application/json") {
+                        $ret[$key]  = json_decode(file_get_contents("php://input"), true);
+                    } else {
+                        $ret[$key]  = $_POST;
+                    }
                     break;
                 case "Locale" :
                     $ret[$key]  = Core::Get()->getConfig("Configure.Locale");

@@ -363,6 +363,6 @@ class Html extends Viewer {
 
         $this->_html = $this->_render($type, $data);
 
-        echo $this->_html;
+        return $this->_html;
     }
 }
