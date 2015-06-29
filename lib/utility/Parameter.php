@@ -25,7 +25,7 @@ class Parameter extends Common {
                     array_shift($ret["Path"]);
                     break;
                 case "Request" :
-                    if (isset($headers["Content-Type"]) and strtolower($headers["Content-Type"]) === "application/json") {
+                    if (isset($headers["Content-Type"]) and strpos(strtolower($headers["Content-Type"]), "application/json") !== false) {
                         $ret[$key]  = json_decode(file_get_contents("php://input"), true);
                     } else {
                         $ret[$key]  = $_POST;
