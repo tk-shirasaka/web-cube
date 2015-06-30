@@ -81,22 +81,11 @@
             "parent"        : "NULL"
         },
         {
-            "id"            : "LeftSide",
-            "class"         : "panel panel-default",
-            "row"           : 2,
-            "col"           : 3,
-            "offset"        : 0,
-            "title"         : "Left Sidebar Parts",
-            "page"          : "Default",
-            "type"          : "Block",
-            "parent"        : "NULL"
-        },
-        {
             "id"            : "Main",
-            "class"         : "NULL",
+            "class"         : "container",
             "row"           : 2,
-            "col"           : 9,
-            "offset"        : 3,
+            "col"           : 0,
+            "offset"        : 0,
             "title"         : "Main Contents",
             "page"          : "Default",
             "type"          : "Block",
@@ -147,108 +136,31 @@
             "parent"        : "NaviHeader"
         },
         {
-            "id"            : "PanelBody",
-            "class"         : "panel-body",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "Panel Body Parts",
-            "page"          : "NULL",
-            "type"          : "Block",
-            "parent"        : "LeftSide"
-        },
-        {
-            "id"            : "FormTab",
-            "class"         : "nav nav-tabs nav-justified",
-            "row"           : 1,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "NULL",
-            "page"          : "NULL",
-            "type"          : "Block",
-            "parent"        : "PanelBody"
-        },
-        {
-            "id"            : "PartsTabParent",
-            "class"         : "NULL",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "Parts",
-            "page"          : "NULL",
-            "type"          : "Block",
-            "parent"        : "FormTab"
-        },
-        {
-            "id"            : "PartsTabChild",
-            "class"         : "NULL",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "Parts",
-            "page"          : "NULL",
-            "type"          : "Link",
-            "parent"        : "PartsTabParent"
-        },
-        {
-            "id"            : "PageTabParent",
-            "class"         : "NULL",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "Page",
-            "page"          : "NULL",
-            "type"          : "Block",
-            "parent"        : "FormTab"
-        },
-        {
-            "id"            : "PageTabChild",
-            "class"         : "active",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "Page",
-            "page"          : "NULL",
-            "type"          : "Link",
-            "parent"        : "PageTabParent"
-        },
-        {
-            "id"            : "FormParent",
-            "class"         : "tab-content",
-            "row"           : 2,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "NULL",
-            "page"          : "NULL",
-            "type"          : "Block",
-            "parent"        : "PanelBody"
-        },
-        {
             "id"            : "PartsFormParent",
-            "class"         : "tab-pane fade",
+            "class"         : "modal",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "NULL",
-            "page"          : "NULL",
+            "title"         : "Parts Form Parent",
+            "page"          : "Default",
             "type"          : "Block",
-            "parent"        : "FormParent"
+            "parent"        : "NULL"
         },
         {
             "id"            : "PageFormParent",
-            "class"         : "tab-pane fade in active",
+            "class"         : "modal",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "NULL",
-            "page"          : "NULL",
+            "title"         : "Page Form Parent",
+            "page"          : "Default",
             "type"          : "Block",
-            "parent"        : "FormParent"
+            "parent"        : "NULL"
         },
         {
             "id"            : "PartsForm",
-            "class"         : "form-horizontal",
-            "row"           : 1,
+            "class"         : "form-horizontal modal-dialog modal-body panel",
+            "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Parts Form",
@@ -258,8 +170,8 @@
         },
         {
             "id"            : "PageForm",
-            "class"         : "form-horizontal",
-            "row"           : 1,
+            "class"         : "form-horizontal modal-dialog modal-body panel",
+            "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Page Select",
@@ -714,10 +626,6 @@
             "type"          : 0
         },
         {
-            "id"            : "LeftSide",
-            "type"          : 0
-        },
-        {
             "id"            : "Main",
             "type"          : 0
         },
@@ -740,22 +648,6 @@
         {
             "id"            : "PageFormParent",
             "type"          : 0
-        },
-        {
-            "id"            : "PanelBody",
-            "type"          : 0
-        },
-        {
-            "id"            : "FormTab",
-            "type"          : 2
-        },
-        {
-            "id"            : "PartsTabParent",
-            "type"          : 3
-        },
-        {
-            "id"            : "PageTabParent",
-            "type"          : 3
         },
         {
             "id"            : "PartsDialog",
@@ -792,20 +684,6 @@
         {
             "id"            : "TextPartsDialog",
             "type"          : 0
-        }
-    ],
-    "LinkParts"   : [
-        {
-            "id"            : "PartsTabChild",
-            "path"          : "#PartsFormParent",
-            "outerlink"     : 0,
-            "image"         : "NULL"
-        },
-        {
-            "id"            : "PageTabChild",
-            "path"          : "#PageFormParent",
-            "outerlink"     : 0,
-            "image"         : "NULL"
         }
     ],
     "FormParts"   : [

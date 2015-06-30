@@ -32,7 +32,7 @@ class Html extends Viewer {
             $ret   .= "col-md-offset-". ($parts["offset"] - $this->_offset). " ";
             $ret   .= "col-sm-offset-". ($parts["offset"] - $this->_offset). " ";
         }
-        if (isset($parts["col"])) {
+        if (isset($parts["col"]) and $parts["col"]) {
             $ret   .= "col-xs-". $parts["col"]. " ";
             $ret   .= "col-md-". $parts["col"]. " ";
             $ret   .= "col-sm-". $parts["col"]. " ";
