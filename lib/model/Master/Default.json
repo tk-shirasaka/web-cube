@@ -82,7 +82,7 @@
         },
         {
             "id"            : "Main",
-            "class"         : "container",
+            "class"         : "container-fluid",
             "row"           : 2,
             "col"           : 0,
             "offset"        : 0,
