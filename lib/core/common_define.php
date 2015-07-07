@@ -21,7 +21,7 @@ define("WWW_ROOT",  APP. DS. "webroot");
 define("SYS_USER",      "sysadmin");
 define("SYS_PASSWORD",  "password");
 define("SYS_LANGUAGE",  "ja");
-define("ACCESS_TIME",   date("Y-m-d"));
+define("ACCESS_TIME",   date("Y-m-d H:i:s"));
 
 /**
  * DB common definition

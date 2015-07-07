@@ -202,6 +202,10 @@ abstract class Database extends Common {
         return implode(" {$join} ", $ret);
     }
 
+    public function chkValid($table, $data) {
+        return $this->Validation->getValidation($data, $this->Schema[$table]);
+    }
+
     public function execute($query) {
         $start  = microtime(true);
 
@@ -272,6 +276,7 @@ abstract class Database extends Common {
 
     public function save($table, $data, $conditions = "") {
         $exec_query = true;
+        $validation = $this->chkValid($table, $data);
         $insert     = [];
         $update     = [];
         foreach ($data as $key => $val) {
@@ -285,7 +290,7 @@ abstract class Database extends Common {
             $insert[$key]   = $val;
             $update[]       = "{$key} = {$val}";
         }
-        if ($exec_query and is_array($data)) {
+        if (!$validation and $exec_query and is_array($data)) {
             $this->is_update    = true;
             $insert_query       = $this->_getQuery("Insert", "", [$table, implode(", ", array_keys($insert)), implode(", ", $insert)]);
             if ($conditions) {
