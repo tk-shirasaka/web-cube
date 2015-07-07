@@ -5,7 +5,8 @@ class Maintenance extends View {
         $ret    = [];
 
         if (!empty($data["_dirty"])) {
-            $data["Parts"]["id"]    = "dummy";
+            $data["Parts"]["id"]        = "dummy";
+            $data["Parts"]["parent"]    = "";
             $ret[$data["_id"]]      = [
                 "Parts" => $this->{"Model.Master"}->Source->chkValid("Parts", $data["Parts"])
             ];

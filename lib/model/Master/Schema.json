@@ -244,6 +244,19 @@
             "Foreign"       : false
         }
     ],
+    "PartsRelation" : [
+        {
+            "Description"   : "Parts relation id",
+            "Field"         : "id",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : true,
+            "Unique"        : false,
+            "Foreign"       : false
+        }
+    ],
     "Parts" : [
         {
             "Description"   : "Parts id",
@@ -349,7 +362,7 @@
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
-                "Table" : "Parts",
+                "Table" : "PartsRelation",
                 "Field" : "id"
             }
         }
@@ -583,6 +596,20 @@
             }
         },
         {
+            "Description"   : "Child parts id",
+            "Field"         : "child",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Default"       : "NULL",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "PartsRelation",
+                "Field" : "id"
+            }
+        },
+        {
             "Description"   : "Method type [GET : 0, POST : 1]",
             "Field"         : "method",
             "Type"          : "tinyint",
@@ -639,6 +666,20 @@
             "Unique"        : false,
             "Foreign"       : {
                 "Table" : "Parts",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Child parts id",
+            "Field"         : "child",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Default"       : "NULL",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "PartsRelation",
                 "Field" : "id"
             }
         },

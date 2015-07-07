@@ -66,6 +66,56 @@
             "name"          : "{I18n::$Link}"
         }
     ],
+    "PartsRelation" : [
+        {
+            "id"            : "Header"
+        },
+        {
+            "id"            : "HeadNavi"
+        },
+        {
+            "id"            : "NaviHeader"
+        },
+        {
+            "id"            : "PartsFormParent"
+        },
+        {
+            "id"            : "PageFormParent"
+        },
+        {
+            "id"            : "PartsForm"
+        },
+        {
+            "id"            : "PartsDialog"
+        },
+        {
+            "id"            : "PartsAttrDialog"
+        },
+        {
+            "id"            : "ChoicePartsDialog"
+        },
+        {
+            "id"            : "InputPartsDialog"
+        },
+        {
+            "id"            : "FormPartsDialog"
+        },
+        {
+            "id"            : "BlockPartsDialog"
+        },
+        {
+            "id"            : "LinkPartsDialog"
+        },
+        {
+            "id"            : "HeaderPartsDialog"
+        },
+        {
+            "id"            : "TextPartsDialog"
+        },
+        {
+            "id"            : "PageForm"
+        }
+    ],
     "Parts" : [
         {
             "id"            : "Header",
@@ -350,8 +400,17 @@
             "parent"        : "FormPartsDialog"
         },
         {
-            "id"            : "FormActionInput",
+            "id"            : "FormChildInput",
             "row"           : 2,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Child Parts id",
+            "type"          : "Input",
+            "parent"        : "FormPartsDialog"
+        },
+        {
+            "id"            : "FormActionInput",
+            "row"           : 3,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Submit URI",
@@ -360,7 +419,7 @@
         },
         {
             "id"            : "FormSubmitInput",
-            "row"           : 3,
+            "row"           : 4,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Submit Text",
@@ -369,7 +428,7 @@
         },
         {
             "id"            : "FormCancelInput",
-            "row"           : 4,
+            "row"           : 6,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Cancel Text",
@@ -385,8 +444,17 @@
             "parent"        : "PartsAttrDialog"
         },
         {
-            "id"            : "BlockTypeChoice",
+            "id"            : "BlockChildInput",
             "row"           : 1,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Child Parts id",
+            "type"          : "Input",
+            "parent"        : "BlockPartsDialog"
+        },
+        {
+            "id"            : "BlockTypeChoice",
+            "row"           : 2,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Block tag",
@@ -518,6 +586,7 @@
     "BlockParts"   : [
         {
             "id"            : "Header",
+            "child"         : "Header",
             "type"          : 0
         },
         {
@@ -529,61 +598,75 @@
             "type"          : 0
         },
         {
-            "id"            : "NaviHeader",
-            "type"          : 0
-        },
-        {
             "id"            : "HeadNavi",
+            "child"         : "HeadNavi",
             "type"          : 1
         },
         {
+            "id"            : "NaviHeader",
+            "child"         : "NaviHeader",
+            "type"          : 0
+        },
+        {
             "id"            : "PartsFormParent",
+            "child"         : "PartsFormParent",
             "type"          : 0
         },
         {
             "id"            : "PageFormParent",
+            "child"         : "PageFormParent",
             "type"          : 0
         },
         {
             "id"            : "PartsDialog",
+            "child"         : "PartsDialog",
             "type"          : 0
         },
         {
             "id"            : "PartsAttrDialog",
+            "child"         : "PartsAttrDialog",
             "type"          : 0
         },
         {
             "id"            : "ChoicePartsDialog",
+            "child"         : "ChoicePartsDialog",
             "type"          : 0
         },
         {
             "id"            : "InputPartsDialog",
+            "child"         : "InputPartsDialog",
             "type"          : 0
         },
         {
             "id"            : "FormPartsDialog",
+            "child"         : "FormPartsDialog",
             "type"          : 0
         },
         {
             "id"            : "BlockPartsDialog",
+            "child"         : "BlockPartsDialog",
             "type"          : 0
         },
         {
             "id"            : "LinkPartsDialog",
+            "child"         : "LinkPartsDialog",
             "type"          : 0
         },
         {
             "id"            : "HeaderPartsDialog",
+            "child"         : "HeaderPartsDialog",
             "type"          : 0
         },
         {
             "id"            : "TextPartsDialog",
+            "child"         : "TextPartsDialog",
             "type"          : 0
         }
     ],
     "FormParts"   : [
         {
             "id"            : "PartsForm",
+            "child"         : "PartsForm",
             "method"        : 1,
             "action"        : "/maintenance/ajax_parts_render",
             "submit"        : "Push",
@@ -591,6 +674,7 @@
         },
         {
             "id"            : "PageForm",
+            "child"         : "PageForm",
             "method"        : 1,
             "action"        : "/maintenance/ajax_page_render",
             "submit"        : "Render"
@@ -651,6 +735,12 @@
             "placeholder"   : "Placeholder"
         },
         {
+            "id"            : "FormChildInput",
+            "name"          : "Attr.child",
+            "label_col"     : 4,
+            "type"          : 4
+        },
+        {
             "id"            : "FormActionInput",
             "name"          : "Attr.action",
             "label_col"     : 4,
@@ -670,6 +760,12 @@
             "label_col"     : 4,
             "type"          : 0,
             "placeholder"   : "Cancel button's text"
+        },
+        {
+            "id"            : "BlockChildInput",
+            "name"          : "Attr.child",
+            "label_col"     : 4,
+            "type"          : 4
         },
         {
             "id"            : "LinkPathInput",

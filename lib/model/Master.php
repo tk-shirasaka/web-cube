@@ -32,18 +32,18 @@ class Master extends Model {
         }
     }
 
-    private function _getChild($parent) {
-        $parts  = $parent["Parts"]["id"];
+    private function _getChild($id) {
         $sort   = ["row", "offset"];
 
-        if (!($ret = $this->Source->find("Parts", ["Where" => ["parent" => $parts], "Sort" => $sort]))) return false;
+        if (!($ret = $this->Source->find(["Parts", "PartsRelation"], ["Where" => ["parent" => $id], "Sort" => $sort]))) return false;
 
         foreach ($ret as $key => $parent) {
             $table  = $parent["Parts"]["type"]. "Parts";
-            $child  = $this->_getChild($parent);
             $attr   = $this->Source->find($table, ["Where" => ["id" => $parent["Parts"]["id"]]]);
-            if ($child) $ret[$key]["Child"] = $child;
-            if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
+            if ($attr) {
+                $ret[$key]["Attr"] = $attr[0][$table];
+                if (!empty($ret[$key]["Attr"]["child"])) $ret[$key]["Child"] = $this->_getChild($ret[$key]["Attr"]["child"]);
+            }
         }
         return $ret;
     }
@@ -76,11 +76,12 @@ class Master extends Model {
         if (!empty($ret)) {
             foreach($ret as $key => $parent) {
                 $table  = $parent["Parts"]["type"]. "Parts";
-                $child  = $this->_getChild($parent);
                 $where  = ["id" => $parent["Parts"]["id"]];
                 $attr   = $this->Source->find($table, ["Where" => $where]);
-                if ($child) $ret[$key]["Child"] = $child;
-                if ($attr) $ret[$key]["Attr"] = $attr[0][$table];
+                if ($attr) {
+                    $ret[$key]["Attr"] = $attr[0][$table];
+                    if (!empty($ret[$key]["Attr"]["child"])) $ret[$key]["Child"] = $this->_getChild($ret[$key]["Attr"]["child"]);
+                }
             }
         }
         Core::Get()->setPropaty(["page" => $ret]);
