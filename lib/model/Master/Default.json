@@ -287,12 +287,12 @@
             "parent"        : "PartsDialog"
         },
         {
-            "id"            : "PartsParentInput",
+            "id"            : "PartsParentChoice",
             "row"           : 8,
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Parent",
-            "type"          : "Input",
+            "type"          : "Choice",
             "parent"        : "PartsDialog"
         },
         {
@@ -708,12 +708,6 @@
             "type"          : 4
         },
         {
-            "id"            : "PartsParentInput",
-            "name"          : "Parts.parent",
-            "label_col"     : 4,
-            "type"          : 4
-        },
-        {
             "id"            : "ChoiceNameInput",
             "name"          : "Attr.name",
             "label_col"     : 4,
@@ -809,6 +803,12 @@
             "name"          : "Parts.type",
             "label_col"     : 4,
             "model"         : "Model.Master.getPartsType",
+            "type"          : 1
+        },
+        {
+            "id"            : "PartsParentChoice",
+            "name"          : "Parts.parent",
+            "label_col"     : 4,
             "type"          : 1
         },
         {
