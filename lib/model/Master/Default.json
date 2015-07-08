@@ -77,13 +77,25 @@
             "id"            : "NaviHeader"
         },
         {
-            "id"            : "PartsFormParent"
+            "id"            : "Modal"
         },
         {
-            "id"            : "PageFormParent"
+            "id"            : "ModalDialog"
+        },
+        {
+            "id"            : "ModalContent"
+        },
+        {
+            "id"            : "ModalHeader"
+        },
+        {
+            "id"            : "ModalBody"
         },
         {
             "id"            : "PartsForm"
+        },
+        {
+            "id"            : "PageForm"
         },
         {
             "id"            : "PartsDialog"
@@ -111,9 +123,6 @@
         },
         {
             "id"            : "TextPartsDialog"
-        },
-        {
-            "id"            : "PageForm"
         }
     ],
     "Parts" : [
@@ -176,44 +185,81 @@
             "parent"        : "NaviHeader"
         },
         {
-            "id"            : "PartsFormParent",
-            "class"         : "modal",
+            "id"            : "Modal",
+            "class"         : "modal fade",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "Parts Form Parent",
+            "title"         : "Modal",
             "page"          : "Default",
             "type"          : "Block"
         },
         {
-            "id"            : "PageFormParent",
-            "class"         : "modal",
+            "id"            : "ModalDialog",
+            "class"         : "modal-dialog",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "Page Form Parent",
-            "page"          : "Default",
-            "type"          : "Block"
+            "title"         : "Modal Dialog",
+            "type"          : "Block",
+            "parent"        : "Modal"
+        },
+        {
+            "id"            : "ModalContent",
+            "class"         : "modal-content",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Modal Content",
+            "type"          : "Block",
+            "parent"        : "ModalDialog"
+        },
+        {
+            "id"            : "ModalHeader",
+            "class"         : "modal-header",
+            "row"           : 1,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Modal Header",
+            "type"          : "Block",
+            "parent"        : "ModalContent"
+        },
+        {
+            "id"            : "ModalTitle",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Modal Title",
+            "type"          : "Header",
+            "parent"        : "ModalHeader"
+        },
+        {
+            "id"            : "ModalBody",
+            "class"         : "modal-body",
+            "row"           : 2,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Modal Body",
+            "type"          : "Block",
+            "parent"        : "ModalContent"
         },
         {
             "id"            : "PartsForm",
-            "class"         : "form-horizontal modal-dialog modal-body panel",
+            "class"         : "form-horizontal",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "Parts Form",
             "type"          : "Form",
-            "parent"        : "PartsFormParent"
+            "parent"        : "ModalBody"
         },
         {
             "id"            : "PageForm",
-            "class"         : "form-horizontal modal-dialog modal-body panel",
+            "class"         : "form-horizontal",
             "row"           : 0,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "Page Select",
             "type"          : "Form",
-            "parent"        : "PageFormParent"
+            "parent"        : "ModalBody"
         },
         {
             "id"            : "PartsDialog",
@@ -608,13 +654,28 @@
             "type"          : 0
         },
         {
-            "id"            : "PartsFormParent",
-            "child"         : "PartsFormParent",
+            "id"            : "Modal",
+            "child"         : "Modal",
             "type"          : 0
         },
         {
-            "id"            : "PageFormParent",
-            "child"         : "PageFormParent",
+            "id"            : "ModalDialog",
+            "child"         : "ModalDialog",
+            "type"          : 0
+        },
+        {
+            "id"            : "ModalContent",
+            "child"         : "ModalContent",
+            "type"          : 0
+        },
+        {
+            "id"            : "ModalHeader",
+            "child"         : "ModalHeader",
+            "type"          : 0
+        },
+        {
+            "id"            : "ModalBody",
+            "child"         : "ModalBody",
             "type"          : 0
         },
         {
@@ -885,6 +946,13 @@
             "label_col"     : 4,
             "model"         : "Model.Master.getPages",
             "type"          : 1
+        }
+    ],
+    "HeaderParts"   : [
+        {
+            "id"            : "ModalTitle",
+            "contents"      : "",
+            "type"          : 4
         }
     ],
     "TextParts"   : [
