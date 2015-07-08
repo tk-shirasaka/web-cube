@@ -98,6 +98,9 @@
             "id"            : "PageForm"
         },
         {
+            "id"            : "SaveForm"
+        },
+        {
             "id"            : "PartsDialog"
         },
         {
@@ -262,6 +265,15 @@
             "parent"        : "ModalBody"
         },
         {
+            "id"            : "SaveForm",
+            "class"         : "form-horizontal",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "type"          : "Form",
+            "parent"        : "ModalBody"
+        },
+        {
             "id"            : "PartsDialog",
             "row"           : 1,
             "col"           : 0,
@@ -324,20 +336,20 @@
             "parent"        : "PartsDialog"
         },
         {
-            "id"            : "PartsTypeChoice",
+            "id"            : "PartsParentChoice",
             "row"           : 7,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "Type",
+            "title"         : "Parent",
             "type"          : "Choice",
             "parent"        : "PartsDialog"
         },
         {
-            "id"            : "PartsParentChoice",
+            "id"            : "PartsTypeChoice",
             "row"           : 8,
             "col"           : 0,
             "offset"        : 0,
-            "title"         : "Parent",
+            "title"         : "Type",
             "type"          : "Choice",
             "parent"        : "PartsDialog"
         },
@@ -604,6 +616,33 @@
             "parent"        : "PageForm"
         },
         {
+            "id"            : "PageIdInput",
+            "row"           : 1,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Title",
+            "type"          : "Input",
+            "parent"        : "SaveForm"
+        },
+        {
+            "id"            : "PageTitleInput",
+            "row"           : 2,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Title",
+            "type"          : "Input",
+            "parent"        : "SaveForm"
+        },
+        {
+            "id"            : "PagePathInput",
+            "row"           : 3,
+            "col"           : 0,
+            "offset"        : 0,
+            "title"         : "Path",
+            "type"          : "Input",
+            "parent"        : "SaveForm"
+        },
+        {
             "id"            : "AjaxParts",
             "row"           : 0,
             "col"           : 0,
@@ -739,6 +778,13 @@
             "method"        : 1,
             "action"        : "/maintenance/ajax_page_render",
             "submit"        : "Render"
+        },
+        {
+            "id"            : "SaveForm",
+            "child"         : "SaveForm",
+            "method"        : 1,
+            "action"        : "/maintenance/ajax_page_save",
+            "submit"        : "Save"
         }
     ],
     "InputParts"    : [
@@ -842,6 +888,27 @@
             "label_col"     : 4,
             "type"          : 0,
             "placeholder"   : "Text contents"
+        },
+        {
+            "id"            : "PageIdInput",
+            "name"          : "Page.id",
+            "label_col"     : 4,
+            "type"          : 0,
+            "placeholder"   : "Page title"
+        },
+        {
+            "id"            : "PageTitleInput",
+            "name"          : "Page.title",
+            "label_col"     : 4,
+            "type"          : 4,
+            "placeholder"   : "Page title"
+        },
+        {
+            "id"            : "PagePathInput",
+            "name"          : "Page.path",
+            "label_col"     : 4,
+            "type"          : 0,
+            "placeholder"   : "Page URI"
         }
     ],
     "ChoiceParts"    : [
