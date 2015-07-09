@@ -30,6 +30,12 @@
             "path"          : "maintenance/ajax_page_render"
         },
         {
+            "id"            : "AjaxSave",
+            "title"         : "Ajax Save",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_page_save"
+        },
+        {
             "id"            : "Error",
             "title"         : "Error Page",
             "user"          : "System",
@@ -659,6 +665,14 @@
             "type"          : "Text"
         },
         {
+            "id"            : "AjaxSave",
+            "row"           : 0,
+            "col"           : 0,
+            "offset"        : 0,
+            "page"          : "AjaxSave",
+            "type"          : "Text"
+        },
+        {
             "id"            : "Error",
             "row"           : 2,
             "col"           : 8,
@@ -893,14 +907,14 @@
             "id"            : "PageIdInput",
             "name"          : "Page.id",
             "label_col"     : 4,
-            "type"          : 0,
-            "placeholder"   : "Page title"
+            "type"          : 4,
+            "placeholder"   : "Page ID"
         },
         {
             "id"            : "PageTitleInput",
             "name"          : "Page.title",
             "label_col"     : 4,
-            "type"          : 4,
+            "type"          : 0,
             "placeholder"   : "Page title"
         },
         {
@@ -1035,6 +1049,11 @@
         },
         {
             "id"            : "AjaxPage",
+            "contents"      : "",
+            "multiple"      : 0
+        },
+        {
+            "id"            : "AjaxSave",
             "contents"      : "",
             "multiple"      : 0
         },

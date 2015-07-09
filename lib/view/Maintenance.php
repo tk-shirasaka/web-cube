@@ -29,6 +29,15 @@ class Maintenance extends View {
         echo json_encode(compact("html", "error"));
     }
 
+    public function ajaxPageSave() {
+        $this->auto_render  = false;
+        $request            = $this->getParams("Request");
+        $page               = $request["Page"];
+        $parts              = $request["Parts"];
+
+        echo json_encode(true);
+    }
+
     public function ajaxPageRender() {
         $this->auto_render  = false;
         $page               = $this->getParams("Request");
