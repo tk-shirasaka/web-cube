@@ -274,36 +274,35 @@ abstract class Database extends Common {
         return ($flg) ? $this->execute($this->_getQuery("Drop", "", $table)) : $flg;
     }
 
-    public function save($table, $data, $conditions = "") {
+    public function save($table, $data, $conditions = []) {
         $exec_query = true;
         $validation = $this->chkValid($table, $data);
+        $fields     = array_search_key(["Field", "Primary"], $this->Schema[$table]);
         $insert     = [];
         $update     = [];
         foreach ($data as $key => $val) {
-            if (is_int($key) and is_array($val)) {
-                $this->save($table, $val);
-                $is_multi   = false;
-                continue;
-            }
-            if (strtoupper($val) === "NULL") $val = "NULL";
+            $index  = array_search($key, $fields["Field"]);
+            if ($index !== false and $this->Schema[$table][$index]["Primary"]) $conditions += [$key => $val];
+            if (strtoupper($val) === "NULL" or $val === null) $val = "NULL";
             else if (is_string($val)) $val = "\"{$val}\"";
             $insert[$key]   = $val;
             $update[]       = "{$key} = {$val}";
         }
         if (!$validation and $exec_query and is_array($data)) {
-            $this->is_update    = true;
             $insert_query       = $this->_getQuery("Insert", "", [$table, implode(", ", array_keys($insert)), implode(", ", $insert)]);
             if ($conditions) {
+                $conditions     = ["Where" => $conditions];
                 $converted      = $this->_getConditions($table, $conditions);
                 $update_query   = $this->_getQuery("Update", $converted["uses"], array_merge([$table, implode(", ", $update)], $converted["options"]));
-                $select_query   = $this->_getQuery("Select", $converted["uses"], array_merge(["*", $table], $converted["options"]));
 
-                $query = "IF EXISTS({$select_query}) {$update_query} ELSE {$insert_query}";
+                $query = (empty($this->find($table, $conditions))) ? $insert_query : $update_query;
             } else {
                 $query = $insert_query;
             }
+            $this->is_update    = true;
             $this->execute($query);
         }
+        return ($validation) ? $validation : $this->_lastId();
     }
 
     public function show($type, $options = []) {

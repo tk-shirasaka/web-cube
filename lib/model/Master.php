@@ -89,6 +89,27 @@ class Master extends Model {
         return $ret;
     }
 
+    public function saveParts($parts) {
+        $id     = $parts["Parts"]["id"];
+        if (!empty($parts["Child"])) $this->Source->save("PartsRelation", compact("id"));
+
+        return $this->Source->save("Parts", $parts["Parts"]);
+    }
+
+    public function savePage($page, $parts, $parent = null) {
+        foreach ($parts as $child) {
+            $child["Parts"]["id"]   = (empty($child["_originalId"])) ? null : $child["_originalId"];
+            if (!empty($child["_dirty"])) {
+                $child["Page"]              = $page;
+                $child["Parts"]["page"]     = $page["id"];
+                $child["Parts"]["parent"]   = $parent;
+                $result                     = $this->saveParts($child);
+                if (!is_array($result)) $child["Parts"]["id"] = $result;
+            }
+            if (!empty($child["Child"])) $this->savePage($page, $child["Child"], $child["Parts"]["id"]);
+        }
+    }
+
     public function getColRange() {
         return range(0, 12);
     }

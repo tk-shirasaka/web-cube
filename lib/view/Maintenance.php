@@ -32,10 +32,9 @@ class Maintenance extends View {
     public function ajaxPageSave() {
         $this->auto_render  = false;
         $request            = $this->getParams("Request");
-        $page               = $request["Page"];
-        $parts              = $request["Parts"];
+        $result             = $this->{"Model.Master"}->savePage($request["Page"] + ["user" => $this->getParams("User")], $request["Parts"]);
 
-        echo json_encode(true);
+        echo json_encode($result);
     }
 
     public function ajaxPageRender() {

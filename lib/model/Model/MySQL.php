@@ -2,6 +2,7 @@
 App::Uses("Model", "Database");
 
 class MySQL extends Database {
+    private $_last_id       = null;
     public  $eoq            = ";";
     public  $separator      = "__";
     public  $connect        = null;
@@ -42,13 +43,22 @@ class MySQL extends Database {
 
     protected function _commit($result) {
         if ($this->is_update and $this->connect) {
-            if ($result)    $this->connect->commit();
-            else            $this->connect->rollback();
+            if ($result) {
+                $this->connect->commit();
+                $this->_last_id = $this->connect->insert_id;
+            } else {
+                $this->connect->rollback();
+                $this->_last_id = null;
+            }
         }
     }
 
     protected function _close() {
         $this->connect->close();
         $this->is_update = false;
+    }
+
+    protected function _lastId() {
+        return $this->_last_id;
     }
 }
