@@ -33,6 +33,9 @@ class Maintenance extends View {
         $this->auto_render  = false;
         $request            = $this->getParams("Request");
         $result             = $this->{"Model.Master"}->savePage($request["Page"] + ["user" => $this->getParams("User")], $request["Parts"]);
+        foreach ($request["Removed"] as $removed) {
+            $this->{"Model.Master"}->deleteParts($removed);
+        }
 
         echo json_encode($result);
     }

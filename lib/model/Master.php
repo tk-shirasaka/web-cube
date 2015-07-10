@@ -92,8 +92,8 @@ class Master extends Model {
 
     public function saveParts($parts) {
         $id     = $parts["Parts"]["id"];
-        $table  = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]]);
-        $table  = $table[0]["PartsType"]["table_name"];
+        $table  = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]], "first");
+        $table  = $table["PartsType"]["table_name"];
         if (!empty($parts["Child"])) $this->Source->save("PartsRelation", compact("id"));
 
         $this->Source->save("Parts", $parts["Parts"]);
@@ -119,6 +119,14 @@ class Master extends Model {
             }
             if (!empty($child["Child"])) $this->savePage($page, $child["Child"], $child["Parts"]["id"]);
         }
+    }
+
+    public function deleteParts($id) {
+        $parts  = $this->Source->find(["Parts", "PartsType"], ["Where" => ["Parts.id" => $id]], "first");
+        $table  = $parts["PartsType"]["table_name"];
+        $this->Source->delete($table, compact("id"));
+        $this->Source->delete("Parts", compact("id"));
+        if (empty($this->Source->find("Parts", ["parent" => $id]))) $this->Source->delete("PartsRelation", compact("id"));
     }
 
     public function getColRange() {

@@ -321,11 +321,21 @@ abstract class Database extends Common {
         return ($validation) ? $validation : $this->_lastId();
     }
 
+    public function delete($table, $conditions) {
+        if (empty($conditions)) return;
+        $conditions = ["Where" => $conditions];
+        $converted  = $this->_getConditions($table, $conditions);
+
+        if (empty($this->find($table, $conditions))) return;
+        return $this->execute($this->_getQuery("Delete", $converted["uses"], array_merge([$table], $converted["options"])));
+    }
+
     public function show($type, $options = []) {
         return $this->execute($this->_getQuery("Show", $type, $options));
     }
 
-    public function find($table, $conditions = []) {
+    public function find($table, $conditions = [], $type = "all") {
+        if ($type === "first") $conditions["Limit"] = 1;
         $ret        = [];
         $options    = [];
         $options[]  = (empty($conditions["Field"])) ? $this->_getFields($table) : $this->_getFields($table, $conditions["Field"]);
@@ -341,6 +351,6 @@ abstract class Database extends Common {
             }
             $ret[] = $ret_record;
         }
-        return $ret;
+        return ($type === "first" and !empty($ret)) ? $ret[0] : $ret;
     }
 }
