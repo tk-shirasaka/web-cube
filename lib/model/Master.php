@@ -35,10 +35,10 @@ class Master extends Model {
     private function _getChild($id) {
         $sort   = ["row", "offset"];
 
-        if (!($ret = $this->Source->find(["Parts", "PartsRelation"], ["Where" => ["parent" => $id], "Sort" => $sort]))) return false;
+        if (!($ret = $this->Source->find(["Parts", "PartsType"], ["Where" => ["parent" => $id], "Sort" => $sort]))) return false;
 
         foreach ($ret as $key => $parent) {
-            $table  = $parent["Parts"]["type"]. "Parts";
+            $table  = $parent["PartsType"]["table_name"];
             $attr   = $this->Source->find($table, ["Where" => ["id" => $parent["Parts"]["id"]]]);
             if ($attr) {
                 $ret[$key]["Attr"] = $attr[0][$table];
@@ -49,11 +49,12 @@ class Master extends Model {
     }
 
     public function getPage($conditions = []) {
-        $table  = ["Page", "Parts"];
+        $table  = ["Page", "Parts", "PartsType"];
         $sort   = ["row", "offset"];
         $where  = [
             "path"      => implode("/", $this->getParams("Path")),
             "user"      => $this->getParams("User"),
+            "parent"    => ["Relation" => "IS", "Value" => "NULL"]
         ];
 
         if ($conditions) {
@@ -75,7 +76,7 @@ class Master extends Model {
         }
         if (!empty($ret)) {
             foreach($ret as $key => $parent) {
-                $table  = $parent["Parts"]["type"]. "Parts";
+                $table  = $parent["PartsType"]["table_name"];
                 $where  = ["id" => $parent["Parts"]["id"]];
                 $attr   = $this->Source->find($table, ["Where" => $where]);
                 if ($attr) {
@@ -91,20 +92,30 @@ class Master extends Model {
 
     public function saveParts($parts) {
         $id     = $parts["Parts"]["id"];
+        $table  = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]]);
+        $table  = $table[0]["PartsType"]["table_name"];
         if (!empty($parts["Child"])) $this->Source->save("PartsRelation", compact("id"));
 
-        return $this->Source->save("Parts", $parts["Parts"]);
+        $this->Source->save("Parts", $parts["Parts"]);
+        $this->Source->save($table, $parts["Attr"]);
     }
 
     public function savePage($page, $parts, $parent = null) {
+        if (!$parent) $this->Source->save("Page", $page);
         foreach ($parts as $child) {
-            $child["Parts"]["id"]   = (empty($child["_originalId"])) ? null : $child["_originalId"];
+            $child["Parts"]["id"]   = (empty($child["_originalId"])) ? uniqid("", true) : $child["_originalId"];
             if (!empty($child["_dirty"])) {
                 $child["Page"]              = $page;
                 $child["Parts"]["page"]     = $page["id"];
                 $child["Parts"]["parent"]   = $parent;
+                $child["Attr"]["id"]        = $child["Parts"]["id"];
+                if (!$parent) unset($child["Parts"]["parent"]);
+                if (empty($child["Child"])) {
+                    unset($child["Attr"]["child"]);
+                } else {
+                    $child["Attr"]["child"] = $child["Parts"]["id"];
+                }
                 $result                     = $this->saveParts($child);
-                if (!is_array($result)) $child["Parts"]["id"] = $result;
             }
             if (!empty($child["Child"])) $this->savePage($page, $child["Child"], $child["Parts"]["id"]);
         }

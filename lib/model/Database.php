@@ -202,6 +202,23 @@ abstract class Database extends Common {
         return implode(" {$join} ", $ret);
     }
 
+    private function _cast($type, $val) {
+        switch ($type) {
+        case "tinyint" :
+        case "smallint" :
+        case "int" :
+        case "bigint" :
+            $val    = (int) $val;
+            break;
+        case "char" :
+        case "varchar" :
+        default :
+            $val    = (string) $val;
+            break;
+        }
+        return $val;
+    }
+
     public function chkValid($table, $data) {
         return $this->Validation->getValidation($data, $this->Schema[$table]);
     }
@@ -243,11 +260,11 @@ abstract class Database extends Common {
             if ($field["Foreign"])  $keys["Foreign"][]  = ["Field" => $field["Field"], "Referer" => $field["Foreign"]];
 
             $type[]     = "Default";
-            if ($field["Default"] === "") {
+            if (!isset($field["Default"])) {
                 array_pop($type);
-            } else if (is_string($field["Default"]) and $field["Default"] !== "NULL") {
+            } else if (is_string($field["Default"])) {
                 $options[] = "'". $field["Default"]. "'";
-            } else if ($field["Default"] !== "") {
+            } else {
                 $options[] = $field["Default"];
             }
             $query[]    = $this->_getQuery("Column", $type, $options);
@@ -275,20 +292,19 @@ abstract class Database extends Common {
     }
 
     public function save($table, $data, $conditions = []) {
-        $exec_query = true;
         $validation = $this->chkValid($table, $data);
-        $fields     = array_search_key(["Field", "Primary"], $this->Schema[$table]);
+        $fields     = array_search_key("Field", $this->Schema[$table]);
         $insert     = [];
         $update     = [];
         foreach ($data as $key => $val) {
-            $index  = array_search($key, $fields["Field"]);
+            $index  = array_search($key, $fields);
+            $val    = $this->_cast($this->Schema[$table][$index]["Type"], $val);
             if ($index !== false and $this->Schema[$table][$index]["Primary"]) $conditions += [$key => $val];
-            if (strtoupper($val) === "NULL" or $val === null) $val = "NULL";
-            else if (is_string($val)) $val = "\"{$val}\"";
+            if (is_string($val)) $val = "\"{$val}\"";
             $insert[$key]   = $val;
             $update[]       = "{$key} = {$val}";
         }
-        if (!$validation and $exec_query and is_array($data)) {
+        if (!$validation and  is_array($data)) {
             $insert_query       = $this->_getQuery("Insert", "", [$table, implode(", ", array_keys($insert)), implode(", ", $insert)]);
             if ($conditions) {
                 $conditions     = ["Where" => $conditions];

@@ -49,7 +49,7 @@ class Validation extends Common {
             $type   = $field["Type"];
             $length = $field["Length"];
 
-            if (!empty($field["Primary"])) $valid["requre"] = true;
+            if (!(isset($field["Default"]) or $field["Null"] or $field["Primary"])) $valid["requre"] = true;
             switch ($type) {
             case "int" :
                 $bytes  = ["smallint" => 2, "int" => 4, "bigint" => 8];

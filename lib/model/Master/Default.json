@@ -45,31 +45,38 @@
     "PartsType" : [
         {
             "id"            : "Block",
-            "name"          : "{I18n::$Block}"
+            "name"          : "{I18n::$Block}",
+            "table_name"    : "BlockParts"
         },
         {
             "id"            : "Form",
-            "name"          : "{I18n::$Form}"
+            "name"          : "{I18n::$Form}",
+            "table_name"    : "FormParts"
         },
         {
             "id"            : "Header",
-            "name"          : "{I18n::$Header}"
+            "name"          : "{I18n::$Header}",
+            "table_name"    : "HeaderParts"
         },
         {
             "id"            : "Text",
-            "name"          : "{I18n::$Text}"
+            "name"          : "{I18n::$Text}",
+            "table_name"    : "TextParts"
         },
         {
             "id"            : "Input",
-            "name"          : "{I18n::$Input}"
+            "name"          : "{I18n::$Input}",
+            "table_name"    : "InputParts"
         },
         {
             "id"            : "Choice",
-            "name"          : "{I18n::$Choice}"
+            "name"          : "{I18n::$Choice}",
+            "table_name"    : "ChoiceParts"
         },
         {
             "id"            : "Link",
-            "name"          : "{I18n::$Link}"
+            "name"          : "{I18n::$Link}",
+            "table_name"    : "LinkParts"
         }
     ],
     "PartsRelation" : [

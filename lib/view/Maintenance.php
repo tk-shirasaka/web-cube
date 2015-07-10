@@ -40,7 +40,7 @@ class Maintenance extends View {
     public function ajaxPageRender() {
         $this->auto_render  = false;
         $page               = $this->getParams("Request");
-        $page               = $this->{"Model.Master"}->getPage(["Where" => $page]);
+        $page               = $this->{"Model.Master"}->getPage(["Where" => $page + ["parent" => ["Relation" => "IS", "Value" => "NULL"]]]);
 
         echo json_encode($page);
     }

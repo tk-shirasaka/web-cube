@@ -6,7 +6,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
@@ -17,7 +16,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
@@ -28,7 +26,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -39,7 +36,6 @@
             "Type"          : "varchar",
             "Length"        : 10,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -50,7 +46,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -61,7 +56,6 @@
             "Type"          : "datetime",
             "Length"        : "",
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -72,7 +66,6 @@
             "Type"          : "varchar",
             "Length"        : 15,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -83,7 +76,6 @@
             "Type"          : "date",
             "Length"        : "",
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -94,7 +86,6 @@
             "Type"          : "date",
             "Length"        : "",
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -107,7 +98,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
@@ -118,7 +108,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -129,7 +118,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -143,7 +131,6 @@
             "Type"          : "varchar",
             "Length"        : 80,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -156,7 +143,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
@@ -167,7 +153,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -189,7 +174,6 @@
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -200,7 +184,6 @@
             "Type"          : "int",
             "Length"        : 8,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -210,8 +193,7 @@
             "Field"         : "user",
             "Type"          : "char",
             "Length"        : 30,
-            "Null"          : true,
-            "Default"       : "NULL",
+            "Null"          : false,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -222,12 +204,11 @@
     ],
     "PartsType" : [
         {
-            "Description"   : "Parts type id",
+            "Description"   : "Parts type id (PartsType's table name)",
             "Field"         : "id",
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
@@ -238,9 +219,18 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Parts table name",
+            "Field"         : "table_name",
+            "Type"          : "varchar",
+            "Length"        : 30,
+            "Null"          : false,
+            "Primary"       : false,
+            "Unique"        : true,
             "Foreign"       : false
         }
     ],
@@ -251,7 +241,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
@@ -264,7 +253,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
@@ -275,7 +263,6 @@
             "Type"          : "varchar",
             "Length"        : 100,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -286,7 +273,7 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
-            "Default"       : "",
+            "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -297,7 +284,7 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
-            "Default"       : "",
+            "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -308,7 +295,7 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
-            "Default"       : "",
+            "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -319,7 +306,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -330,7 +316,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : true,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -344,7 +329,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -358,7 +342,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -374,7 +357,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -388,7 +370,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -399,7 +380,6 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -410,7 +390,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -434,7 +413,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -448,7 +426,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -459,7 +436,6 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -470,7 +446,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -494,7 +469,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -507,8 +481,7 @@
             "Field"         : "path",
             "Type"          : "varchar",
             "Length"        : 200,
-            "Null"          : false,
-            "Default"       : "",
+            "Null"          : true,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -530,7 +503,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -546,7 +518,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -560,7 +531,6 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -570,8 +540,7 @@
             "Field"         : "target",
             "Type"          : "char",
             "Length"        : 30,
-            "Null"          : false,
-            "Default"       : "",
+            "Null"          : true,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -587,7 +556,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -601,7 +569,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -626,7 +593,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -637,7 +603,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -648,7 +613,6 @@
             "Type"          : "varchar",
             "Length"        : 40,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -661,7 +625,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -675,7 +638,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : true,
-            "Default"       : "NULL",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -702,7 +664,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -716,7 +677,6 @@
             "Type"          : "varchar",
             "Length"        : 2000,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -740,7 +700,6 @@
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : {
@@ -754,7 +713,6 @@
             "Type"          : "varchar",
             "Length"        : 100,
             "Null"          : false,
-            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
