@@ -91,17 +91,25 @@ class Master extends Model {
     }
 
     public function saveParts($parts) {
-        $id     = $parts["Parts"]["id"];
-        $table  = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]], "first");
-        $table  = $table["PartsType"]["table_name"];
-        if (!empty($parts["Child"])) $this->Source->save("PartsRelation", compact("id"));
+        $ret            = [];
+        $id             = $parts["Parts"]["id"];
+        $table          = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]], "first");
+        $table          = $table["PartsType"]["table_name"];
+        if (!empty($parts["Child"])) $ret["Relation"] = $this->Source->save("PartsRelation", compact("id"));
 
-        $this->Source->save("Parts", $parts["Parts"]);
-        $this->Source->save($table, $parts["Attr"]);
+        $ret["Parts"]   = $this->Source->save("Parts", $parts["Parts"]);
+        $ret["Attr"]    = $this->Source->save($table, $parts["Attr"]);
+
+        return (is_array($ret["Parts"]) and is_array($ret["Attr"]) or (isset($ret["Relation"]) and is_array($ret["Relation"]))) ? [$id => $ret] : [];
     }
 
     public function savePage($page, $parts, $parent = null) {
-        if (!$parent) $this->Source->save("Page", $page);
+        $ret            = [];
+
+        if (!$parent) {
+            $result = $this->Source->save("Page", $page);
+            $ret    = (is_array($result)) ? ["Page" => $result] : [];
+        }
         foreach ($parts as $child) {
             $child["Parts"]["id"]   = (empty($child["_originalId"])) ? uniqid("", true) : $child["_originalId"];
             if (!empty($child["_dirty"])) {
@@ -115,18 +123,23 @@ class Master extends Model {
                 } else {
                     $child["Attr"]["child"] = $child["Parts"]["id"];
                 }
-                $result                     = $this->saveParts($child);
+                $ret                        = array_merge($ret, $this->saveParts($child));
             }
             if (!empty($child["Child"])) $this->savePage($page, $child["Child"], $child["Parts"]["id"]);
         }
+
+        return $ret;
     }
 
     public function deleteParts($id) {
-        $parts  = $this->Source->find(["Parts", "PartsType"], ["Where" => ["Parts.id" => $id]], "first");
-        $table  = $parts["PartsType"]["table_name"];
-        $this->Source->delete($table, compact("id"));
-        $this->Source->delete("Parts", compact("id"));
-        if (empty($this->Source->find("Parts", ["parent" => $id]))) $this->Source->delete("PartsRelation", compact("id"));
+        $ret            = [];
+        $parts          = $this->Source->find(["Parts", "PartsType"], ["Where" => ["Parts.id" => $id]], "first");
+        $table          = $parts["PartsType"]["table_name"];
+        $ret["Attr"]    = $this->Source->delete($table, compact("id"));
+        $ret["Parts"]   = $this->Source->delete("Parts", compact("id"));
+        if (empty($this->Source->find("Parts", ["parent" => $id]))) $ret["Relation"] = $this->Source->delete("PartsRelation", compact("id"));
+
+        return (is_array($ret["Parts"]) and is_array($ret["Attr"]) or (isset($ret["Relation"]) and is_array($ret["Relation"]))) ? [$id => $ret] : [];
     }
 
     public function getColRange() {
