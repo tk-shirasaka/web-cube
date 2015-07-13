@@ -2,7 +2,7 @@
 class Validation extends Common {
 
     private function _requre($data, $key, $value) {
-        return (isset($data[$key])) ? [] : ["requre" => true];
+        return (empty($data[$key])) ? ["requre" => true] : [];
     }
 
     private function _max($data, $key, $max) {

@@ -244,6 +244,19 @@
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
+        },
+        {
+            "Description"   : "Parts owner user account",
+            "Field"         : "user",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "User",
+                "Field" : "id"
+            }
         }
     ],
     "Parts" : [
@@ -380,6 +393,7 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
+            "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
@@ -436,6 +450,7 @@
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
+            "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false

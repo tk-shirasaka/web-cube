@@ -1055,7 +1055,7 @@
     "HeaderParts"   : [
         {
             "id"            : "ModalTitle",
-            "contents"      : "",
+            "contents"      : "Sample",
             "type"          : 4
         }
     ],
