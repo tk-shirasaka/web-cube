@@ -181,7 +181,7 @@ abstract class Database extends Common {
         return implode(", ", $ret);
     }
 
-    private function _getWhere($where, $join = "AND") {
+    private function _getWhere($where, $join = "AND", $parent = null) {
         $where  = (is_array($where)) ? $where : [$where];
         $ret    = [];
 
@@ -193,13 +193,14 @@ abstract class Database extends Common {
                 $value      = $val["Value"];
                 $ret[]      = "{$key} {$relation} {$value}"; 
             } else if (is_array($val)) {
-                $ret[]      = $this->_getWhere($val);
+                $ret[]      = $this->_getWhere($val, $join, $key);
             } else {
-                if (is_string($val)) $val = "'$val'";
+                if (is_string($val))    $val    = "'$val'";
+                if (is_int($key))       $key    = $parent;
                 $ret[]      = "{$key} = {$val}"; 
             }
         }
-        return implode(" {$join} ", $ret);
+        return (is_array($ret)) ? implode(" {$join} ", $ret) : $ret;
     }
 
     private function _cast($type, $val) {
@@ -323,11 +324,13 @@ abstract class Database extends Common {
 
     public function delete($table, $conditions) {
         if (empty($conditions)) return;
-        $conditions = ["Where" => $conditions];
-        $converted  = $this->_getConditions($table, $conditions);
+        $conditions         = ["Where" => $conditions];
+        $converted          = $this->_getConditions($table, $conditions);
 
         if (empty($this->find($table, $conditions))) return;
-        return $this->execute($this->_getQuery("Delete", $converted["uses"], array_merge([$table], $converted["options"])));
+        $this->is_update    = true;
+        $query              = $this->_getQuery("Delete", $converted["uses"], array_merge([$table], $converted["options"]));
+        return $this->execute($query);
     }
 
     public function show($type, $options = []) {

@@ -107,6 +107,7 @@ class Master extends Model {
         $ret            = [];
 
         if (!$parent) {
+            if (!$page["id"]) $page["id"] = uniqid("", true);
             $result = $this->Source->save("Page", $page);
             $ret    = (is_array($result)) ? ["Page" => $result] : [];
         }
@@ -134,10 +135,14 @@ class Master extends Model {
     public function deleteParts($id) {
         $ret            = [];
         $parts          = $this->Source->find(["Parts", "PartsType"], ["Where" => ["Parts.id" => $id]], "first");
+        $parent         = $parts["Parts"]["parent"];
         $table          = $parts["PartsType"]["table_name"];
+        $where          = ["parent" => $id];
         $ret["Attr"]    = $this->Source->delete($table, compact("id"));
         $ret["Parts"]   = $this->Source->delete("Parts", compact("id"));
-        if (empty($this->Source->find("Parts", ["parent" => $id]))) $ret["Relation"] = $this->Source->delete("PartsRelation", compact("id"));
+
+        if (empty($this->Source->find("Parts", ["Where" => ["parent" => $id]]))) $ret["Relation"] = $this->Source->delete("PartsRelation", compact("id"));
+        if (empty($this->Source->find("Parts", ["Where" => compact("parent")]))) $ret["Relation"] = $this->Source->delete("PartsRelation", ["id" => $parent]);
 
         return (is_array($ret["Parts"]) and is_array($ret["Attr"]) or (isset($ret["Relation"]) and is_array($ret["Relation"]))) ? [$id => $ret] : [];
     }
@@ -194,7 +199,7 @@ class Master extends Model {
     }
 
     public function getInputType() {
-        return ["text", "number", "multiline text", "hidden"];
+        return ["text", "number", "multiline text", "password", "hidden"];
     }
 
     public function getMethodType() {
