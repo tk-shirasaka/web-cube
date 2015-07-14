@@ -32,59 +32,47 @@ class Master extends Model {
         }
     }
 
-    private function _getChild($id) {
+    private function _getParts($where) {
         $sort   = ["row", "offset"];
+        $parts  = $this->Source->find(["Parts", "PartsType"], ["Where" => $where, "Sort" => $sort]);
 
-        if (!($ret = $this->Source->find(["Parts", "PartsType"], ["Where" => ["parent" => $id], "Sort" => $sort]))) return false;
-
-        foreach ($ret as $key => $parent) {
-            $table  = $parent["PartsType"]["table_name"];
-            $attr   = $this->Source->find($table, ["Where" => ["id" => $parent["Parts"]["id"]]]);
-            if ($attr) {
-                $ret[$key]["Attr"] = $attr[0][$table];
-                if (!empty($ret[$key]["Attr"]["child"])) $ret[$key]["Child"] = $this->_getChild($ret[$key]["Attr"]["child"]);
-            }
+        if (empty($parts)) return [];
+        foreach ($parts as $key => $val) {
+            $id                     = $val["Parts"]["id"];
+            $table                  = $val["PartsType"]["table_name"];
+            $attr                   = $this->Source->find($table, ["Where" => compact("id")], "first");
+            $parts[$key]["Attr"]    = $attr[$table];
+            if (isset($attr[$table]["child"])) $parts[$key]["Child"] = $this->_getParts(["parent" => $id]);
         }
-        return $ret;
+
+        return $parts;
     }
 
     public function getPage($conditions = []) {
-        $table  = ["Page", "Parts", "PartsType"];
-        $sort   = ["row", "offset"];
-        $where  = [
-            "path"      => implode("/", $this->getParams("Path")),
-            "user"      => $this->getParams("User"),
-            "parent"    => ["Relation" => "IS", "Value" => "NULL"]
+        $ret    = [];
+        $id     = $this->getParams("Data.PageId");
+        $user   = $this->getParams("User");
+        $path   = implode("/", $this->getParams("Path"));
+        $wheres = [
+            ($id) ? compact("id") : null,
+            compact("user", "path"),
+            compact("user") + ["path" => ""],
+            ["user" => "system", "path" => "Error"],
         ];
 
-        if ($conditions) {
-            $where  = isset($conditions["Where"]) ? $conditions["Where"] : $where;
-        } else if ($this->getParams("Method") === "POST" and $this->getParams("Data.PageId")) {
-            $where  = ["id" => $this->getParams("Data.PageId")];
+        foreach ($wheres as $where) {
+            $page   = $this->Source->find("Page", ["Where" => $where], "first");
+            if (empty($where) or empty($page)) continue;
+
+            $ret    = $page;
+            $where  = array_merge([
+                "page"      => $page["Page"]["id"],
+                "parent"    => ["Relation" => "IS", "Value" => "NULL"],
+            ], $conditions);
+            $ret   += $this->_getParts($where);
+            break;
         }
 
-        $ret    = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
-        if (empty($ret) and $this->getParams("User") === "System") {
-            $where["user"]  = "System";
-            $where["path"]  = "Default";
-            $ret            = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
-        }
-        if (empty($ret)) {
-            $where["user"]  = "System";
-            $where["path"]  = "Error";
-            $ret            = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
-        }
-        if (!empty($ret)) {
-            foreach($ret as $key => $parent) {
-                $table  = $parent["PartsType"]["table_name"];
-                $where  = ["id" => $parent["Parts"]["id"]];
-                $attr   = $this->Source->find($table, ["Where" => $where]);
-                if ($attr) {
-                    $ret[$key]["Attr"] = $attr[0][$table];
-                    if (!empty($ret[$key]["Attr"]["child"])) $ret[$key]["Child"] = $this->_getChild($ret[$key]["Attr"]["child"]);
-                }
-            }
-        }
         Core::Get()->setPropaty(["page" => $ret]);
 
         return $ret;

@@ -12,8 +12,8 @@
     ],
     "Page"  : [
         {
-            "id"            : "Default",
-            "title"         : "Default Page",
+            "id"            : "PageSetting",
+            "title"         : "Page Setting",
             "user"          : "System",
             "path"          : "maintenance/page"
         },
@@ -148,7 +148,7 @@
             "col"           : 12,
             "offset"        : 0,
             "title"         : "Header Parts",
-            "page"          : "Default",
+            "page"          : "PageSetting",
             "type"          : "Block"
         },
         {
@@ -158,7 +158,7 @@
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Main Contents",
-            "page"          : "Default",
+            "page"          : "PageSetting",
             "type"          : "Block"
         },
         {
@@ -167,7 +167,7 @@
             "col"           : 12,
             "offset"        : 0,
             "title"         : "Footer Parts",
-            "page"          : "Default",
+            "page"          : "PageSetting",
             "type"          : "Block"
         },
         {
@@ -207,7 +207,7 @@
             "col"           : 0,
             "offset"        : 0,
             "title"         : "Modal",
-            "page"          : "Default",
+            "page"          : "PageSetting",
             "type"          : "Block"
         },
         {
@@ -656,30 +656,6 @@
             "parent"        : "SaveForm"
         },
         {
-            "id"            : "AjaxParts",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "page"          : "AjaxParts",
-            "type"          : "Text"
-        },
-        {
-            "id"            : "AjaxPage",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "page"          : "AjaxPage",
-            "type"          : "Text"
-        },
-        {
-            "id"            : "AjaxSave",
-            "row"           : 0,
-            "col"           : 0,
-            "offset"        : 0,
-            "page"          : "AjaxSave",
-            "type"          : "Text"
-        },
-        {
             "id"            : "Error",
             "row"           : 2,
             "col"           : 8,
@@ -1047,21 +1023,6 @@
         {
             "id"            : "PageTitle",
             "contents"      : "Web Cube",
-            "multiple"      : 0
-        },
-        {
-            "id"            : "AjaxParts",
-            "contents"      : "",
-            "multiple"      : 0
-        },
-        {
-            "id"            : "AjaxPage",
-            "contents"      : "",
-            "multiple"      : 0
-        },
-        {
-            "id"            : "AjaxSave",
-            "contents"      : "",
             "multiple"      : 0
         },
         {

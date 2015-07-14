@@ -91,7 +91,7 @@ class Html extends Viewer {
 
         switch ((string) $tag_type) {
         case "Layout" :
-            $title      = $data[0]["Page"]["title"];
+            $title      = $data["Page"]["title"];
             $locale     = $this->getParams("Locale");
             $script     = $this->Script;
             $style      = $this->Style;

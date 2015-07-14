@@ -36,7 +36,7 @@ abstract class Common {
 
             $ret = $this->{$name};
             foreach (explode(".", $args) as $key) {
-                if (empty($ret[$key]))  return null;
+                if (!isset($ret[$key]))  return null;
                 $ret = $ret[$key];
             }
         }
