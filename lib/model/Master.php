@@ -53,7 +53,7 @@ class Master extends Model {
         $id     = $this->getParams("Data.PageId");
         $user   = $this->getParams("User");
         $path   = implode("/", $this->getParams("Path"));
-        $wheres = [
+        $wheres = ($conditions) ? [$conditions] : [
             ($id) ? compact("id") : null,
             compact("user", "path"),
             compact("user") + ["path" => ""],
@@ -65,10 +65,10 @@ class Master extends Model {
             if (empty($where) or empty($page)) continue;
 
             $ret    = $page;
-            $where  = array_merge([
+            $where  = [
                 "page"      => $page["Page"]["id"],
                 "parent"    => ["Relation" => "IS", "Value" => "NULL"],
-            ], $conditions);
+            ];
             $ret   += $this->_getParts($where);
             break;
         }
@@ -101,7 +101,12 @@ class Master extends Model {
             $ret    = (is_array($result)) ? ["Page" => $result] : [];
         }
         foreach ($parts as $child) {
-            $child["Parts"]["id"]   = (empty($child["_originalId"])) ? uniqid("", true) : $child["_originalId"];
+            if (empty($child["_originalId"])) {
+                $child["Parts"]["id"]   = uniqid("", true);
+                $child["_dirty"]        = true;
+            } else {
+                $child["Parts"]["id"]   = $child["_originalId"];
+            }
             if (!empty($child["_dirty"])) {
                 $child["Page"]              = $page;
                 $child["Parts"]["page"]     = $page["id"];

@@ -46,7 +46,7 @@ class Maintenance extends View {
     public function ajaxPageRender() {
         $this->auto_render  = false;
         $page               = $this->getParams("Request");
-        $parts              = $this->{"Model.Master"}->getPage($page + ["parent" => ["Relation" => "IS", "Value" => "NULL"]]);
+        $parts              = $this->{"Model.Master"}->getPage(["id" => $page["page"]]);
         $page               = $parts["Page"];
         unset($parts["Page"]);
 
