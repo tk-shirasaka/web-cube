@@ -511,19 +511,6 @@
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false
-        },
-        {
-            "Description"   : "Image id",
-            "Field"         : "image",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : true,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "Image",
-                "Field" : "id"
-            }
         }
     ],
     "ButtonParts"   : [

@@ -298,6 +298,7 @@ abstract class Database extends Common {
         $insert     = [];
         $update     = [];
         foreach ($data as $key => $val) {
+            if ($val === null) continue;
             $index  = array_search($key, $fields);
             $val    = $this->_cast($this->Schema[$table][$index]["Type"], $val);
             if ($index !== false and $this->Schema[$table][$index]["Primary"]) $conditions += [$key => $val];

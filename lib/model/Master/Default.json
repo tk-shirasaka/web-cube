@@ -559,15 +559,6 @@
             "parent"        : "LinkPartsDialog"
         },
         {
-            "id"            : "LinkImageChoice",
-            "row"           : 2,
-            "col"           : 0,
-            "offset"        : 0,
-            "title"         : "Background Image",
-            "type"          : "Choice",
-            "parent"        : "LinkPartsDialog"
-        },
-        {
             "id"            : "HeaderPartsDialog",
             "row"           : 0,
             "col"           : 0,
@@ -1023,13 +1014,6 @@
             "name"          : "Attr.outerlink",
             "label_col"     : 9,
             "type"          : 0
-        },
-        {
-            "id"            : "LinkImageChoice",
-            "name"          : "Attr.image",
-            "label_col"     : 4,
-            "model"         : "Model.Master.getImageIds",
-            "type"          : 1
         },
         {
             "id"            : "HeaderTypeChoice",

@@ -184,17 +184,6 @@ class Master extends Model {
         return $ret;
     }
 
-    public function getImageIds() {
-        $ret    = ["Not use"];
-        $table  = "Image";
-
-        foreach ($this->Source->find($table, ["Field" => ["id", "name"], "Where" => ["user" => $this->getParams("User")]]) as $image) {
-            $ret[$image[$table]["id"]] = $image[$table]["name"];
-        }
-
-        return $ret;
-    }
-
     public function getChoiceType() {
         return ["checkbox", "selectbox", "radio button"];
     }
