@@ -18,6 +18,12 @@
             "path"          : "maintenance/page"
         },
         {
+            "id"            : "AjaxGallery",
+            "title"         : "Ajax Gallery",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_parts_gallery"
+        },
+        {
             "id"            : "AjaxParts",
             "title"         : "Ajax Parts",
             "user"          : "System",

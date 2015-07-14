@@ -32,9 +32,11 @@ class Master extends Model {
         }
     }
 
-    private function _getParts($where) {
+    public function getParts($where, $table = []) {
+        if (is_string($table)) $table = [$table];
+        $table  = array_merge(["Parts", "PartsType"], $table);
         $sort   = ["row", "offset"];
-        $parts  = $this->Source->find(["Parts", "PartsType"], ["Where" => $where, "Sort" => $sort]);
+        $parts  = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
 
         if (empty($parts)) return [];
         foreach ($parts as $key => $val) {
@@ -42,7 +44,7 @@ class Master extends Model {
             $table                  = $val["PartsType"]["table_name"];
             $attr                   = $this->Source->find($table, ["Where" => compact("id")], "first");
             $parts[$key]["Attr"]    = $attr[$table];
-            if (isset($attr[$table]["child"])) $parts[$key]["Child"] = $this->_getParts(["parent" => $id]);
+            if (isset($attr[$table]["child"])) $parts[$key]["Child"] = $this->getParts(["parent" => $id]);
         }
 
         return $parts;
@@ -69,7 +71,7 @@ class Master extends Model {
                 "page"      => $page["Page"]["id"],
                 "parent"    => ["Relation" => "IS", "Value" => "NULL"],
             ];
-            $ret   += $this->_getParts($where);
+            $ret   += $this->getParts($where);
             break;
         }
 

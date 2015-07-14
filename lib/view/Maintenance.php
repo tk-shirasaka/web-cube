@@ -22,6 +22,14 @@ class Maintenance extends View {
         return $ret;
     }
 
+    public function ajaxPartsGallery() {
+        $this->auto_render  = false;
+        $user               = $this->getParams("User");
+        $page               = $this->{"Model.Master"}->getParts(compact("user"), "PartsRelation");
+
+        echo json_encode($page);
+    }
+
     public function ajaxPartsRender() {
         $this->auto_render  = false;
         $parts              = $this->getParams("Request");
@@ -30,6 +38,16 @@ class Maintenance extends View {
         $error              = $this->_chkPartsValid($parts);
 
         echo json_encode(compact("html", "error"));
+    }
+
+    public function ajaxPageRender() {
+        $this->auto_render  = false;
+        $page               = $this->getParams("Request");
+        $parts              = $this->{"Model.Master"}->getPage(["id" => $page["page"]]);
+        $page               = $parts["Page"];
+        unset($parts["Page"]);
+
+        echo json_encode(["Page" => $page] + ["Parts" => $parts]);
     }
 
     public function ajaxPageSave() {
@@ -41,15 +59,5 @@ class Maintenance extends View {
         }
 
         echo json_encode($result);
-    }
-
-    public function ajaxPageRender() {
-        $this->auto_render  = false;
-        $page               = $this->getParams("Request");
-        $parts              = $this->{"Model.Master"}->getPage(["id" => $page["page"]]);
-        $page               = $parts["Page"];
-        unset($parts["Page"]);
-
-        echo json_encode(["Page" => $page] + ["Parts" => $parts]);
     }
 }
