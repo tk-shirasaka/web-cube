@@ -33,8 +33,7 @@ class Maintenance extends View {
     public function ajaxPartsRender() {
         $this->auto_render  = false;
         $parts              = $this->getParams("Request");
-        $type               = $parts["Parts"]["type"];
-        $html               = $this->Viewer->view($parts["Parts"]["type"], $parts);
+        $html               = $this->Viewer->view("Block", $parts);
         $error              = $this->_chkPartsValid($parts);
 
         echo json_encode(compact("html", "error"));
