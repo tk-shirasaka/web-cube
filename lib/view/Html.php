@@ -63,10 +63,7 @@ class Html extends Viewer {
     private function _commonTag($tag, $parts, $attr, $options = []) {
         $id         = (isset($parts["id"])) ? $parts["id"] : "";
         $class      = $this->_getClass($parts);
-
-        foreach ($options as $key => $val) {
-            ${$key} = $val;
-        }
+        extract($options);
 
         eval("\$ret = \"{$this->{$tag}}\";");
 

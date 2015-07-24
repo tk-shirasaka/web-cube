@@ -103,13 +103,7 @@ class Master extends Model {
             $ret    = (is_array($result)) ? ["Page" => $result] : [];
         }
         foreach ($parts as $child) {
-            if (empty($child["_originalId"])) {
-                $child["Parts"]["id"]   = uniqid("", true);
-                $child["_dirty"]        = true;
-            } else {
-                $child["Parts"]["id"]   = $child["_originalId"];
-            }
-            if (!empty($child["_dirty"])) {
+            if (!empty($child["dirty"])) {
                 $child["Page"]              = $page;
                 $child["Parts"]["page"]     = $page["id"];
                 $child["Parts"]["parent"]   = $parent;
