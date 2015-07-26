@@ -22,8 +22,13 @@ class Maintenance extends View {
 
     public function ajaxPartsGallery() {
         $this->auto_render  = false;
+        $page               = [];
         $user               = $this->getParams("User");
-        $page               = $this->{"Model.Master"}->getParts(compact("user"), "PartsRelation");
+        $parent             = ["Relation" => "IS", "Value" => "NULL"];
+        foreach ($this->{"Model.Master"}->getParts(compact("user", "parent"), "PartsRelation") as $parts) {
+            $parts["html"]  = $this->Viewer->view($parts["Parts"]["type"], $parts);
+            $page[]         = $parts;
+        }
 
         echo json_encode($page);
     }
