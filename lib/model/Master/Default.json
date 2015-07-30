@@ -44,8 +44,12 @@
         {
             "id"            : "Error",
             "title"         : "Error Page",
-            "user"          : "System",
-            "path"          : "Error"
+            "path"          : "error"
+        },
+        {
+            "id"            : "Template",
+            "title"         : "Parts Gallery",
+            "path"          : "template"
         }
     ],
     "PartsType" : [

@@ -117,7 +117,7 @@
             "Field"         : "user",
             "Type"          : "char",
             "Length"        : 30,
-            "Null"          : false,
+            "Null"          : true,
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : {
@@ -244,19 +244,6 @@
             "Primary"       : true,
             "Unique"        : false,
             "Foreign"       : false
-        },
-        {
-            "Description"   : "Parts owner user account",
-            "Field"         : "user",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : true,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "User",
-                "Field" : "id"
-            }
         }
     ],
     "Parts" : [
@@ -359,6 +346,19 @@
             "Unique"        : false,
             "Foreign"       : {
                 "Table" : "PartsRelation",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Parts owner user account",
+            "Field"         : "user",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "User",
                 "Field" : "id"
             }
         }

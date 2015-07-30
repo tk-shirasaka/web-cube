@@ -80,7 +80,7 @@ class Html extends Viewer {
 
         if ($this->{$tag_type} and isset($data["Parts"])) {
             if ($this->_row !== (int) $data["Parts"]["row"] or (int) $data["Parts"]["row"] === 0) {
-                if ($this->_row) $ret .= $this->block(["id" => "", "class" => "", "col" => 12, "offset" => 0], [], []);
+                if ($this->_row) $ret .= $this->block(["id" => "", "class" => "clearfix"], [], []);
                 $this->_row     = (int) $data["Parts"]["row"];
                 $this->_offset  = 0;
             }

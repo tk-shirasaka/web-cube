@@ -58,8 +58,9 @@ class Master extends Model {
         $wheres = ($conditions) ? [$conditions] : [
             ($id) ? compact("id") : null,
             compact("user", "path"),
-            compact("user") + ["path" => ""],
-            ["user" => "system", "path" => "Error"],
+            ["user" => ["Relation" => "IS", "Value" => "NULL"]] + compact("path"),
+            compact("user") + ["path" => "error"],
+            ["user" => ["Relation" => "IS", "Value" => "NULL"], "path" => "error"],
         ];
 
         foreach ($wheres as $where) {
@@ -81,11 +82,11 @@ class Master extends Model {
     }
 
     public function saveParts($parts) {
-        $ret            = [];
-        $id             = $parts["Parts"]["id"];
-        $user           = $this->getParams("User");
-        $table          = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]], "first");
-        $table          = $table["PartsType"]["table_name"];
+        $ret                = [];
+        $id                 = $parts["Parts"]["id"];
+        $parts["Parts"]    += ["user" => $this->getParams("User")];
+        $table              = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]], "first");
+        $table              = $table["PartsType"]["table_name"];
         if (!empty($parts["Child"])) $ret["Relation"] = $this->Source->save("PartsRelation", compact("id", "user"));
 
         $ret["Parts"]   = $this->Source->save("Parts", $parts["Parts"]);
