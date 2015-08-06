@@ -50,6 +50,18 @@ class Maintenance extends View {
         echo json_encode(compact("html", "error"));
     }
 
+    public function ajaxPageList() {
+        $this->auto_render  = false;
+        $pages              = [];
+        $pages[]            = ["id" => null, "title" => "New Page"];
+
+        foreach ($this->{"Model.Master"}->Source->find("Page", ["Field" => ["id", "title"], "Where" => ["user" => $this->getParams("User")]]) as $page) {
+            $pages[]    = $page["Page"];
+        }
+
+        echo json_encode($pages);
+    }
+
     public function ajaxPageRender() {
         $this->auto_render  = false;
         $page               = $this->getParams("Request");
