@@ -30,6 +30,12 @@
             "path"          : "maintenance/ajax_parts_render"
         },
         {
+            "id"            : "AjaxPageList",
+            "title"         : "Ajax Page List",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_page_list"
+        },
+        {
             "id"            : "AjaxPage",
             "title"         : "Ajax Page",
             "user"          : "System",
