@@ -50,6 +50,28 @@ class Maintenance extends View {
         echo json_encode(compact("html", "error"));
     }
 
+    public function ajaxPartsType() {
+        $this->auto_render  = false;
+        $types              = [];
+        $forms              = [];
+
+        foreach ($this->{"Model.Master"}->Source->find("PartsType") as $type) {
+            $types[]        = ["value" => $type["PartsType"]["id"], "name" => $type["PartsType"]["name"]];
+            $form           = [];
+            foreach (array_search_key("Field", $this->{"Model.Master"}->Schema[$type["PartsType"]["table_name"]]) as $field) {
+                if (array_search($field, ["id", "child"]) !== false) continue;
+                $form[]     = [
+                    "name"  => $field,
+                    "type"  => "text",
+                    "label" => ucwords(str_replace("_", " ", $field)),
+                ];
+            }
+            $forms[$type["PartsType"]["id"]]    = $form;
+        }
+
+        echo json_encode(compact("types", "forms"));
+    }
+
     public function ajaxPageList() {
         $this->auto_render  = false;
         $pages              = [];
