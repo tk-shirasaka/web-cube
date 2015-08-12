@@ -72,6 +72,20 @@ class Maintenance extends View {
         echo json_encode(compact("types", "forms"));
     }
 
+    public function ajaxPartsSave() {
+        $this->auto_render  = false;
+        $parts              = $this->getParams("Request");
+
+        echo json_encode($this->{"Model.Master"}->saveParts($parts));
+    }
+
+    public function ajaxPartsRemove() {
+        $this->auto_render  = false;
+        $parts              = $this->getParams("Request");
+
+        echo json_encode($this->{"Model.Master"}->removeParts($parts));
+    }
+
     public function ajaxPageList() {
         $this->auto_render  = false;
         $pages              = [];
