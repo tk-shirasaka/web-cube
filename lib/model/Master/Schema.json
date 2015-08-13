@@ -279,7 +279,7 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Use col nums (Bootstrap cols [1-12])",
+            "Description"   : "Use col",
             "Field"         : "col",
             "Type"          : "tinyint",
             "Length"        : 1,
@@ -287,7 +287,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["None", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         },
         {
             "Description"   : "Use col offset",
@@ -298,7 +299,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["None", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         },
         {
             "Description"   : "Parts title (used parts title e.g. h3 tag)",
@@ -396,7 +398,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["None", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         },
         {
             "Description"   : "Used placeholder",
@@ -417,7 +420,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["text", "number", "multiline", "password", "hidden"]
         }
     ],
     "ChoiceParts"   : [
@@ -453,7 +457,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["None", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         },
         {
             "Description"   : "If aparts get option data from model, use this field (e.g <Root>.<Class>.<Method>[.<args>])",
@@ -466,7 +471,7 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Choice type (0: checkbox, 1: selectbox, 2: radio button])",
+            "Description"   : "Choice type",
             "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
@@ -474,7 +479,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["checkbox", "selectbox", "radio"]
         }
     ],
     "LinkParts"     : [
@@ -579,7 +585,7 @@
             }
         },
         {
-            "Description"   : "Method type [GET : 0, POST : 1]",
+            "Description"   : "Method type",
             "Field"         : "method",
             "Type"          : "tinyint",
             "Length"        : 1,
@@ -587,7 +593,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["GET", "POST"]
         },
         {
             "Description"   : "Action URI",
@@ -648,7 +655,7 @@
             }
         },
         {
-            "Description"   : "Tag type (0: div, 1: navi, 2: list)",
+            "Description"   : "Tag type",
             "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
@@ -656,7 +663,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : ["div", "navi", "list"]
         }
     ],
     "TextParts"   : [
@@ -720,7 +728,7 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Header tag type [ H1 - H6 ]",
+            "Description"   : "Header tag type",
             "Field"         : "type",
             "Type"          : "tinyint",
             "Length"        : 1,
@@ -728,7 +736,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Range"         : {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6}
         }
     ]
 }

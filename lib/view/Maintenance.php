@@ -52,18 +52,29 @@ class Maintenance extends View {
 
     public function ajaxPartsType() {
         $this->auto_render  = false;
+        $makeRange          = function ($start, $end) {$ret = []; for (; $start <= $end; $start++) { $ret[] = ["name" => ($start) ? $start : "Null", "value" => $start]; } return $ret; };
         $types              = [];
         $forms              = [];
 
         foreach ($this->{"Model.Master"}->Source->find("PartsType") as $type) {
             $types[]        = ["value" => $type["PartsType"]["id"], "name" => $type["PartsType"]["name"]];
             $form           = [];
-            foreach (array_search_key("Field", $this->{"Model.Master"}->Schema[$type["PartsType"]["table_name"]]) as $field) {
-                if (array_search($field, ["id", "child"]) !== false) continue;
+            foreach ($this->{"Model.Master"}->Schema[$type["PartsType"]["table_name"]] as $field) {
+                if (array_search($field["Field"], ["id", "child", "model"]) !== false) continue;
+                $input          = "text";
+                $options        = [];
+                if (isset($field["Range"])) {
+                    $input      = "select";
+                    foreach ($field["Range"] as $key => $val) {
+                        $options[] = ["name" => $val, "value" => $key];
+                    }
+                }
                 $form[]     = [
-                    "name"  => $field,
-                    "type"  => "text",
-                    "label" => ucwords(str_replace("_", " ", $field)),
+                    "name"          => $field["Field"],
+                    "type"          => $input,
+                    "options"       => $options,
+                    "label"         => ucwords(str_replace("_", " ", $field["Field"])),
+                    "placeholder"   => $field["Description"],
                 ];
             }
             $forms[$type["PartsType"]["id"]]    = $form;
