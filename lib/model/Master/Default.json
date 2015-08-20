@@ -36,6 +36,18 @@
             "path"          : "maintenance/ajax_parts_type"
         },
         {
+            "id"            : "AjaxPartsSave",
+            "title"         : "Ajax Parts Save",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_parts_save"
+        },
+        {
+            "id"            : "AjaxPartsRemove",
+            "title"         : "Ajax Parts Remove",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_parts_remove"
+        },
+        {
             "id"            : "AjaxPageList",
             "title"         : "Ajax Page List",
             "user"          : "System",
