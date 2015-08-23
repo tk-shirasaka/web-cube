@@ -248,6 +248,16 @@
     ],
     "Parts" : [
         {
+            "Description"   : "Parts title",
+            "Field"         : "title",
+            "Type"          : "varchar",
+            "Length"        : 40,
+            "Null"          : true,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
             "Description"   : "Parts id",
             "Field"         : "id",
             "Type"          : "char",
@@ -301,16 +311,6 @@
             "Unique"        : false,
             "Foreign"       : false,
             "Range"         : ["None", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        },
-        {
-            "Description"   : "Parts title (used parts title e.g. h3 tag)",
-            "Field"         : "title",
-            "Type"          : "varchar",
-            "Length"        : 40,
-            "Null"          : true,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : false
         },
         {
             "Description"   : "Page id",
@@ -700,7 +700,8 @@
             "Default"       : 0,
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : false
+            "Foreign"       : false,
+            "Boolean"       : true
         }
     ],
     "HeaderParts"   : [

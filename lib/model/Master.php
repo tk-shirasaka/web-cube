@@ -40,11 +40,10 @@ class Master extends Model {
 
         if (empty($parts)) return [];
         foreach ($parts as $key => $val) {
-            $id                     = $val["Parts"]["id"];
             $table                  = $val["PartsType"]["table_name"];
-            $attr                   = $this->Source->find($table, ["Where" => compact("id")], "first");
+            $attr                   = $this->Source->find($table, ["Where" => ["id" => $val["Parts"]["id"]]], "first");
             $parts[$key]["Attr"]    = $attr[$table];
-            if (isset($attr[$table]["child"])) $parts[$key]["Child"] = $this->getParts(["parent" => $id]);
+            if (isset($attr[$table]["child"])) $parts[$key]["Child"] = $this->getParts(["parent" => $attr[$table]["child"]]);
         }
 
         return $parts;
@@ -83,12 +82,11 @@ class Master extends Model {
 
     public function saveParts($parts) {
         $ret                = [];
-        $id                 = $parts["Parts"]["id"];
         $parts["Parts"]    += ["user" => $this->getParams("User")];
-        $parts["Attr"]     += compact("id");
+        $parts["Attr"]      = array_merge($parts["Attr"], ["id" => $parts["Parts"]["id"]]);
         $table              = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]], "first");
         $table              = $table["PartsType"]["table_name"];
-        if (!empty($parts["Child"])) $ret["Relation"] = $this->Source->save("PartsRelation", compact("id", "user"));
+        if (!empty($parts[$table]["child"])) $ret["Relation"] = $this->Source->save("PartsRelation", ["id" => $parts[$table]["child"]]);
 
         $ret["Parts"]   = $this->Source->save("Parts", $parts["Parts"]);
         $ret["Attr"]    = $this->Source->save($table, $parts["Attr"]);
@@ -127,17 +125,14 @@ class Master extends Model {
     public function removeParts($parts) {
         $ret            = [];
         $id             = $parts["Parts"]["id"];
-        $parent         = $parts["Parts"]["parent"];
         $table          = $parts["PartsType"]["table_name"];
-        $where          = ["parent" => $id];
         $ret["Attr"]    = $this->Source->delete($table, compact("id"));
         $ret["Parts"]   = $this->Source->delete("Parts", compact("id"));
 
-        if (empty($this->Source->find("Parts", ["Where" => ["parent" => $id]]))) $ret["Relation"] = $this->Source->delete("PartsRelation", compact("id"));
-        if (empty($this->Source->find("Parts", ["Where" => compact("parent")]))) $ret["Relation"] = $this->Source->delete("PartsRelation", ["id" => $parent]);
-        if (isset($parts["Child"])) {
+        if (isset($parts["Attr"]["child"]) and empty($this->Source->find("PartsRelation", ["Where" => ["id" => $parts["Attr"]["child"]]]))) {
             foreach ($parts["Child"] as $child) {
-                $ret   += $this->removeParts($child);
+                $ret["Relation"]    = $this->Source->delete("PartsRelation", ["id" => $parts["Attr"]["child"]]);
+                $ret               += $this->removeParts($child);
             }
         }
 

@@ -52,32 +52,37 @@ class Maintenance extends View {
 
     public function ajaxPartsType() {
         $this->auto_render  = false;
-        $makeRange          = function ($start, $end) {$ret = []; for (; $start <= $end; $start++) { $ret[] = ["name" => ($start) ? $start : "Null", "value" => $start]; } return $ret; };
         $types              = [];
         $forms              = [];
-
-        foreach ($this->{"Model.Master"}->Source->find("PartsType") as $type) {
-            $types[]        = ["value" => $type["PartsType"]["id"], "name" => $type["PartsType"]["name"]];
-            $form           = [];
-            foreach ($this->{"Model.Master"}->Schema[$type["PartsType"]["table_name"]] as $field) {
-                if (array_search($field["Field"], ["id", "child", "model"]) !== false) continue;
+        $getForm            = function ($schema, $prefix) {
+            $form   = [];
+            foreach ($schema as $field) {
+                if (array_search($field["Field"], ["id", "page", "parent", "user", "child", "model"]) !== false) continue;
                 $input          = "text";
                 $options        = [];
-                if (isset($field["Range"])) {
+                if (!empty($field["Range"])) {
                     $input      = "select";
                     foreach ($field["Range"] as $key => $val) {
                         $options[] = ["name" => $val, "value" => $key];
                     }
+                } else if (!empty($field["Boolean"])) {
+                    $input      = "checkbox";
                 }
                 $form[]     = [
-                    "name"          => $field["Field"],
+                    "name"          => $prefix. ".". $field["Field"],
                     "type"          => $input,
                     "options"       => $options,
                     "label"         => ucwords(str_replace("_", " ", $field["Field"])),
                     "placeholder"   => $field["Description"],
                 ];
             }
-            $forms[$type["PartsType"]["id"]]    = $form;
+            return $form;
+        };
+
+        $forms["Parts"]     = $getForm($this->{"Model.Master"}->Schema["Parts"], "Parts");
+        foreach ($this->{"Model.Master"}->Source->find("PartsType") as $type) {
+            $types[]                            = ["value" => $type["PartsType"]["id"], "name" => $type["PartsType"]["name"]];
+            $forms[$type["PartsType"]["id"]]    = $getForm($this->{"Model.Master"}->Schema[$type["PartsType"]["table_name"]], "Attr");
         }
 
         echo json_encode(compact("types", "forms"));
