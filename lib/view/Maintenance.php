@@ -79,6 +79,7 @@ class Maintenance extends View {
             return $form;
         };
 
+        $forms["Page"]      = $getForm($this->{"Model.Master"}->Schema["Page"], "Page");
         $forms["Parts"]     = $getForm($this->{"Model.Master"}->Schema["Parts"], "Parts");
         foreach ($this->{"Model.Master"}->Source->find("PartsType") as $type) {
             $types[]                            = ["value" => $type["PartsType"]["id"], "name" => $type["PartsType"]["name"]];
