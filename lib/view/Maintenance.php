@@ -57,7 +57,7 @@ class Maintenance extends View {
         $getForm            = function ($schema, $prefix) {
             $form   = [];
             foreach ($schema as $field) {
-                if (array_search($field["Field"], ["id", "page", "parent", "user", "child", "model"]) !== false) continue;
+                if (array_search($field["Field"], ["id", "page", "parent", "user", "child", "model", "isAjax"]) !== false) continue;
                 $input          = "text";
                 $options        = [];
                 if (!empty($field["Range"])) {
@@ -106,9 +106,8 @@ class Maintenance extends View {
     public function ajaxPageList() {
         $this->auto_render  = false;
         $pages              = [];
-        $pages[]            = ["id" => null, "title" => "New Page"];
 
-        foreach ($this->{"Model.Master"}->Source->find("Page", ["Field" => ["id", "title"], "Where" => ["user" => $this->getParams("User")]]) as $page) {
+        foreach ($this->{"Model.Master"}->Source->find("Page", ["Field" => ["id", "title"], "Where" => ["user" => $this->getParams("User"), "isAjax" => 0]]) as $page) {
             $pages[]    = $page["Page"];
         }
 
@@ -127,12 +126,7 @@ class Maintenance extends View {
 
     public function ajaxPageSave() {
         $this->auto_render  = false;
-        $request            = $this->getParams("Request");
-        $result             = $this->{"Model.Master"}->savePage($request["Page"] + ["user" => $this->getParams("User")], $request["Parts"]);
-        foreach ($request["Removed"] as $removed) {
-            $result         = array_merge($result, $this->{"Model.Master"}->deleteParts($removed));
-        }
-
-        echo json_encode($result);
+        $page               = $this->getParams("Request.Page") + ["user" => $this->getParams("User")];
+        echo json_encode($this->{"Model.Master"}->savePage($page));
     }
 }

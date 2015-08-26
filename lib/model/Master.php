@@ -94,32 +94,8 @@ class Master extends Model {
         return (is_array($ret["Parts"]) and is_array($ret["Attr"]) or (isset($ret["Relation"]) and is_array($ret["Relation"]))) ? [$id => $ret] : [];
     }
 
-    public function savePage($page, $parts, $parent = null) {
-        $ret            = [];
-
-        if (!$parent) {
-            if (!$page["id"]) $page["id"] = uniqid("", true);
-            $result = $this->Source->save("Page", $page);
-            $ret    = (is_array($result)) ? ["Page" => $result] : [];
-        }
-        foreach ($parts as $child) {
-            if (!empty($child["dirty"])) {
-                $child["Page"]              = $page;
-                $child["Parts"]["page"]     = $page["id"];
-                $child["Parts"]["parent"]   = $parent;
-                $child["Attr"]["id"]        = $child["Parts"]["id"];
-                if (!$parent) unset($child["Parts"]["parent"]);
-                if (empty($child["Child"])) {
-                    unset($child["Attr"]["child"]);
-                } else {
-                    $child["Attr"]["child"] = $child["Parts"]["id"];
-                }
-                $ret                        = array_merge($ret, $this->saveParts($child));
-            }
-            if (!empty($child["Child"])) $this->savePage($page, $child["Child"], $child["Parts"]["id"]);
-        }
-
-        return $ret;
+    public function savePage($page) {
+        return $this->Source->save("Page", $page);
     }
 
     public function removeParts($parts) {
@@ -137,57 +113,5 @@ class Master extends Model {
         }
 
         return (is_array($ret["Parts"]) and is_array($ret["Attr"]) or (isset($ret["Relation"]) and is_array($ret["Relation"]))) ? [$id => $ret] : [];
-    }
-
-    public function getColRange() {
-        return range(0, 12);
-    }
-
-    public function getOffsetRange() {
-        return range(0, 11);
-    }
-
-    public function getHeaderRange() {
-        $ret    = range(0, 6);
-        unset($ret[0]);
-        return $ret;
-    }
-
-    public function getPages() {
-        $ret    = ["New Page"];
-        $table  = "Page";
-
-        foreach ($this->Source->find($table, ["Field" => ["id", "title"], "Where" => ["user" => $this->getParams("User")]]) as $page) {
-            $ret[$page[$table]["id"]] = $page[$table]["title"];
-        }
-
-        return $ret;
-    }
-
-    public function getPartsType() {
-        $ret    = [];
-        $table  = "PartsType";
-
-        foreach ($this->Source->find($table, ["Field" => ["id", "name"]]) as $type) {
-            $ret[$type[$table]["id"]] = $type[$table]["name"];
-        }
-
-        return $ret;
-    }
-
-    public function getChoiceType() {
-        return ["checkbox", "selectbox", "radio button"];
-    }
-
-    public function getInputType() {
-        return ["text", "number", "multiline text", "password", "hidden"];
-    }
-
-    public function getMethodType() {
-        return ["GET", "POST"];
-    }
-
-    public function getBlockTagType() {
-        return ["div", "navi", "list", "list item"];
     }
 }
