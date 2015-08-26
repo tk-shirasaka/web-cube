@@ -25,31 +25,10 @@
             "isAjax"        : true
         },
         {
-            "id"            : "AjaxParts",
-            "title"         : "Ajax Parts",
-            "user"          : "System",
-            "path"          : "maintenance/ajax_parts_render",
-            "isAjax"        : true
-        },
-        {
             "id"            : "AjaxPartsType",
             "title"         : "Ajax Parts Type",
             "user"          : "System",
             "path"          : "maintenance/ajax_parts_type",
-            "isAjax"        : true
-        },
-        {
-            "id"            : "AjaxPartsSave",
-            "title"         : "Ajax Parts Save",
-            "user"          : "System",
-            "path"          : "maintenance/ajax_parts_save",
-            "isAjax"        : true
-        },
-        {
-            "id"            : "AjaxPartsRemove",
-            "title"         : "Ajax Parts Remove",
-            "user"          : "System",
-            "path"          : "maintenance/ajax_parts_remove",
             "isAjax"        : true
         },
         {
@@ -60,17 +39,45 @@
             "isAjax"        : true
         },
         {
-            "id"            : "AjaxPage",
-            "title"         : "Ajax Page",
+            "id"            : "AjaxPageRender",
+            "title"         : "Ajax Page Render",
             "user"          : "System",
             "path"          : "maintenance/ajax_page_render",
             "isAjax"        : true
         },
         {
-            "id"            : "AjaxSave",
-            "title"         : "Ajax Save",
+            "id"            : "AjaxPartsRender",
+            "title"         : "Ajax Parts Render",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_parts_render",
+            "isAjax"        : true
+        },
+        {
+            "id"            : "AjaxPageSave",
+            "title"         : "Ajax Page Save",
             "user"          : "System",
             "path"          : "maintenance/ajax_page_save",
+            "isAjax"        : true
+        },
+        {
+            "id"            : "AjaxPartsSave",
+            "title"         : "Ajax Parts Save",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_parts_save",
+            "isAjax"        : true
+        },
+        {
+            "id"            : "AjaxPageRemove",
+            "title"         : "Ajax Page Remove",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_page_remove",
+            "isAjax"        : true
+        },
+        {
+            "id"            : "AjaxPartsRemove",
+            "title"         : "Ajax Parts Remove",
+            "user"          : "System",
+            "path"          : "maintenance/ajax_parts_remove",
             "isAjax"        : true
         },
         {

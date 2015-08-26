@@ -80,6 +80,10 @@ class Master extends Model {
         return $ret;
     }
 
+    public function savePage($page) {
+        return $this->Source->save("Page", $page);
+    }
+
     public function saveParts($parts) {
         $ret                = [];
         $parts["Parts"]    += ["user" => $this->getParams("User")];
@@ -94,8 +98,11 @@ class Master extends Model {
         return (is_array($ret["Parts"]) and is_array($ret["Attr"]) or (isset($ret["Relation"]) and is_array($ret["Relation"]))) ? [$id => $ret] : [];
     }
 
-    public function savePage($page) {
-        return $this->Source->save("Page", $page);
+    public function removePage($id) {
+        $ret            = [];
+        if (empty($this->Source->find("Parts", ["Where" => ["page" => $id]]))) $ret = [$id => $this->Source->delete("Page", compact("id"))];
+
+        return $ret;
     }
 
     public function removeParts($parts) {

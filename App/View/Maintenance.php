@@ -41,15 +41,6 @@ class Maintenance extends View {
         echo json_encode($page);
     }
 
-    public function ajaxPartsRender() {
-        $this->auto_render  = false;
-        $parts              = $this->getParams("Request");
-        $html               = $this->Viewer->view($parts["Parts"]["type"], $parts);
-        $error              = $this->_chkPartsValid($parts);
-
-        echo json_encode(compact("html", "error"));
-    }
-
     public function ajaxPartsType() {
         $this->auto_render  = false;
         $types              = [];
@@ -89,20 +80,6 @@ class Maintenance extends View {
         echo json_encode(compact("types", "forms"));
     }
 
-    public function ajaxPartsSave() {
-        $this->auto_render  = false;
-        $parts              = $this->getParams("Request");
-
-        echo json_encode($this->{"Model.Master"}->saveParts($parts));
-    }
-
-    public function ajaxPartsRemove() {
-        $this->auto_render  = false;
-        $parts              = $this->getParams("Request");
-
-        echo json_encode($this->{"Model.Master"}->removeParts($parts));
-    }
-
     public function ajaxPageList() {
         $this->auto_render  = false;
         $pages              = [];
@@ -116,17 +93,46 @@ class Maintenance extends View {
 
     public function ajaxPageRender() {
         $this->auto_render  = false;
-        $page               = $this->getParams("Request");
-        $parts              = $this->{"Model.Master"}->getPage(["id" => $page["page"]]);
+        $page               = $this->getParams("Request.Page");
+        $parts              = $this->{"Model.Master"}->getPage(["id" => $page["id"]]);
         $page               = $parts["Page"];
         unset($parts["Page"]);
 
         echo json_encode(["Page" => $page] + ["Parts" => $parts]);
     }
 
+    public function ajaxPartsRender() {
+        $this->auto_render  = false;
+        $parts              = $this->getParams("Request");
+        $html               = $this->Viewer->view($parts["Parts"]["type"], $parts);
+        $error              = $this->_chkPartsValid($parts);
+
+        echo json_encode(compact("html", "error"));
+    }
+
     public function ajaxPageSave() {
         $this->auto_render  = false;
         $page               = $this->getParams("Request.Page") + ["user" => $this->getParams("User")];
         echo json_encode($this->{"Model.Master"}->savePage($page));
+    }
+
+    public function ajaxPartsSave() {
+        $this->auto_render  = false;
+        $parts              = $this->getParams("Request");
+
+        echo json_encode($this->{"Model.Master"}->saveParts($parts));
+    }
+
+    public function ajaxPageRemove() {
+        $page               = $this->getParams("Request.Page");
+
+        echo json_encode($this->{"Model.Master"}->removePage($page["id"]));
+    }
+
+    public function ajaxPartsRemove() {
+        $this->auto_render  = false;
+        $parts              = $this->getParams("Request");
+
+        echo json_encode($this->{"Model.Master"}->removeParts($parts));
     }
 }
