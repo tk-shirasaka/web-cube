@@ -32,7 +32,7 @@ $(function () {
             this.props.select(this.props.data);
         },
         render: function () {
-            return <a href="#" onClick={this._select}><span>{this.props.title}</span></a>;
+            return <a onClick={this._select}><span>{this.props.title}</span></a>;
         }
     });
 
@@ -62,6 +62,7 @@ $(function () {
                     break;
                 case formType.hidden :
                     formTag     = <input id={index} name={form.name} type="hidden" value={form.value}></input>;
+                    labelTag    = "";
                     break;
                 }
                 return <div className={formClass}>{labelTag}{formTag}</div>;
@@ -82,12 +83,12 @@ $(function () {
 
     var PageClass = React.createClass({
         render: function () {
-            var child = this.props.data.map(function (child) {
+            var child   = this.props.data.map(function (child) {
                 return <li key={child.id}><ListChildClass data={{Page: {id: child.id}}} title={child.title} select={this.props.select} /></li>;
             }, this);
-            var add     = <li><ListChildClass data={null} title="add" select={this.props.add} /></li>
+            var add     = <li><ListChildClass data={null} title="add" select={this.props.add} /></li>;
 
-            return <ul className="animated slideInRight">{child}<span className={icons.get("add")}></span>{add}</ul>;
+            return <ul className="animated slideInRight"><span className={icons.get("add")}></span>{add}{child}</ul>;
         }
     });
 
@@ -110,12 +111,14 @@ $(function () {
             var child   = this.props.data.map(function (child) {
                 var id          = child.Parts.id;
                 var title       = child.Parts.title || "[No title]";
-                var children    = (child.Child && this.state.open.indexOf(id) >= 0 ) ? <PartsClass data={child.Child} select={this.props.select} /> : "";
+                var children    = (child.Child && this.state.open.indexOf(id) >= 0 ) ? <PartsClass data={child.Child} select={this.props.select} add={this.props.add} parent={id} /> : "";
                 var badge       = (child.Child) ? <span className="badge pull-left">{child.Child.length}</span> : "";
                 var toggle      = (child.Child) ? <span className={icons.get((this.state.open.indexOf(id) >= 0) ? "slideDown" : "slideUp")} onClick={this.toggleChild.bind(this, id)}></span> : "";
                 return <li key={id}>{toggle}{badge}<ListChildClass data={child} title={title} select={this.props.select} />{children}</li>;
             }, this);
-            return <ul className="animated slideInRight" style={{margin: "10px 0 10px"}}>{child}</ul>;
+            var add     = <li><ListChildClass data={this.props.parent} title="add" select={this.props.add} /></li>;
+
+            return <ul className="animated slideInRight" ><span className={icons.get("add")}></span>{add}{child}</ul>;
         }
     });
 
@@ -175,6 +178,7 @@ $(function () {
             this.ajaxAction("render", data);
         },
         ajaxSave: function () {
+            if (this.getDataType(this.state.select) === dataType.parts && this.state.select.Attr.hasOwnProperty("child") && !this.state.select.Attr.child) this.state.select.Attr.child = this.state.select.Parts.id;
             this.ajaxAction("save", this.state.select);
         },
         ajaxRemove: function () {
@@ -183,15 +187,13 @@ $(function () {
         changeForm: function (e) {
             var target = (e.target.type === "checkbox") ? e.target.checked : e.target.value;
             eval("this.state.select." + e.target.name + " = target");
+            if (this.getDataType(this.state.select) === dataType.parts && e.target.name === "Parts.type") this.state.select.Attr = {};
             this.setState({select: this.state.select});
         },
         selectAction: function (id) {
             var state   = {snapshot: $.extend(true, {}, this.state)};
             var type    = this.getDataType(this.state.select);
             switch (id) {
-            case viewType.add :
-                if (type === dataType.parts) this.addParts(this.state.select.Parts.id);
-                break;
             case viewType.copy :
                 state.view      = viewType.saved;
                 if (type === dataType.parts) this.copyParts();
@@ -242,7 +244,6 @@ $(function () {
             else if (type === dataType.page && this.state.parts.Parts.length)   actions = ["edit"];
             else if (type === dataType.page)                                    actions = ["edit", "remove"];
             else if (type === dataType.parts)                                   actions = ["edit", "copy", "remove"];
-            if (type === dataType.parts && typeof(this.state.select.Attr.child) !== "undefined") actions.push("add");
             actionList.map(function (val, key) { if (actions.indexOf(val.name) >= 0) ret.push(val); });
 
             return ret;
@@ -299,7 +300,7 @@ $(function () {
                 break;
             case viewType.parts :
                 listView.push(<div><h4>{this.state.select.Page.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);
-                listView.push(<div><h4>Parts List</h4><PartsClass data={this.state.parts.Parts} select={this.selectParts} /><ul className="animated slideInRight"><span className={icons.get("add")}></span><ListChildClass data={null} title="add" select={this.addParts} /></ul></div>);
+                listView.push(<div><h4>Parts List</h4><PartsClass data={this.state.parts.Parts} select={this.selectParts} add={this.addParts} /></div>);
                 break;
             case viewType.gallery :
                 break;
@@ -313,6 +314,7 @@ $(function () {
                     var name    = form.name.split(".");
                     form.type   = formType[form.type];
                     form.value  = this.state.select[name[0]][name[1]];
+                    if (!this.state.select[name[0]].hasOwnProperty(name[1])) this.state.select[name[0]][name[1]] = null;
                     if (form.name === "Parts.type") $.extend(true, form, {type: formType.select, options: this.state.partsType.types})
                     if (form.name === "Attr.contents" && this.state.select.Attr.multiple) form.type = formType.textarea;
                     formList.push(form)

@@ -48,10 +48,12 @@ class Maintenance extends View {
         $getForm            = function ($schema, $prefix) {
             $form   = [];
             foreach ($schema as $field) {
-                if (array_search($field["Field"], ["id", "page", "parent", "user", "child", "model", "isAjax"]) !== false) continue;
+                if (array_search($field["Field"], ["id", "page", "parent", "user", "model", "isAjax"]) !== false) continue;
                 $input          = "text";
                 $options        = [];
-                if (!empty($field["Range"])) {
+                if ($field["Field"] === "child") {
+                    $input      = "hidden";
+                } else if (!empty($field["Range"])) {
                     $input      = "select";
                     foreach ($field["Range"] as $key => $val) {
                         $options[] = ["name" => $val, "value" => $key];

@@ -90,7 +90,7 @@ class Master extends Model {
         $parts["Attr"]      = array_merge($parts["Attr"], ["id" => $parts["Parts"]["id"]]);
         $table              = $this->Source->find("PartsType", ["Field" => ["table_name"], "Where" => ["id" => $parts["Parts"]["type"]]], "first");
         $table              = $table["PartsType"]["table_name"];
-        if (!empty($parts[$table]["child"])) $ret["Relation"] = $this->Source->save("PartsRelation", ["id" => $parts[$table]["child"]]);
+        if (!empty($parts["Attr"]["child"])) $ret["Relation"] = $this->Source->save("PartsRelation", ["id" => $parts["Attr"]["child"]]);
 
         $ret["Parts"]   = $this->Source->save("Parts", $parts["Parts"]);
         $ret["Attr"]    = $this->Source->save($table, $parts["Attr"]);
@@ -112,12 +112,12 @@ class Master extends Model {
         $ret["Attr"]    = $this->Source->delete($table, compact("id"));
         $ret["Parts"]   = $this->Source->delete("Parts", compact("id"));
 
-        if (isset($parts["Attr"]["child"]) and empty($this->Source->find("PartsRelation", ["Where" => ["id" => $parts["Attr"]["child"]]]))) {
+        if (isset($parts["Attr"]["child"])) {
             foreach ($parts["Child"] as $child) {
-                $ret["Relation"]    = $this->Source->delete("PartsRelation", ["id" => $parts["Attr"]["child"]]);
                 $ret               += $this->removeParts($child);
             }
         }
+        if (empty($this->Source->find("Parts", ["Where" => ["id" => $parts["Attr"]["child"]]]))) $ret["Relation"] = $this->Source->delete("PartsRelation", ["id" => $parts["Attr"]["child"]]);
 
         return (is_array($ret["Parts"]) and is_array($ret["Attr"]) or (isset($ret["Relation"]) and is_array($ret["Relation"]))) ? [$id => $ret] : [];
     }
