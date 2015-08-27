@@ -95,12 +95,14 @@
         {
             "id"            : "Block",
             "name"          : "{I18n::$Block}",
-            "table_name"    : "BlockParts"
+            "table_name"    : "BlockParts",
+            "child"         : true
         },
         {
             "id"            : "Form",
             "name"          : "{I18n::$Form}",
-            "table_name"    : "FormParts"
+            "table_name"    : "FormParts",
+            "child"         : true
         },
         {
             "id"            : "Header",
@@ -147,7 +149,8 @@
             "offset"        : 0,
             "title"         : "Header Parts",
             "page"          : "PageSetting",
-            "type"          : "Block"
+            "type"          : "Block",
+            "child"         : "Header"
         },
         {
             "id"            : "Main",
@@ -167,7 +170,8 @@
             "offset"        : 0,
             "title"         : "Header Navigation",
             "type"          : "Block",
-            "parent"        : "Header"
+            "parent"        : "Header",
+            "child"         : "HeadNavi"
         },
         {
             "id"            : "NaviHeader",
@@ -177,7 +181,8 @@
             "offset"        : 0,
             "title"         : "Page Title Parts",
             "type"          : "Block",
-            "parent"        : "HeadNavi"
+            "parent"        : "HeadNavi",
+            "child"         : "NaviHeader"
         },
         {
             "id"            : "PageTitle",
@@ -202,7 +207,6 @@
     "BlockParts"   : [
         {
             "id"            : "Header",
-            "child"         : "Header",
             "type"          : 0
         },
         {
@@ -211,12 +215,10 @@
         },
         {
             "id"            : "HeadNavi",
-            "child"         : "HeadNavi",
             "type"          : 1
         },
         {
             "id"            : "NaviHeader",
-            "child"         : "NaviHeader",
             "type"          : 0
         }
     ],

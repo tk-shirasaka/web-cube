@@ -244,6 +244,17 @@
             "Primary"       : false,
             "Unique"        : true,
             "Foreign"       : false
+        },
+        {
+            "Description"   : "Have child flg",
+            "Field"         : "child",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : false,
+            "Default"       : 0,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
         }
     ],
     "PartsRelation" : [
@@ -353,6 +364,19 @@
         {
             "Description"   : "Parent parts id",
             "Field"         : "parent",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "PartsRelation",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Child parts id",
+            "Field"         : "child",
             "Type"          : "char",
             "Length"        : 30,
             "Null"          : true,
@@ -585,19 +609,6 @@
             }
         },
         {
-            "Description"   : "Child parts id",
-            "Field"         : "child",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : true,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "PartsRelation",
-                "Field" : "id"
-            }
-        },
-        {
             "Description"   : "Method type",
             "Field"         : "method",
             "Type"          : "tinyint",
@@ -651,19 +662,6 @@
             "Unique"        : false,
             "Foreign"       : {
                 "Table" : "Parts",
-                "Field" : "id"
-            }
-        },
-        {
-            "Description"   : "Child parts id",
-            "Field"         : "child",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : true,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "PartsRelation",
                 "Field" : "id"
             }
         },

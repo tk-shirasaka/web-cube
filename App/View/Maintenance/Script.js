@@ -178,7 +178,7 @@ $(function () {
             this.ajaxAction("render", data);
         },
         ajaxSave: function () {
-            if (this.getDataType(this.state.select) === dataType.parts && this.state.select.Attr.hasOwnProperty("child") && !this.state.select.Attr.child) this.state.select.Attr.child = this.state.select.Parts.id;
+            if (this.getDataType(this.state.select) === dataType.parts && !this.state.select.Parts.child) this.state.select.Parts.child = this.state.select.Parts.id;
             this.ajaxAction("save", this.state.select);
         },
         ajaxRemove: function () {
