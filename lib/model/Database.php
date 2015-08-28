@@ -297,16 +297,16 @@ abstract class Database extends Common {
         $fields     = array_search_key("Field", $this->Schema[$table]);
         $insert     = [];
         $update     = [];
-        foreach ($data as $key => $val) {
-            if ($val === null) continue;
-            $index  = array_search($key, $fields);
-            $val    = $this->_cast($this->Schema[$table][$index]["Type"], $val);
-            if ($index !== false and $this->Schema[$table][$index]["Primary"]) $conditions += [$key => $val];
-            if (is_string($val)) $val = "\"{$val}\"";
-            $insert[$key]   = $val;
-            $update[]       = "{$key} = {$val}";
-        }
-        if (!$validation and  is_array($data)) {
+        if (!$validation and is_array($data)) {
+            foreach ($data as $key => $val) {
+                if ($val === null) continue;
+                $index  = array_search($key, $fields);
+                $val    = $this->_cast($this->Schema[$table][$index]["Type"], $val);
+                if ($index !== false and $this->Schema[$table][$index]["Primary"]) $conditions += [$key => $val];
+                if (is_string($val)) $val = "\"{$val}\"";
+                $insert[$key]   = $val;
+                $update[]       = "{$key} = {$val}";
+            }
             $insert_query       = $this->_getQuery("Insert", "", [$table, implode(", ", array_keys($insert)), implode(", ", $insert)]);
             if ($conditions) {
                 $conditions     = ["Where" => $conditions];
@@ -318,9 +318,9 @@ abstract class Database extends Common {
                 $query = $insert_query;
             }
             $this->is_update    = true;
-            $this->execute($query);
+            $validation         = $this->execute($query);
         }
-        return ($validation) ? $validation : $this->_lastId();
+        return $validation;
     }
 
     public function delete($table, $conditions) {

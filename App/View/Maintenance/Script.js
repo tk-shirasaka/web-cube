@@ -1,7 +1,7 @@
 <script type="text/jsx">
 $(function () {
     var viewType    = {init: 1, page: 2, parts: 3, gallery: 4, actions: 5, edit: 6, copy: 7, remove: 8, partsForm: 9, partsAttrForm: 10, saved: 11};
-    var dataType    = {any: -1, form: 1, preview: 2, page: 3, parts: 4, path: 5, list: 6};
+    var dataType    = {any: -1, error: 1, form: 2, preview: 3, page: 4, parts: 5, path: 6, list: 7};
     var formType    = {input: 1, number: 2, checkbox: 3, raddio: 4, select: 5, textarea: 6, hidden: 7};
     var uniqueKey   = {get: function (prefix) { return prefix + "-" + Math.random().toString().replace(".", "")}};
     var size        = {
@@ -42,6 +42,8 @@ $(function () {
                 var formClass   = "form-group";
                 var formTag     = "";
                 var labelTag    = (form.label) ? <label for={index}>{form.label}</label> : "";
+                var errorTag    = [];
+                var error       = null;
                 switch (form.type) {
                 case formType.text :
                     formTag     = <input id={index} className="form-control" name={form.name} value={form.value} placeholder={form.placeholder} onChange={this.props.change}></input>;
@@ -65,7 +67,13 @@ $(function () {
                     labelTag    = "";
                     break;
                 }
-                return <div className={formClass}>{labelTag}{formTag}</div>;
+                if (this.props.error && (error = eval("this.props.error." + form.name))) {
+                    formClass  += " has-error";
+                    for (var i in error) {
+                        errorTag.push(<span className="help-block">{error[i]}</span>);
+                    }
+                }
+                return <div className={formClass}>{labelTag}{formTag}{errorTag}</div>;
             }, this);
 
             return <form className="animated slideInRight">{child}</form>;
@@ -136,6 +144,7 @@ $(function () {
         getInitialState: function () {
             return {
                 view        : viewType.init,
+                error       : null,
                 snapshot    : null,
                 select      : null,
                 preview     : null,
@@ -164,18 +173,18 @@ $(function () {
         listPage: function () {
             this.exeAjax("GET", "/maintenance/ajax_page_list", null);
         },
-        ajaxAction: function (action, data, url) {
+        ajaxAction: function (action, data, url, notRefresh) {
             var type    = this.getDataType(data);
 
             if (type === dataType.page)     url = "page_" + action;
             if (type === dataType.parts)    url = "parts_" + action;
             if (url) {
-                this.routerSub({path: viewType.saved});
+                if (!notRefresh) this.routerSub({path: viewType.saved});
                 this.exeAjax("POST", "/maintenance/ajax_" + url, data);
             }
         },
         ajaxRender: function (data) {
-            this.ajaxAction("render", data);
+            this.ajaxAction("render", data, null, true);
         },
         ajaxSave: function () {
             if (this.getDataType(this.state.select) === dataType.parts && !this.state.select.Parts.child) this.state.select.Parts.child = this.state.select.Parts.id;
@@ -224,7 +233,8 @@ $(function () {
             this.routerSub({Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: parent}, Attr: {}, unsaved: true});
         },
         copyParts: function () {
-            $.extend(true, this.state.select.Parts, {id: uniqueKey.get("Parts"), title: this.state.select.Parts.title + " - Copy"});
+            this.state.select.Parts.id      = uniqueKey.get("Parts");
+            this.state.select.Parts.title  += " - Copy";
             this.ajaxSave();
         },
         getNavi: function () {
@@ -250,6 +260,7 @@ $(function () {
         },
         getDataType: function (data) {
             if (!data)          return dataType.any;
+            if (data.error)     return dataType.error;
             if (data.forms)     return dataType.form;
             if (data.html)      return dataType.preview;
             if (data.path)      return dataType.path
@@ -263,13 +274,14 @@ $(function () {
             var type    = this.getDataType(data);
             var state   = {};
 
+            if (type === dataType.error)    state   = {view: viewType.edit, error: data.error};
             if (type === dataType.form)     state   = {partsType: data};
             if (type === dataType.preview)  state   = {preview: data};
             if (type === dataType.list)     state   = {view: viewType.page, page: data};
             if (type === dataType.parts)    state   = {view: viewType.parts, parts: data, select: {Page: data.Page}};
             if (type === dataType.parts)    this.ajaxRender({Parts: {type: "Block"}, Child: data.Parts});
-            if (this.state.view === viewType.saved && type !== dataType.parts) {
-                state   = {snapshot: null, select: null};
+            if (this.state.view === viewType.saved && type !== dataType.error) {
+                state   = {error: null, snapshot: null, select: null};
                 type    = this.getDataType(this.state.select);
                 if (type === dataType.page)     this.listPage();
                 if (type === dataType.parts)    this.ajaxRender({Page: this.state.parts.Page});
@@ -329,7 +341,7 @@ $(function () {
                     this.state.partsType.forms[this.state.select.Parts.type].map(getForm, this)
                 }
 
-                listView.push(<div><h4>{type + ": " + this.state.select[type].title}</h4><FormClass forms={formList} change={this.changeForm} /><button className="btn btn-primary pull-right" onClick={this.ajaxSave}>Save</button></div>);
+                listView.push(<div><h4>{type + ": " + this.state.select[type].title}</h4><FormClass forms={formList} error= {this.state.error} change={this.changeForm} /><button className="btn btn-primary pull-right" onClick={this.ajaxSave}>Save</button></div>);
                 break;
             }
             return (

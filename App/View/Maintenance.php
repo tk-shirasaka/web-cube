@@ -51,6 +51,7 @@ class Maintenance extends View {
                 if (array_search($field["Field"], ["id", "page", "parent", "user", "model", "isAjax"]) !== false) continue;
                 $input          = "text";
                 $options        = [];
+                if (array_search($field["Type"], ["int", "tinyint"])) $input = "number";
                 if ($field["Field"] === "child") {
                     $input      = "hidden";
                 } else if (!empty($field["Range"])) {
@@ -107,9 +108,8 @@ class Maintenance extends View {
         $this->auto_render  = false;
         $parts              = $this->getParams("Request");
         $html               = $this->Viewer->view($parts["Parts"]["type"], $parts);
-        $error              = $this->_chkPartsValid($parts);
 
-        echo json_encode(compact("html", "error"));
+        echo json_encode(compact("html"));
     }
 
     public function ajaxPageSave() {

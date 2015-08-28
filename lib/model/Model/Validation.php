@@ -2,25 +2,25 @@
 class Validation extends Common {
 
     private function _requre($data, $key, $value) {
-        return (empty($data[$key])) ? ["requre" => true] : [];
+        return (empty($data[$key])) ? ["requre" => "Require Field"] : [];
     }
 
     private function _max($data, $key, $max) {
         if (!isset($data[$key])) return [];
         if ($data[$key] <= $max) return [];
-        return ["max" => true];
+        return ["max" => "Max number is {$max}"];
     }
 
     private function _min($data, $key, $min) {
         if (!isset($data[$key])) return [];
         if ($data[$key] >= $min) return [];
-        return ["min" => true];
+        return ["min" => "Min number is {$min}"];
     }
 
     private function _maxLength($data, $key, $maxLength) {
         if (!isset($data[$key])) return [];
         if (strlen($data[$key]) <= $maxLength) return [];
-        return ["maxLength" => true];
+        return ["maxLength" => "Max length is {$maxLength} bytes"];
     }
 
     private function _format($data, $key, $formats) {
@@ -30,7 +30,7 @@ class Validation extends Common {
         foreach ($formats as $format) {
             if (preg_match("/{$format}/", $data[$key])) return [];
         }
-        return ["format" => true];
+        return ["format" => "Follow this format : {$format}"];
     }
 
     private function _numeric($bytes, $sign = true) {
