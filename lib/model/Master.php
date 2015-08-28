@@ -81,7 +81,10 @@ class Master extends Model {
     }
 
     public function savePage($page) {
-        return $this->Source->save("Page", $page);
+        $page              += ["user" => $this->getParams("User")];
+        $error              = [];
+        $error["Page"]      = $this->Source->save("Page", $page);
+        return ($error["Page"] === true) ? true : compact("error");
     }
 
     public function saveParts($parts) {

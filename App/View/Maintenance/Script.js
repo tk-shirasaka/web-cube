@@ -281,7 +281,7 @@ $(function () {
             if (type === dataType.parts)    state   = {view: viewType.parts, parts: data, select: {Page: data.Page}};
             if (type === dataType.parts)    this.ajaxRender({Parts: {type: "Block"}, Child: data.Parts});
             if (this.state.view === viewType.saved && type !== dataType.error) {
-                state   = {error: null, snapshot: null, select: null};
+                $.extend(true, state, {error: null, snapshot: null, select: this.state.select});
                 type    = this.getDataType(this.state.select);
                 if (type === dataType.page)     this.listPage();
                 if (type === dataType.parts)    this.ajaxRender({Page: this.state.parts.Page});

@@ -130,7 +130,8 @@
             "Field"         : "path",
             "Type"          : "varchar",
             "Length"        : 80,
-            "Null"          : true,
+            "Null"          : false,
+            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
             "Foreign"       : false

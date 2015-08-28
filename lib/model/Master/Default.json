@@ -144,9 +144,8 @@
     "Parts" : [
         {
             "id"            : "Header",
+            "class"         : "row navbar navbar-inverse navbar-static-top",
             "row"           : 1,
-            "col"           : 12,
-            "offset"        : 0,
             "title"         : "Header Parts",
             "page"          : "PageSetting",
             "type"          : "Block",
@@ -154,20 +153,15 @@
         },
         {
             "id"            : "Main",
-            "class"         : "container-fluid",
+            "class"         : "row",
             "row"           : 2,
-            "col"           : 0,
-            "offset"        : 0,
             "title"         : "Main Contents",
             "page"          : "PageSetting",
             "type"          : "Block"
         },
         {
             "id"            : "HeadNavi",
-            "class"         : "row navbar navbar-inverse navbar-static-top",
             "row"           : 1,
-            "col"           : 12,
-            "offset"        : 0,
             "title"         : "Header Navigation",
             "type"          : "Block",
             "parent"        : "Header",
@@ -178,7 +172,6 @@
             "class"         : "navbar-header",
             "row"           : 1,
             "col"           : 3,
-            "offset"        : 0,
             "title"         : "Page Title Parts",
             "type"          : "Block",
             "parent"        : "HeadNavi",
@@ -188,8 +181,6 @@
             "id"            : "PageTitle",
             "class"         : "navbar-brand",
             "row"           : 1,
-            "col"           : 12,
-            "offset"        : 0,
             "title"         : "Page Title Parts",
             "type"          : "Text",
             "parent"        : "NaviHeader"

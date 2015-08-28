@@ -114,7 +114,7 @@ class Maintenance extends View {
 
     public function ajaxPageSave() {
         $this->auto_render  = false;
-        $page               = $this->getParams("Request.Page") + ["user" => $this->getParams("User")];
+        $page               = $this->getParams("Request.Page");
         echo json_encode($this->{"Model.Master"}->savePage($page));
     }
 
@@ -126,6 +126,7 @@ class Maintenance extends View {
     }
 
     public function ajaxPageRemove() {
+        $this->auto_render  = false;
         $page               = $this->getParams("Request.Page");
 
         echo json_encode($this->{"Model.Master"}->removePage($page["id"]));
