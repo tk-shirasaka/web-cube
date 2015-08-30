@@ -1,6 +1,6 @@
 <script type="text/jsx">
 $(function () {
-    var viewType    = {init: 1, page: 2, parts: 3, gallery: 4, actions: 5, edit: 6, copy: 7, remove: 8, partsForm: 9, partsAttrForm: 10, saved: 11};
+    var viewType    = {init: 1, page: 2, parts: 3, template: 4, actions: 5, edit: 6, copy: 7, remove: 8, saved: 9};
     var dataType    = {any: -1, error: 1, form: 2, preview: 3, page: 4, parts: 5, path: 6, list: 7};
     var formType    = {input: 1, number: 2, checkbox: 3, raddio: 4, select: 5, textarea: 6, hidden: 7};
     var uniqueKey   = {get: function (prefix) { return prefix + "-" + Math.random().toString().replace(".", "")}};
@@ -10,20 +10,13 @@ $(function () {
     }
     var icons       = {
         _base       : "pull-left glyphicon glyphicon-",
-        open        : "folder-open",
-        close       : "folder-close",
-        select      : "th-list",
+        template    : "folder-open",
         add         : "plus",
         copy        : "duplicate",
         edit        : "pencil",
-        save        : "save",
         remove      : "trash",
         slideUp     : "menu-up",
         slideDown   : "menu-down",
-        slideLeft   : "menu-left",
-        slideRight  : "menu-right",
-        zoomIn      : "zoom-in",
-        zoomOut     : "zoom-out",
         get         : function (name) { return (this[name]) ? this._base + this[name] : ""; }
     };
 
@@ -187,7 +180,7 @@ $(function () {
             this.ajaxAction("render", data, null, true);
         },
         ajaxSave: function () {
-            if (this.getDataType(this.state.select) === dataType.parts && !this.state.select.Parts.child) this.state.select.Parts.child = this.state.select.Parts.id;
+            if (this.getDataType(this.state.select) === dataType.parts && this.state.select.Attr.child) this.state.select.Parts.child = this.state.select.Parts.id;
             this.ajaxAction("save", this.state.select);
         },
         ajaxRemove: function () {
@@ -240,18 +233,18 @@ $(function () {
         getNavi: function () {
             var naviList    = [];
             naviList.push({title: "Home", state: {view: viewType.page, parts: null, select: null}});
-            if (this.state.parts) naviList.push({title: this.state.parts.Page.title, state: {view: viewType.parts, select: null}});
+            if (this.state.parts) naviList.push({title: this.state.parts.Page.title, state: {view: viewType.parts, select: {Page: this.state.parts.Page}}});
             if (this.state.select && this.getDataType(this.state.select) === dataType.parts) naviList.push({title: this.state.select.Parts.title, state: {view: viewType.actions, select: this.state.select}});
-            if (this.state.view === viewType.edit || this.state.view === viewType.partsAttrForm) naviList.push({title: "Parts Edit", state: {view: viewType.edit}});
+            if (this.state.view === viewType.edit) naviList.push({title: "Edit Form", state: {view: viewType.edit}});
             return naviList;
         },
         getAction: function () {
             var ret         = [];
             var actions     = [];
-            var actionList  = [{id: viewType.add, name: "add"}, {id: viewType.edit, name: "edit"}, {id: viewType.copy, name: "copy"}, {id: viewType.remove, name: "remove"}];
+            var actionList  = [{id: viewType.add, name: "add"}, {id: viewType.edit, name: "edit"}, {id: viewType.copy, name: "copy"}, {id: viewType.remove, name: "remove"}, {id: viewType.template, name: "template"}];
             var type        = this.getDataType(this.state.select);
             if (this.state.select.unsaved )                                     actions = ["edit"];
-            else if (type === dataType.page && this.state.parts.Parts.length)   actions = ["edit"];
+            else if (type === dataType.page && this.state.parts.Parts.length)   actions = ["edit", "template"];
             else if (type === dataType.page)                                    actions = ["edit", "remove"];
             else if (type === dataType.parts)                                   actions = ["edit", "copy", "remove"];
             actionList.map(function (val, key) { if (actions.indexOf(val.name) >= 0) ret.push(val); });
@@ -311,10 +304,10 @@ $(function () {
                 listView.push(<div><h4>Page List</h4><PageClass data={this.state.page} select={this.ajaxRender} add={this.addPage} /></div>);
                 break;
             case viewType.parts :
-                listView.push(<div><h4>{this.state.select.Page.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);
+                listView.push(<div><h4>{this.state.parts.Page.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);
                 listView.push(<div><h4>Parts List</h4><PartsClass data={this.state.parts.Parts} select={this.selectParts} add={this.addParts} /></div>);
                 break;
-            case viewType.gallery :
+            case viewType.template :
                 break;
             case viewType.actions :
                 listView.push(<div><h4>{this.state.select.Parts.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);
