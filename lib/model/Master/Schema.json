@@ -350,6 +350,18 @@
             }
         },
         {
+            "Description"   : "Shared parts flg",
+            "Field"         : "shared",
+            "Type"          : "tinyint",
+            "Length"        : 1,
+            "Null"          : false,
+            "Default"       : 0,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false,
+            "Boolean"       : true
+        },
+        {
             "Description"   : "Type id",
             "Field"         : "type",
             "Type"          : "char",

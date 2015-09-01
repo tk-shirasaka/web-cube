@@ -35,7 +35,7 @@ class Master extends Model {
     public function getParts($where, $table = []) {
         if (is_string($table)) $table = [$table];
         $table  = array_merge(["Parts", "PartsType"], $table);
-        $sort   = ["row", "offset"];
+        $sort   = ["row", "offset", "title"];
         $parts  = $this->Source->find($table, ["Where" => $where, "Sort" => $sort]);
 
         if (empty($parts)) return [];
@@ -94,9 +94,10 @@ class Master extends Model {
         $parts["Attr"]      = array_merge($parts["Attr"], ["id" => $parts["Parts"]["id"]]);
         $type               = $this->Source->find("PartsType", ["Where" => ["id" => $parts["Parts"]["type"]]], "first");
         $table              = $type["PartsType"]["table_name"];
-        if ($type["PartsType"]["child"] && !empty($parts["Parts"]["child"])) $error["PartsRelation"] = $this->Source->save("PartsRelation", ["id" => $parts["Parts"]["child"]]);
-        if (($error["Parts"] = $this->Source->save("Parts", $parts["Parts"])) !== true) $ret = false;
-        if (($error["Attr"] = $this->Source->save($table, $parts["Attr"])) !== true)    $ret = false;
+        if ($type["PartsType"]["child"] and empty($parts["Parts"]["child"]))            $parts["Parts"]["child"]    = $parts["Parts"]["id"];
+        if ($type["PartsType"]["child"])                                                $error["PartsRelation"]     = $this->Source->save("PartsRelation", ["id" => $parts["Parts"]["child"]]);
+        if (($error["Parts"] = $this->Source->save("Parts", $parts["Parts"])) !== true) $ret                        = false;
+        if (($error["Attr"] = $this->Source->save($table, $parts["Attr"])) !== true)    $ret                        = false;
         if (!$ret) $this->removeParts($parts);
         return ($ret) ? $ret : compact("error");
     }

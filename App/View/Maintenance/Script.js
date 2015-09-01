@@ -1,7 +1,7 @@
 <script type="text/jsx">
 $(function () {
-    var viewType    = {init: 1, page: 2, parts: 3, template: 4, actions: 5, edit: 6, copy: 7, remove: 8, saved: 9};
-    var dataType    = {any: -1, error: 1, form: 2, preview: 3, page: 4, parts: 5, path: 6, list: 7};
+    var viewType    = {init: 1, page: 2, parts: 3, sample: 4, actions: 5, edit: 6, copy: 7, remove: 8, saved: 9};
+    var dataType    = {any: -1, error: 1, list: 2, form: 3, preview: 4, page: 5, parts: 6, sample: 7, path: 8};
     var formType    = {input: 1, number: 2, checkbox: 3, raddio: 4, select: 5, textarea: 6, hidden: 7};
     var uniqueKey   = {get: function (prefix) { return prefix + "-" + Math.random().toString().replace(".", "")}};
     var size        = {
@@ -10,7 +10,7 @@ $(function () {
     }
     var icons       = {
         _base       : "pull-left glyphicon glyphicon-",
-        template    : "folder-open",
+        sample      : "folder-open",
         add         : "plus",
         copy        : "duplicate",
         edit        : "pencil",
@@ -123,6 +123,16 @@ $(function () {
         }
     });
 
+    var SampleClass = React.createClass({
+        render: function () {
+            var sample  = this.props.sample.parts.map(function (parts) {
+                return <li key={parts.Parts.id}><ListChildClass data={parts} title={parts.Parts.title} select={this.props.select} /></li>;
+            }, this)
+
+            return <ul className="animated slideInRight">{sample}</ul>;
+        }
+    });
+
     var NavigationClass = React.createClass({
         render: function () {
             var child   = this.props.data.map(function (child, index) {
@@ -141,6 +151,7 @@ $(function () {
                 snapshot    : null,
                 select      : null,
                 preview     : null,
+                sample      : null,
                 page        : null,
                 parts       : null,
                 partsType   : null,
@@ -148,6 +159,7 @@ $(function () {
         },
         componentDidMount: function () {
             this.exeAjax("GET", "/maintenance/ajax_parts_type", null);
+            this.sampleParts();
             this.listPage();
         },
         exeAjax: function (type, url, data) {
@@ -166,6 +178,9 @@ $(function () {
         listPage: function () {
             this.exeAjax("GET", "/maintenance/ajax_page_list", null);
         },
+        sampleParts: function () {
+            this.exeAjax("GET", "/maintenance/ajax_parts_sample", null);
+        },
         ajaxAction: function (action, data, url, notRefresh) {
             var type    = this.getDataType(data);
 
@@ -180,7 +195,6 @@ $(function () {
             this.ajaxAction("render", data, null, true);
         },
         ajaxSave: function () {
-            if (this.getDataType(this.state.select) === dataType.parts && this.state.select.Attr.child) this.state.select.Parts.child = this.state.select.Parts.id;
             this.ajaxAction("save", this.state.select);
         },
         ajaxRemove: function () {
@@ -203,6 +217,9 @@ $(function () {
             case viewType.remove :
                 state.view      = viewType.saved;
                 this.ajaxRemove();
+                break;
+            case viewType.sample :
+                state.preview = this.state.sample.html;
                 break;
             }
             this.routerSub({path: id});
@@ -241,11 +258,11 @@ $(function () {
         getAction: function () {
             var ret         = [];
             var actions     = [];
-            var actionList  = [{id: viewType.add, name: "add"}, {id: viewType.edit, name: "edit"}, {id: viewType.copy, name: "copy"}, {id: viewType.remove, name: "remove"}, {id: viewType.template, name: "template"}];
+            var actionList  = [{id: viewType.add, name: "add"}, {id: viewType.edit, name: "edit"}, {id: viewType.copy, name: "copy"}, {id: viewType.remove, name: "remove"}, {id: viewType.sample, name: "sample"}];
             var type        = this.getDataType(this.state.select);
             if (this.state.select.unsaved )                                     actions = ["edit"];
-            else if (type === dataType.page && this.state.parts.Parts.length)   actions = ["edit", "template"];
-            else if (type === dataType.page)                                    actions = ["edit", "remove"];
+            else if (type === dataType.page && this.state.parts.Parts.length)   actions = ["edit", "sample"];
+            else if (type === dataType.page)                                    actions = ["edit", "sample", "remove"];
             else if (type === dataType.parts)                                   actions = ["edit", "copy", "remove"];
             actionList.map(function (val, key) { if (actions.indexOf(val.name) >= 0) ret.push(val); });
 
@@ -256,6 +273,7 @@ $(function () {
             if (data.error)     return dataType.error;
             if (data.forms)     return dataType.form;
             if (data.html)      return dataType.preview;
+            if (data.sample)    return dataType.sample;
             if (data.path)      return dataType.path
             if (data.length)    return dataType.list;
             if (data.Parts)     return dataType.parts;
@@ -269,7 +287,8 @@ $(function () {
 
             if (type === dataType.error)    state   = {view: viewType.edit, error: data.error};
             if (type === dataType.form)     state   = {partsType: data};
-            if (type === dataType.preview)  state   = {preview: data};
+            if (type === dataType.preview)  state   = {preview: data.html};
+            if (type === dataType.sample)   state   = {sample: data.sample};
             if (type === dataType.list)     state   = {view: viewType.page, page: data};
             if (type === dataType.parts)    state   = {view: viewType.parts, parts: data, select: {Page: data.Page}};
             if (type === dataType.parts)    this.ajaxRender({Parts: {type: "Block"}, Child: data.Parts});
@@ -295,7 +314,7 @@ $(function () {
         render: function () {
             var listView    = [];
             var formList    = [];
-            var $preview    = (this.state.preview) ? $(this.state.preview.html) : $("<div></div>");
+            var $preview    = (this.state.preview) ? $(this.state.preview) : $("<div></div>");
 
             $preview.find("[parts-markdown=1]").each(function () { $(this).html(marked($(this).html().trim())); });
             listView.push(<NavigationClass data={this.getNavi()} select={this.selectNavigation} />);
@@ -307,7 +326,8 @@ $(function () {
                 listView.push(<div><h4>{this.state.parts.Page.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);
                 listView.push(<div><h4>Parts List</h4><PartsClass data={this.state.parts.Parts} select={this.selectParts} add={this.addParts} /></div>);
                 break;
-            case viewType.template :
+            case viewType.sample :
+                listView.push(<div><h4>Sample List</h4><SampleClass sample={this.state.sample} select={this.selectParts} /></div>);
                 break;
             case viewType.actions :
                 listView.push(<div><h4>{this.state.select.Parts.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);

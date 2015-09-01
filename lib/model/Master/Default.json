@@ -18,10 +18,10 @@
             "path"          : "maintenance/page"
         },
         {
-            "id"            : "AjaxGallery",
-            "title"         : "Ajax Gallery",
+            "id"            : "AjaxPartsSample",
+            "title"         : "Ajax Parts Sample",
             "user"          : "System",
-            "path"          : "maintenance/ajax_parts_gallery",
+            "path"          : "maintenance/ajax_parts_sample",
             "isAjax"        : true
         },
         {
@@ -84,11 +84,6 @@
             "id"            : "Error",
             "title"         : "Error Page",
             "path"          : "error"
-        },
-        {
-            "id"            : "Template",
-            "title"         : "Parts Gallery",
-            "path"          : "template"
         }
     ],
     "PartsType" : [
