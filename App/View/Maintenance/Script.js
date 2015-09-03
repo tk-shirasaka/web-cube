@@ -1,6 +1,6 @@
 <script type="text/jsx">
 $(function () {
-    var viewType    = {init: 1, page: 2, parts: 3, sample: 4, actions: 5, edit: 6, copy: 7, remove: 8, saved: 9};
+    var viewType    = {init: 1, page: 2, parts: 3, sample: 4, actions: 5, edit: 6, copy: 7, deepcopy: 8, remove: 9, saved: 10};
     var dataType    = {any: -1, error: 1, list: 2, form: 3, preview: 4, page: 5, parts: 6, sample: 7, path: 8};
     var formType    = {input: 1, number: 2, checkbox: 3, raddio: 4, select: 5, textarea: 6, hidden: 7};
     var uniqueKey   = {get: function (prefix) { return prefix + "-" + Math.random().toString().replace(".", "")}};
@@ -12,9 +12,9 @@ $(function () {
         _base       : "pull-left glyphicon glyphicon-",
         sample      : "folder-open",
         add         : "plus",
+        edit        : "pencil",
         copy        : "copy",
         deepcopy    : "duplicate",
-        edit        : "pencil",
         remove      : "trash",
         slideUp     : "menu-up",
         slideDown   : "menu-down",
@@ -194,8 +194,8 @@ $(function () {
         ajaxRender: function (data) {
             this.ajaxAction("render", data, null, true);
         },
-        ajaxSave: function () {
-            this.ajaxAction("save", this.state.select);
+        ajaxSave: function (parts) {
+            this.ajaxAction("save", (this.getDataType(parts) === dataType.parts) ? parts : this.state.select);
         },
         ajaxRemove: function () {
             this.ajaxAction("remove", this.state.select);
@@ -212,7 +212,11 @@ $(function () {
             switch (id) {
             case viewType.copy :
                 state.view      = viewType.saved;
-                if (type === dataType.parts) this.copyParts();
+                if (type === dataType.parts) this.copyParts(this.state.select);
+                break;
+            case viewType.deepcopy :
+                state.view      = viewType.saved;
+                if (type === dataType.parts) this.deepcopyParts(this.state.select);
                 break;
             case viewType.remove :
                 state.view      = viewType.saved;
@@ -239,16 +243,28 @@ $(function () {
         addParts: function (parent) {
             this.routerSub({Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: parent}, Attr: {}, unsaved: true});
         },
-        copyParts: function () {
-            this.state.select.Parts.id      = uniqueKey.get("Parts");
-            this.state.select.Parts.page    = this.state.parts.Page.id;
-            this.state.select.Parts.title  += " - Copy";
-            this.ajaxSave();
+        copyParts: function (parts) {
+            parts.Parts.id      = uniqueKey.get("Parts");
+            parts.Parts.page    = this.state.parts.Page.id;
+            parts.Parts.title  += " - Copy";
+            this.ajaxSave(parts);
+        },
+        deepcopyParts: function (parts) {
+            parts.Parts.child = null;
+            this.copyParts(parts);
+
+            if (parts.Child && parts.Child.length) {
+                parts.Child.map(function (child) {
+                    child.Parts.parent  = parts.Parts.id;
+                    this.deepcopyParts(child);
+                }, this);
+            }
         },
         getNavi: function () {
             var naviList    = [];
             naviList.push({title: "Home", state: {view: viewType.page, parts: null, select: null}});
-            if (this.state.parts) naviList.push({title: this.state.parts.Page.title, state: {view: viewType.parts, select: {Page: this.state.parts.Page}}});
+            if (this.state.parts) naviList.push({title: this.state.parts.Page.title, state: {view: viewType.parts, sample: null, select: {Page: this.state.parts.Page}}});
+            if (this.state.sample) naviList.push({title: "Sample", state: {view: viewType.sample, select: {Page: this.state.parts.Page}}})
             if (this.state.select && this.getDataType(this.state.select) === dataType.parts) naviList.push({title: this.state.select.Parts.title, state: {view: viewType.actions, select: this.state.select}});
             if (this.state.view === viewType.edit) naviList.push({title: "Edit Form", state: {view: viewType.edit}});
             return naviList;
@@ -262,7 +278,7 @@ $(function () {
             else if (this.state.select.unsaved )                                actions = ["edit"];
             else if (type === dataType.page && this.state.parts.Parts.length)   actions = ["edit"];
             else if (type === dataType.page)                                    actions = ["edit", "remove"];
-            else if (type === dataType.parts)                                   actions = ["edit", "copy", "remove"];
+            else if (type === dataType.parts)                                   actions = ["edit", "copy", "deepcopy", "remove"];
             actionList.map(function (val, key) { if (actions.indexOf(val.name) >= 0) ret.push(val); });
 
             return ret;
@@ -342,6 +358,10 @@ $(function () {
                     if (!this.state.select[name[0]].hasOwnProperty(name[1])) this.state.select[name[0]][name[1]] = null;
                     if (form.name === "Parts.type") $.extend(true, form, {type: formType.select, options: this.state.partsType.types})
                     if (form.name === "Attr.contents" && this.state.select.Attr.multiple) form.type = formType.textarea;
+                    if (form.name === "Attr.path" && this.state.select.Attr.innerlink) {
+                        form.type       = formType.select;
+                        form.options    = this.state.page.map(function (page) { return {name: page.title, value: "/" + page.path}});
+                    }
                     formList.push(form)
                 }
 

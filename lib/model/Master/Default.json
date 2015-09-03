@@ -123,6 +123,11 @@
             "id"            : "Link",
             "name"          : "{I18n::$Link}",
             "table_name"    : "LinkParts"
+        },
+        {
+            "id"            : "Image",
+            "name"          : "{I18n::$Image}",
+            "table_name"    : "ImageParts"
         }
     ],
     "PartsRelation" : [

@@ -182,26 +182,6 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Image width",
-            "Field"         : "width",
-            "Type"          : "int",
-            "Length"        : 8,
-            "Null"          : true,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : false
-        },
-        {
-            "Description"   : "Image height",
-            "Field"         : "height",
-            "Type"          : "int",
-            "Length"        : 8,
-            "Null"          : true,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : false
-        },
-        {
             "Description"   : "Image ouwner user account",
             "Field"         : "user",
             "Type"          : "char",
@@ -557,8 +537,8 @@
             "Foreign"       : false
         },
         {
-            "Description"   : "Outer link flg",
-            "Field"         : "outerlink",
+            "Description"   : "Inner link flg",
+            "Field"         : "innerlink",
             "Type"          : "tinyint",
             "Length"        : 1,
             "Null"          : false,
@@ -763,6 +743,54 @@
             "Unique"        : false,
             "Foreign"       : false,
             "Range"         : {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6}
+        }
+    ],
+    "ImageParts"   : [
+        {
+            "Description"   : "Parts id",
+            "Field"         : "id",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : false,
+            "Primary"       : true,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "Parts",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Image id",
+            "Field"         : "image",
+            "Type"          : "char",
+            "Length"        : 30,
+            "Null"          : true,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : {
+                "Table" : "Image",
+                "Field" : "id"
+            }
+        },
+        {
+            "Description"   : "Image width",
+            "Field"         : "width",
+            "Type"          : "int",
+            "Length"        : 8,
+            "Null"          : true,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Image height",
+            "Field"         : "height",
+            "Type"          : "int",
+            "Length"        : 8,
+            "Null"          : true,
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
         }
     ]
 }

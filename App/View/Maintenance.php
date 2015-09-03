@@ -43,8 +43,9 @@ class Maintenance extends View {
                 if (array_search($field["Type"], ["int", "tinyint"])) $input = "number";
                 if ($field["Field"] === "child") {
                     $input      = "hidden";
-                } else if (!empty($field["Range"])) {
+                } else if (!empty($field["Range"]) or !empty($field['Foreign'])) {
                     $input      = "select";
+                    if (empty($field["Range"])) $field["Range"] = [];
                     foreach ($field["Range"] as $key => $val) {
                         $options[] = ["name" => $val, "value" => $key];
                     }
@@ -62,8 +63,9 @@ class Maintenance extends View {
             return $form;
         };
 
-        $forms["Page"]      = $getForm($this->{"Model.Master"}->Schema["Page"], "Page");
         $forms["Parts"]     = $getForm($this->{"Model.Master"}->Schema["Parts"], "Parts");
+        $forms["Page"]      = $getForm($this->{"Model.Master"}->Schema["Page"], "Page");
+        $forms["Image"]      = $getForm($this->{"Model.Master"}->Schema["Image"], "Image");
         foreach ($this->{"Model.Master"}->Source->find("PartsType") as $type) {
             $types[]                            = ["value" => $type["PartsType"]["id"], "name" => $type["PartsType"]["name"]];
             $forms[$type["PartsType"]["id"]]    = $getForm($this->{"Model.Master"}->Schema[$type["PartsType"]["table_name"]], "Attr");
@@ -76,7 +78,7 @@ class Maintenance extends View {
         $this->auto_render  = false;
         $pages              = [];
 
-        foreach ($this->{"Model.Master"}->Source->find("Page", ["Field" => ["id", "title"], "Where" => ["user" => $this->getParams("User"), "isAjax" => 0]]) as $page) {
+        foreach ($this->{"Model.Master"}->Source->find("Page", ["Field" => ["id", "title", "path"], "Where" => ["user" => $this->getParams("User"), "isAjax" => 0]]) as $page) {
             $pages[]    = $page["Page"];
         }
 
