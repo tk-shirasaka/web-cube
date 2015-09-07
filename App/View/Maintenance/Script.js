@@ -150,6 +150,7 @@ $(function () {
     var ParentClass = React.createClass({
         getInitialState: function () {
             return {
+                callbacks   : [],
                 view        : viewType.init,
                 error       : null,
                 select      : null,
@@ -163,7 +164,7 @@ $(function () {
         componentDidMount: function () {
             this.router(viewType.page);
         },
-        exeAjax: function (type, url, data, callbacks) {
+        exeAjax: function (type, url, data) {
             var params = {
                 type        : type,
                 url         : url,
@@ -178,8 +179,8 @@ $(function () {
                     if (type === dataType.sample)   $.extend(true, this.state, {preview: ret.sample.html, sample: ret.sample.parts});
                     if (type === dataType.list)     $.extend(true, this.state, {page: ret});
                     if (type === dataType.parts)    $.extend(true, this.state, {parts: ret, select: {Page: ret.Page}});
-                    if (callbacks && callbacks.length) {
-                        callbacks.pop()(callbacks);
+                    if (this.state.callbacks && this.state.callbacks.length) {
+                        this.state.callbacks.pop()();
                     } else {
                         this.setState(this.state);
                     }
@@ -205,28 +206,21 @@ $(function () {
             this.state.select   = parts;
             this.router(viewType.actions);
         },
-        addPage: function () {
-            this.state.select   = {Page: {id: uniqueKey.get("Page")}, unsaved: true};
+        add: function (data) {
+            if (this.state.view === viewType.page)  this.state.select = {Page: {id: uniqueKey.get("Page")}, unsaved: true};
+            if (this.state.view === viewType.parts) this.state.select = {Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: data}, Attr: {}, unsaved: true};
             this.router(viewType.edit);
         },
-        addParts: function (parent) {
-            this.state.select   = {Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: parent}, Attr: {}, unsaved: true};
-            this.router(viewType.edit);
-        },
-        copyParts: function (parts) {
-            parts.Parts.id      = uniqueKey.get("Parts");
-            parts.Parts.page    = this.state.parts.Page.id;
-            parts.Parts.title  += " - Copy";
-            this.exeAjax("POST", "/maintenance/ajax_parts_save", parts);
-        },
-        deepcopyParts: function (parts) {
-            parts.Parts.child = null;
-            this.copyParts(parts);
+        deepcopyParts: function () {
+            var parts                       = this.state.select;
+            this.state.select.Parts.child   = null;
+            this.router(viewType.copy);
 
             if (parts.Child && parts.Child.length) {
                 parts.Child.map(function (child) {
                     child.Parts.parent  = parts.Parts.id;
-                    this.deepcopyParts(child);
+                    this.state.select   = child;
+                    this.router(viewType.deepcopy);
                 }, this);
             }
         },
@@ -273,7 +267,6 @@ $(function () {
             return dataType.any;
         },
         router: function (view) {
-            var callbacks   = [];
             var type        = this.getDataType(this.state.select);
 
             switch (view) {
@@ -281,33 +274,36 @@ $(function () {
             case viewType.deepcopy :
             case viewType.remove :
             case viewType.saved :
-                callbacks.push(function () { if (!this.state.error) {this.selectPage(this.state.parts); } else { this.setState(this.state); } }.bind(this));
-                if (view === viewType.copy && type === dataType.parts)      this.copyParts(this.state.select);
-                if (view === viewType.deepcopy && type === dataType.parts)  this.deepcopyParts(this.state.select);
-                if (view === viewType.remove && type === dataType.page)     callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_page_remove", this.state.select, callbacks); }.bind(this));
-                if (view === viewType.remove && type === dataType.parts)    callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_parts_remove", this.state.select, callbacks); }.bind(this));
-                if (view === viewType.saved && type === dataType.page)      callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_page_save", this.state.select, callbacks); }.bind(this));
-                if (view === viewType.saved && type === dataType.parts)     callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_parts_save", this.state.select, callbacks); }.bind(this));
+                this.state.callbacks.push(function () { if (this.state.error) { this.setState(this.state); } else if (!this.state.callbacks.length) { this.selectPage(this.state.parts); } }.bind(this));
+                if (view === viewType.copy && type === dataType.parts) {
+                    $.extend(true, this.state.select.Parts, {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, title: this.state.select.Parts.title + " - Copy"});
+                    view            = viewType.saved;
+                }
+                if (view === viewType.deepcopy && type === dataType.parts)  this.deepcopyParts();
+                if (view === viewType.remove && type === dataType.page)     this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_page_remove", this.state.select); }.bind(this));
+                if (view === viewType.remove && type === dataType.parts)    this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_remove", this.state.select); }.bind(this));
+                if (view === viewType.saved && type === dataType.page)      this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_page_save", this.state.select); }.bind(this));
+                if (view === viewType.saved && type === dataType.parts)     this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_save", this.state.select); }.bind(this));
                 this.state.error    = null;
                 view                = viewType.edit;
                 break;
             case viewType.sample :
-                callbacks.push(function (callbacks) { this.exeAjax("GET", "/maintenance/ajax_parts_sample", null, callbacks); }.bind(this));
+                this.state.callbacks.push(function () { this.exeAjax("GET", "/maintenance/ajax_parts_sample", null); }.bind(this));
             case viewType.parts :
                 this.state.sample   = null;
                 if (this.state.parts) this.state.select   = {Page: this.state.parts.Page};
-                callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_parts_render", {Parts: {type: "Block"}, Child: this.state.parts.Parts}, callbacks); }.bind(this));
-                callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_page_render", this.state.select, callbacks); }.bind(this));
+                this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_render", {Parts: {type: "Block"}, Child: this.state.parts.Parts}); }.bind(this));
+                this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_page_render", this.state.select); }.bind(this));
             case viewType.page :
                 this.state.parts    = null;
-                if (!this.state.page) callbacks.push(function (callbacks) { this.exeAjax("GET", "/maintenance/ajax_page_list", null, callbacks); }.bind(this));
+                if (!this.state.page) this.state.callbacks.push(function () { this.exeAjax("GET", "/maintenance/ajax_page_list", null); }.bind(this));
             case viewType.init :
-                if (!this.state.partsType) callbacks.push(function (callbacks) { this.exeAjax("GET", "/maintenance/ajax_parts_type", null, callbacks); }.bind(this));
+                if (!this.state.partsType) this.state.callbacks.push(function () { this.exeAjax("GET", "/maintenance/ajax_parts_type", null); }.bind(this));
             }
 
             this.state.view = view;
-            if (callbacks.length) {
-                callbacks.pop()(callbacks);
+            if (this.state.callbacks.length) {
+                this.state.callbacks.pop()();
             } else {
                 this.setState(this.state);
             }
@@ -321,11 +317,11 @@ $(function () {
             listView.push(<NavigationClass data={this.getNavi()} select={this.router} />);
             switch (this.state.view) {
             case viewType.page :
-                listView.push(<div><h4>Page List</h4><PageClass data={this.state.page} select={this.selectPage} add={this.addPage} /></div>);
+                listView.push(<div><h4>Page List</h4><PageClass data={this.state.page} select={this.selectPage} add={this.add} /></div>);
                 break;
             case viewType.parts :
                 listView.push(<div><h4>{this.state.parts.Page.title}</h4><ActionClass select={this.getAction()} action={this.router} /></div>);
-                listView.push(<div><h4>Parts List</h4><PartsClass data={this.state.parts.Parts} select={this.selectParts} add={this.addParts} /></div>);
+                listView.push(<div><h4>Parts List</h4><PartsClass data={this.state.parts.Parts} select={this.selectParts} add={this.add} /></div>);
                 break;
             case viewType.sample :
                 listView.push(<div><h4>Sample List</h4><SampleClass sample={this.state.sample} select={this.selectParts} /></div>);
