@@ -31,6 +31,9 @@ $(function () {
     });
 
     var FormClass = React.createClass({
+        _save: function () {
+            this.props.save(viewType.saved);
+        },
         render: function () {
             var child = this.props.forms.map(function (form, index) {
                 var formClass   = "form-group";
@@ -70,7 +73,7 @@ $(function () {
                 return <div className={formClass}>{labelTag}{formTag}{errorTag}</div>;
             }, this);
 
-            return <form className="animated slideInRight">{child}</form>;
+            return <form className="animated slideInRight">{child}<li className="btn btn-primary pull-right" onClick={this._save} >Save</li></form>;
         }
     });
 
@@ -137,7 +140,7 @@ $(function () {
     var NavigationClass = React.createClass({
         render: function () {
             var child   = this.props.data.map(function (child, index) {
-                return <li key={index} itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><ListChildClass data={child.state} title={child.title} select={this.props.select}/></li>;
+                return <li key={index} itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"><ListChildClass data={child.view} title={child.title} select={this.props.select}/></li>;
             }, this);
 
             return <ol className="breadcrumb">{child}</ol>;
@@ -149,7 +152,6 @@ $(function () {
             return {
                 view        : viewType.init,
                 error       : null,
-                snapshot    : null,
                 select      : null,
                 preview     : null,
                 sample      : null,
@@ -159,46 +161,32 @@ $(function () {
             };
         },
         componentDidMount: function () {
-            this.exeAjax("GET", "/maintenance/ajax_parts_type", null);
-            this.listPage();
+            this.router(viewType.page);
         },
-        exeAjax: function (type, url, data) {
+        exeAjax: function (type, url, data, callbacks) {
             var params = {
                 type        : type,
                 url         : url,
                 contentType : "application/json",
                 dataType    : "json",
                 success     : function (ret) {
-                    this.router(ret);
+                    var type    = this.getDataType(ret);
+ 
+                    if (type === dataType.error)    $.extend(true, this.state, {error: ret.error});
+                    if (type === dataType.form)     $.extend(true, this.state, {partsType: ret});
+                    if (type === dataType.preview)  $.extend(true, this.state, {preview: ret.html});
+                    if (type === dataType.sample)   $.extend(true, this.state, {preview: ret.sample.html, sample: ret.sample.parts});
+                    if (type === dataType.list)     $.extend(true, this.state, {page: ret});
+                    if (type === dataType.parts)    $.extend(true, this.state, {parts: ret, select: {Page: ret.Page}});
+                    if (callbacks && callbacks.length) {
+                        callbacks.pop()(callbacks);
+                    } else {
+                        this.setState(this.state);
+                    }
                 }.bind(this),
             };
             if (data) params.data = JSON.stringify(data);
             $.ajax(params);
-        },
-        listPage: function () {
-            this.exeAjax("GET", "/maintenance/ajax_page_list", null);
-        },
-        sampleParts: function () {
-            this.exeAjax("GET", "/maintenance/ajax_parts_sample", null);
-        },
-        ajaxAction: function (action, data, url, notRefresh) {
-            var type    = this.getDataType(data);
-
-            if (type === dataType.page)     url = "page_" + action;
-            if (type === dataType.parts)    url = "parts_" + action;
-            if (url) {
-                if (!notRefresh) this.routerSub({path: viewType.saved});
-                this.exeAjax("POST", "/maintenance/ajax_" + url, data);
-            }
-        },
-        ajaxRender: function (data) {
-            this.ajaxAction("render", data, null, true);
-        },
-        ajaxSave: function (parts) {
-            this.ajaxAction("save", (this.getDataType(parts) === dataType.parts) ? parts : this.state.select);
-        },
-        ajaxRemove: function () {
-            this.ajaxAction("remove", this.state.select);
         },
         changeForm: function (e) {
             var target = (e.target.type === "checkbox") ? e.target.checked : e.target.value;
@@ -206,48 +194,30 @@ $(function () {
             if (this.getDataType(this.state.select) === dataType.parts && e.target.name === "Parts.type") this.state.select.Attr = {};
             this.setState({select: this.state.select});
         },
-        selectAction: function (id) {
-            var state   = {snapshot: $.extend(true, {}, this.state)};
-            var type    = this.getDataType(this.state.select);
-            switch (id) {
-            case viewType.copy :
-                state.view      = viewType.saved;
-                if (type === dataType.parts) this.copyParts(this.state.select);
-                break;
-            case viewType.deepcopy :
-                state.view      = viewType.saved;
-                if (type === dataType.parts) this.deepcopyParts(this.state.select);
-                break;
-            case viewType.remove :
-                state.view      = viewType.saved;
-                this.ajaxRemove();
-                break;
-            }
-            this.routerSub({path: id});
-            this.setState(state);
-        },
-        selectNavigation: function (state) {
-            if (this.state.snapshot) $.extend(true, state, this.state.snapshot);
-            state.snapshot  = null;
-            this.setState(state);
+        selectPage: function (data) {
+            this.state.select   = data;
+            this.router(viewType.parts);
         },
         selectParts: function (parts) {
             if (this.getDataType(this.state.select) === dataType.parts && this.state.select.Parts.id === parts.Parts.id) parts = null;
             $(".parts-active").removeClass("parts-active");
             if (parts) $("#" + parts.Parts.id).addClass("parts-active");
-            this.routerSub(parts);
+            this.state.select   = parts;
+            this.router(viewType.actions);
         },
         addPage: function () {
-            this.routerSub({Page: {id: uniqueKey.get("Page")}, unsaved: true});
+            this.state.select   = {Page: {id: uniqueKey.get("Page")}, unsaved: true};
+            this.router(viewType.edit);
         },
         addParts: function (parent) {
-            this.routerSub({Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: parent}, Attr: {}, unsaved: true});
+            this.state.select   = {Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: parent}, Attr: {}, unsaved: true};
+            this.router(viewType.edit);
         },
         copyParts: function (parts) {
             parts.Parts.id      = uniqueKey.get("Parts");
             parts.Parts.page    = this.state.parts.Page.id;
             parts.Parts.title  += " - Copy";
-            this.ajaxSave(parts);
+            this.exeAjax("POST", "/maintenance/ajax_parts_save", parts);
         },
         deepcopyParts: function (parts) {
             parts.Parts.child = null;
@@ -262,23 +232,29 @@ $(function () {
         },
         getNavi: function () {
             var naviList    = [];
-            naviList.push({title: "Home", state: {view: viewType.page, parts: null, select: null}});
-            if (this.state.parts) naviList.push({title: this.state.parts.Page.title, state: {view: viewType.parts, sample: null, select: {Page: this.state.parts.Page}}});
-            if (this.state.sample) naviList.push({title: "Sample", state: {view: viewType.sample, select: {Page: this.state.parts.Page}}})
-            if (this.state.select && this.getDataType(this.state.select) === dataType.parts) naviList.push({title: this.state.select.Parts.title, state: {view: viewType.actions, select: this.state.select}});
-            if (this.state.view === viewType.edit) naviList.push({title: "Edit Form", state: {view: viewType.edit}});
+
+            if (this.state.page)    naviList.push({title: "Home", view: viewType.page});
+            if (this.state.parts)   naviList.push({title: this.state.parts.Page.title, view: viewType.parts});
+            if (this.state.sample)  naviList.push({title: "Sample", view: viewType.sample});
+            if ([viewType.add, viewType.edit, viewType.actions].indexOf(this.state.view) >= 0) {
+                var title   = "";
+                var type    = this.getDataType(this.state.select);
+                if (type === dataType.page)     title = this.state.select.Page.title;
+                if (type === dataType.parts)    title = this.state.select.Parts.title;
+                naviList.push({title: title, view: this.state.view});
+            }
+
             return naviList;
         },
         getAction: function () {
             var ret         = [];
             var actions     = [];
-            var actionList  = [{id: viewType.add, name: "add"}, {id: viewType.edit, name: "edit"}, {id: viewType.copy, name: "copy"}, {id: viewType.deepcopy, name: "deepcopy"}, {id: viewType.remove, name: "remove"}];
-            var type        = this.getDataType(this.state.select);
-            if (this.state.sample)                                              actions = ["copy", "deepcopy"];
-            else if (this.state.select.unsaved )                                actions = ["edit"];
-            else if (type === dataType.page && this.state.parts.Parts.length)   actions = ["edit"];
-            else if (type === dataType.page)                                    actions = ["edit", "remove"];
-            else if (type === dataType.parts)                                   actions = ["edit", "copy", "deepcopy", "remove"];
+            var actionList  = [{id: viewType.add, name: "add"}, {id: viewType.edit, name: "edit"}, {id: viewType.copy, name: "copy"}, {id: viewType.deepcopy, name: "deepcopy"}, {id: viewType.remove, name: "remove"}, {id: viewType.sample, name: "sample"}];
+
+            if (this.state.view === viewType.parts)     actions = (this.state.parts.Parts.length) ? ["edit", "sample"] : ["edit", "remove", "sample"];
+            if (this.state.view === viewType.actions)   actions = (this.state.select.unsaved) ? ["edit"] : ["edit", "copy", "deepcopy", "remove"];
+            if (this.state.sample)                      actions = ["copy", "deepcopy"];
+
             actionList.map(function (val, key) { if (actions.indexOf(val.name) >= 0) ret.push(val); });
 
             return ret;
@@ -296,35 +272,45 @@ $(function () {
 
             return dataType.any;
         },
-        router: function (data) {
-            var type    = this.getDataType(data);
-            var state   = {};
+        router: function (view) {
+            var callbacks   = [];
+            var type        = this.getDataType(this.state.select);
 
-            if (type === dataType.error)    state   = {view: viewType.edit, error: data.error};
-            if (type === dataType.form)     state   = {partsType: data};
-            if (type === dataType.preview)  state   = {preview: data.html};
-            if (type === dataType.sample)   state   = {view: viewType.sample, preview: data.sample.html, sample: data.sample.parts};
-            if (type === dataType.list)     state   = {view: viewType.page, page: data};
-            if (type === dataType.parts)    state   = {view: viewType.parts, parts: data, select: {Page: data.Page}};
-            if (type === dataType.parts)    this.ajaxRender({Parts: {type: "Block"}, Child: data.Parts});
-            if (this.state.view === viewType.saved && type !== dataType.error) {
-                $.extend(true, state, {error: null, snapshot: null, sample: null, select: this.state.select});
-                type    = this.getDataType(this.state.select);
-                if (type === dataType.page)     this.listPage();
-                if (type === dataType.parts)    this.ajaxRender({Page: this.state.parts.Page});
+            switch (view) {
+            case viewType.copy :
+            case viewType.deepcopy :
+            case viewType.remove :
+            case viewType.saved :
+                callbacks.push(function () { if (!this.state.error) {this.selectPage(this.state.parts); } else { this.setState(this.state); } }.bind(this));
+                if (view === viewType.copy && type === dataType.parts)      this.copyParts(this.state.select);
+                if (view === viewType.deepcopy && type === dataType.parts)  this.deepcopyParts(this.state.select);
+                if (view === viewType.remove && type === dataType.page)     callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_page_remove", this.state.select, callbacks); }.bind(this));
+                if (view === viewType.remove && type === dataType.parts)    callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_parts_remove", this.state.select, callbacks); }.bind(this));
+                if (view === viewType.saved && type === dataType.page)      callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_page_save", this.state.select, callbacks); }.bind(this));
+                if (view === viewType.saved && type === dataType.parts)     callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_parts_save", this.state.select, callbacks); }.bind(this));
+                this.state.error    = null;
+                view                = viewType.edit;
+                break;
+            case viewType.sample :
+                callbacks.push(function (callbacks) { this.exeAjax("GET", "/maintenance/ajax_parts_sample", null, callbacks); }.bind(this));
+            case viewType.parts :
+                this.state.sample   = null;
+                if (this.state.parts) this.state.select   = {Page: this.state.parts.Page};
+                callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_parts_render", {Parts: {type: "Block"}, Child: this.state.parts.Parts}, callbacks); }.bind(this));
+                callbacks.push(function (callbacks) { this.exeAjax("POST", "/maintenance/ajax_page_render", this.state.select, callbacks); }.bind(this));
+            case viewType.page :
+                this.state.parts    = null;
+                if (!this.state.page) callbacks.push(function (callbacks) { this.exeAjax("GET", "/maintenance/ajax_page_list", null, callbacks); }.bind(this));
+            case viewType.init :
+                if (!this.state.partsType) callbacks.push(function (callbacks) { this.exeAjax("GET", "/maintenance/ajax_parts_type", null, callbacks); }.bind(this));
             }
 
-            this.setState(state);
-        },
-        routerSub: function (data) {
-            var type    = this.getDataType(data);
-            var state   = {};
-
-            if (type === dataType.path)                             state       = {view: data.path};
-            if (type === dataType.page || type === dataType.parts)  state       = {view: viewType.actions, select: data};
-            if (data.unsaved)                                       state.view  = viewType.edit;
-
-            this.setState(state);
+            this.state.view = view;
+            if (callbacks.length) {
+                callbacks.pop()(callbacks);
+            } else {
+                this.setState(this.state);
+            }
         },
         render: function () {
             var listView    = [];
@@ -332,21 +318,20 @@ $(function () {
             var $preview    = (this.state.preview) ? $(this.state.preview) : $("<div></div>");
 
             $preview.find("[parts-markdown=1]").each(function () { $(this).html(marked($(this).html().trim())); });
-            listView.push(<NavigationClass data={this.getNavi()} select={this.selectNavigation} />);
+            listView.push(<NavigationClass data={this.getNavi()} select={this.router} />);
             switch (this.state.view) {
             case viewType.page :
-                listView.push(<div><h4>Page List</h4><PageClass data={this.state.page} select={this.ajaxRender} add={this.addPage} /></div>);
+                listView.push(<div><h4>Page List</h4><PageClass data={this.state.page} select={this.selectPage} add={this.addPage} /></div>);
                 break;
             case viewType.parts :
-                listView.push(<div><h4>{this.state.parts.Page.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);
-                listView.push(<div><ul><li className="animated slideInRight"><ListChildClass data={0} title="sample" select={this.sampleParts}/><span className={icons.get("sample")}></span></li></ul></div>)
+                listView.push(<div><h4>{this.state.parts.Page.title}</h4><ActionClass select={this.getAction()} action={this.router} /></div>);
                 listView.push(<div><h4>Parts List</h4><PartsClass data={this.state.parts.Parts} select={this.selectParts} add={this.addParts} /></div>);
                 break;
             case viewType.sample :
                 listView.push(<div><h4>Sample List</h4><SampleClass sample={this.state.sample} select={this.selectParts} /></div>);
                 break;
             case viewType.actions :
-                listView.push(<div><h4>{this.state.select.Parts.title}</h4><ActionClass select={this.getAction()} action={this.selectAction} /></div>);
+                listView.push(<div><h4>{this.state.select.Parts.title}</h4><ActionClass select={this.getAction()} action={this.router} /></div>);
                 break;
             case viewType.edit :
                 var type    = "";
@@ -374,7 +359,7 @@ $(function () {
                     this.state.partsType.forms[this.state.select.Parts.type].map(getForm, this)
                 }
 
-                listView.push(<div><h4>{type + ": " + this.state.select[type].title}</h4><FormClass forms={formList} error= {this.state.error} change={this.changeForm} /><button className="btn btn-primary pull-right" onClick={this.ajaxSave}>Save</button></div>);
+                listView.push(<div><h4>{type + ": " + this.state.select[type].title}</h4><FormClass forms={formList} error={this.state.error} change={this.changeForm} save={this.router} /></div>);
                 break;
             }
             return (
