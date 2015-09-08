@@ -116,7 +116,7 @@ $(function () {
             var child   = this.props.data.map(function (child) {
                 var id          = child.Parts.id;
                 var title       = child.Parts.title || "[No title]";
-                var children    = (child.Child && this.state.open.indexOf(id) >= 0 ) ? <PartsClass data={child.Child} select={this.props.select} add={this.props.add} parent={id} /> : "";
+                var children    = (child.Child && this.state.open.indexOf(id) >= 0 ) ? <PartsClass data={child.Child} select={this.props.select} add={this.props.add} parent={child.Parts.child} /> : "";
                 var badge       = (child.Child) ? <span className="badge pull-left">{child.Child.length}</span> : "";
                 var toggle      = (child.Child) ? <span className={icons.get((this.state.open.indexOf(id) >= 0) ? "slideDown" : "slideUp")} onClick={this.toggleChild.bind(this, id)}></span> : "";
                 return <li key={id}>{toggle}{badge}<ListChildClass data={child} title={title} select={this.props.select} />{children}</li>;
@@ -207,7 +207,7 @@ $(function () {
             this.router(viewType.actions);
         },
         add: function (data) {
-            if (this.state.view === viewType.page)  this.state.select = {Page: {id: uniqueKey.get("Page")}, unsaved: true};
+            if (this.state.view === viewType.page)  this.state.select = {Page: {id: uniqueKey.get("Page")}};
             if (this.state.view === viewType.parts) this.state.select = {Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: data}, Attr: {}, unsaved: true};
             this.router(viewType.edit);
         },
@@ -219,6 +219,7 @@ $(function () {
             if (parts.Child && parts.Child.length) {
                 parts.Child.map(function (child) {
                     child.Parts.parent  = parts.Parts.id;
+                    this.state.select   = null;
                     this.state.select   = child;
                     this.router(viewType.deepcopy);
                 }, this);
