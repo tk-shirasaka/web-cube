@@ -285,6 +285,7 @@ $(function () {
                 if (view === viewType.remove && type === dataType.parts)    this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_remove", this.state.select); }.bind(this));
                 if (view === viewType.saved && type === dataType.page)      this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_page_save", this.state.select); }.bind(this));
                 if (view === viewType.saved && type === dataType.parts)     this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_save", this.state.select); }.bind(this));
+                if (this.getDataType(this.state.select) === dataType.page)  this.state.page = null;
                 this.state.error    = null;
                 view                = viewType.edit;
                 break;

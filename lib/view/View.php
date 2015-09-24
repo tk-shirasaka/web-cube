@@ -13,9 +13,11 @@ class View extends Common {
         if (!$args) $args = [];
         if (__CLASS__ === $this->getName()) {
             App::Uses("View", $this->type);
-            App::Uses("View", $class);
  
-            if (is_object($this->{"View.{$class}"})) $renderd = true;
+            if ($class) {
+                App::Uses("View", $class);
+                if (is_object($this->{"View.{$class}"}))    $renderd = true;
+            }
         }
 
         if (!$renderd) {
