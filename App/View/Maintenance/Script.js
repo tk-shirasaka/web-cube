@@ -1,4 +1,3 @@
-<script type="text/jsx">
 $(function () {
     var viewType    = {init: 1, page: 2, parts: 3, sample: 4, actions: 5, edit: 6, copy: 7, deepcopy: 8, remove: 9, saved: 10};
     var dataType    = {any: -1, error: 1, list: 2, form: 3, preview: 4, page: 5, parts: 6, sample: 7, path: 8};
@@ -73,7 +72,7 @@ $(function () {
                 return <div className={formClass}>{labelTag}{formTag}{errorTag}</div>;
             }, this);
 
-            return <form className="animated slideInRight">{child}<li className="btn btn-primary pull-right" onClick={this._save} >Save</li></form>;
+            return <form className="animated fadeIn">{child}<li className="btn btn-primary pull-right" onClick={this._save} >Save</li></form>;
         }
     });
 
@@ -82,7 +81,7 @@ $(function () {
             var child = this.props.select.map(function (child) {
                 return <li key={child.id}><span className={icons.get(child.name)}></span><ListChildClass data={child.id} title={child.name} select={this.props.action} /></li>;
             }, this);
-            return <ul className="animated slideInRight">{child}</ul>;
+            return <ul className="animated fadeIn">{child}</ul>;
         }
     });
 
@@ -93,7 +92,7 @@ $(function () {
             }, this);
             var add     = <li><ListChildClass data={null} title="add" select={this.props.add} /></li>;
 
-            return <ul className="animated slideInRight"><span className={icons.get("add")}></span>{add}{child}</ul>;
+            return <ul className="animated fadeIn"><span className={icons.get("add")}></span>{add}{child}</ul>;
         }
     });
 
@@ -123,7 +122,7 @@ $(function () {
             }, this);
             var add     = <li><ListChildClass data={this.props.parent} title="add" select={this.props.add} /></li>;
 
-            return <ul className="animated slideInRight" ><span className={icons.get("add")}></span>{add}{child}</ul>;
+            return <ul className="animated fadeIn" ><span className={icons.get("add")}></span>{add}{child}</ul>;
         }
     });
 
@@ -133,7 +132,7 @@ $(function () {
                 return <li key={parts.Parts.id}><ListChildClass data={parts} title={parts.Parts.title} select={this.props.select} /></li>;
             }, this)
 
-            return <ul className="animated slideInRight">{sample}</ul>;
+            return <ul className="animated fadeIn">{sample}</ul>;
         }
     });
 
@@ -211,20 +210,6 @@ $(function () {
             if (this.state.view === viewType.parts) this.state.select = {Parts: {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, type: this.state.partsType.types[0].value, parent: data}, Attr: {}, unsaved: true};
             this.router(viewType.edit);
         },
-        deepcopyParts: function () {
-            var parts                       = this.state.select;
-            this.state.select.Parts.child   = null;
-            this.router(viewType.copy);
-
-            if (parts.Child && parts.Child.length) {
-                parts.Child.map(function (child) {
-                    child.Parts.parent  = parts.Parts.id;
-                    this.state.select   = null;
-                    this.state.select   = child;
-                    this.router(viewType.deepcopy);
-                }, this);
-            }
-        },
         getNavi: function () {
             var naviList    = [];
 
@@ -267,34 +252,51 @@ $(function () {
 
             return dataType.any;
         },
-        router: function (view) {
+        router: function (view, skipSetState) {
             var type        = this.getDataType(this.state.select);
+            var retPath     = {};
 
             switch (view) {
             case viewType.copy :
-            case viewType.deepcopy :
-            case viewType.remove :
-            case viewType.saved :
-                this.state.callbacks.push(function () { if (this.state.error) { this.setState(this.state); } else if (!this.state.callbacks.length) { this.selectPage(this.state.parts); } }.bind(this));
-                if (view === viewType.copy && type === dataType.parts) {
+                if (type === dataType.parts) {
                     $.extend(true, this.state.select.Parts, {id: uniqueKey.get("Parts"), page: this.state.parts.Page.id, title: this.state.select.Parts.title + " - Copy"});
-                    view            = viewType.saved;
+                    this.router(viewType.saved);
                 }
-                if (view === viewType.deepcopy && type === dataType.parts)  this.deepcopyParts();
-                if (view === viewType.remove && type === dataType.page)     this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_page_remove", this.state.select); }.bind(this));
-                if (view === viewType.remove && type === dataType.parts)    this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_remove", this.state.select); }.bind(this));
-                if (view === viewType.saved && type === dataType.page)      this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_page_save", this.state.select); }.bind(this));
-                if (view === viewType.saved && type === dataType.parts)     this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_save", this.state.select); }.bind(this));
-                if (this.getDataType(this.state.select) === dataType.page)  this.state.page = null;
-                this.state.error    = null;
-                view                = viewType.edit;
+                break;
+            case viewType.deepcopy :
+                var parts                       = $.extend(true, {}, this.state.select);
+                var page                        = $.extend(true, {}, this.state.parts.Page);
+                parts.Parts.id                  = uniqueKey.get("Parts");
+                parts.Parts.title              += " - Copy";
+                parts.Parts.child               = parts.Parts.id;
+ 
+                if (parts.Child && parts.Child.length) {
+                    parts.Child.map(function (child) {
+                        child.Parts.parent  = parts.Parts.id;
+                        this.state.select   = child;
+                        this.state.parts    = {Page: page};
+                        this.router(viewType.deepcopy, true);
+                    }, this);
+                }
+                this.state.select               = parts;
+                this.state.select.Child         = null;
+                this.router(viewType.saved, true);
+                if (!skipSetState) this.router(viewType.parts);
+                break;
+            case viewType.remove :
+                if (type === dataType.page) retPath = {view: viewType.page, url: "/maintenance/ajax_page_remove"};
+                if (type === dataType.parts) retPath = {view: viewType.parts, url: "/maintenance/ajax_parts_remove"};
+                break;
+            case viewType.saved :
+                if (type === dataType.page) retPath = {view: viewType.page, url: "/maintenance/ajax_page_save"};
+                if (type === dataType.parts) retPath = {view: viewType.parts, url: "/maintenance/ajax_parts_save"};
                 break;
             case viewType.sample :
                 this.state.callbacks.push(function () { this.exeAjax("GET", "/maintenance/ajax_parts_sample", null); }.bind(this));
             case viewType.parts :
                 this.state.sample   = null;
                 if (this.state.parts) this.state.select   = {Page: this.state.parts.Page};
-                this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_render", {Parts: {type: "Block"}, Child: this.state.parts.Parts}); }.bind(this));
+                this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_parts_render", this.state.parts.Parts); }.bind(this));
                 this.state.callbacks.push(function () { this.exeAjax("POST", "/maintenance/ajax_page_render", this.state.select); }.bind(this));
             case viewType.page :
                 this.state.parts    = null;
@@ -304,18 +306,20 @@ $(function () {
             }
 
             this.state.view = view;
-            if (this.state.callbacks.length) {
-                this.state.callbacks.pop()();
-            } else {
-                this.setState(this.state);
+            if (retPath.url) {
+                var select          = $.extend(true, {}, this.state.select);
+                this.state.select   = null;
+                if (type === dataType.page) this.state.page = null;
+                this.router(retPath.view, true);
+                this.state.callbacks.push(function () { this.exeAjax("POST", retPath.url, select); }.bind(this));
             }
+            if (!skipSetState) (this.state.callbacks.length) ? this.state.callbacks.pop()() : this.setState(this.state);
         },
         render: function () {
             var listView    = [];
             var formList    = [];
-            var $preview    = (this.state.preview) ? $(this.state.preview) : $("<div></div>");
+            var preview    = (this.state.preview) ? this.state.preview : "";
 
-            $preview.find("[parts-markdown=1]").each(function () { $(this).html(marked($(this).html().trim())); });
             listView.push(<NavigationClass data={this.getNavi()} select={this.router} />);
             switch (this.state.view) {
             case viewType.page :
@@ -366,7 +370,9 @@ $(function () {
                     <div className={size.get(9)}>
                         <div className="panel panel-default">
                             <div className="panel-heading"><h4>{(this.state.parts) ? this.state.parts.Page.title : ""}</h4></div>
-                            <div className="panel-body" dangerouslySetInnerHTML={{__html: $preview.html()}}></div>
+                            <div className="panel-body">
+                                <iframe id="parts-body" srcDoc={preview}></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -379,4 +385,3 @@ $(function () {
         document.getElementById("Main")
     );
 });
-</script>

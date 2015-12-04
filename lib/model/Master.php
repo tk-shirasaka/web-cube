@@ -104,8 +104,13 @@ class Master extends Model {
 
     public function removePage($id) {
         $ret            = [];
-        if (empty($this->Source->find("Parts", ["Where" => ["page" => $id]]))) $ret = [$id => $this->Source->delete("Page", compact("id"))];
+        if ($partsList = $this->Source->find(["Parts", "PartsType"], ["Where" => ["page" => $id]])) {
+            foreach ($partsList as $parts) {
+                $this->removeParts($parts);
+            }
+        }
 
+        $ret = [$id => $this->Source->delete("Page", compact("id"))];
         return $ret;
     }
 

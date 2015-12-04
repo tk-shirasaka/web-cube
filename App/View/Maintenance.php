@@ -25,7 +25,7 @@ class Maintenance extends View {
         $user               = $this->getParams("User");
         $shared             = ["Relation" => ">", "Value" => 0];
         $parts              = $this->{"Model.Master"}->getParts(compact("user", "shared"));
-        $html               = $this->Viewer->view("Block", ["Parts" => [],"Child" => $parts]);
+        $html               = $this->Viewer->view("Layout", $parts);
 
         echo json_encode(["sample" => compact("parts", "html")]);
     }
@@ -96,9 +96,11 @@ class Maintenance extends View {
     }
 
     public function ajaxPartsRender() {
+        $Viewer             = $this->Viewer;
         $this->auto_render  = false;
+        $Viewer->Script     = " ";
         $parts              = $this->getParams("Request");
-        $html               = $this->Viewer->view($parts["Parts"]["type"], $parts);
+        $html               = $Viewer->view("Layout", $parts);
 
         echo json_encode(compact("html"));
     }
