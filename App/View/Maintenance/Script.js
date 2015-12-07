@@ -1,7 +1,7 @@
 $(function () {
     var viewType    = {init: 1, page: 2, parts: 3, sample: 4, actions: 5, edit: 6, copy: 7, deepcopy: 8, remove: 9, saved: 10};
     var dataType    = {any: -1, error: 1, list: 2, form: 3, preview: 4, page: 5, parts: 6, sample: 7, path: 8};
-    var formType    = {input: 1, number: 2, checkbox: 3, raddio: 4, select: 5, textarea: 6, hidden: 7};
+    var formType    = {text: 1, number: 2, checkbox: 3, raddio: 4, select: 5, textarea: 6, hidden: 7};
     var uniqueKey   = {get: function (prefix) { return prefix + "-" + Math.random().toString().replace(".", "")}};
     var size        = {
         _base       : ["col-xs-", "col-md-", "col-sm"],
@@ -49,7 +49,7 @@ $(function () {
                     break;
                 case formType.checkbox :
                     formClass   = "checkbox";
-                    formTag     = <label><input id={index} name={form.name} type="checkbox" value={form.value} onChange={this.props.change}></input>{form.label}</label>;
+                    formTag     = <label><input id={index} name={form.name} type="checkbox" value={form.value} onChange={this.props.change} checked={Number(form.value)}></input>{form.label}</label>;
                     labelTag    = "";
                     break;
                 case formType.select :
@@ -102,8 +102,8 @@ $(function () {
         },
         toggleChild: function (id) {
             var index   = this.state.open.indexOf(id);
-            $(".parts-active").removeClass("parts-active");
-            $("#" + id).addClass("parts-active");
+            $("iframe").contents().find(".parts-active").removeClass("parts-active");
+            $("iframe").contents().find("#" + id).addClass("parts-active");
             if (index < 0) {
                 this.state.open.push(id);
             } else {
@@ -200,8 +200,8 @@ $(function () {
         },
         selectParts: function (parts) {
             if (this.getDataType(this.state.select) === dataType.parts && this.state.select.Parts.id === parts.Parts.id) parts = null;
-            $(".parts-active").removeClass("parts-active");
-            if (parts) $("#" + parts.Parts.id).addClass("parts-active");
+            $("iframe").contents().find(".parts-active").removeClass("parts-active");
+            if (parts) $("iframe").contents().find("#" + parts.Parts.id).addClass("parts-active");
             this.state.select   = parts;
             this.router(viewType.actions);
         },

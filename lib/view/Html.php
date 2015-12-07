@@ -100,6 +100,7 @@ class Html extends Viewer {
             break;
         case "Form" :
         case "Block" :
+        case "Image" :
         case "Table" :
         case "Link" :
         case "Text" :
@@ -233,6 +234,15 @@ class Html extends Viewer {
         $contents   = $attr["contents"];
 
         return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("type", "contents"));
+    }
+
+    protected function image($parts, $attr, $child) {
+        $src        = $attr["src"];
+        $alt        = $attr["alt"];
+        if (!empty($attr["width"]))     $width  = $attr["width"];
+        if (!empty($attr["height"]))    $height = $attr["height"];
+
+        return $this->_commonTag(ucfirst(__FUNCTION__), $parts, $attr, compact("src", "alt", "width", "height"));
     }
 
     protected function link($parts, $attr, $child) {

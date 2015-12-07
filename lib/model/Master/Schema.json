@@ -149,52 +149,6 @@
             "Boolean"       : true
         }
     ],
-    "Image"     : [
-        {
-            "Description"   : "Image id",
-            "Field"         : "id",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : false,
-            "Primary"       : true,
-            "Unique"        : false,
-            "Foreign"       : false
-        },
-        {
-            "Description"   : "Image name",
-            "Field"         : "name",
-            "Type"          : "varchar",
-            "Length"        : 40,
-            "Null"          : false,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : false
-        },
-        {
-            "Description"   : "Image path",
-            "Field"         : "path",
-            "Type"          : "varchar",
-            "Length"        : 200,
-            "Null"          : false,
-            "Default"       : "",
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : false
-        },
-        {
-            "Description"   : "Image ouwner user account",
-            "Field"         : "user",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : false,
-            "Primary"       : false,
-            "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "User",
-                "Field" : "id"
-            }
-        }
-    ],
     "PartsType" : [
         {
             "Description"   : "Parts type id",
@@ -690,17 +644,26 @@
             }
         },
         {
-            "Description"   : "Image id",
-            "Field"         : "image",
-            "Type"          : "char",
-            "Length"        : 30,
-            "Null"          : true,
+            "Description"   : "Image path",
+            "Field"         : "src",
+            "Type"          : "varchar",
+            "Length"        : 200,
+            "Null"          : false,
+            "Default"       : "",
             "Primary"       : false,
             "Unique"        : false,
-            "Foreign"       : {
-                "Table" : "Image",
-                "Field" : "id"
-            }
+            "Foreign"       : false
+        },
+        {
+            "Description"   : "Image description",
+            "Field"         : "alt",
+            "Type"          : "varchar",
+            "Length"        : 200,
+            "Null"          : false,
+            "Default"       : "",
+            "Primary"       : false,
+            "Unique"        : false,
+            "Foreign"       : false
         },
         {
             "Description"   : "Image width",
